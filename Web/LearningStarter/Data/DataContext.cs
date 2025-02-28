@@ -11,7 +11,7 @@ public sealed class DataContext : IdentityDbContext<User, Role, int>
         : base(options)
     {
     }
-
+public DbSet<ExerciseLog> ExerciseLogs { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
