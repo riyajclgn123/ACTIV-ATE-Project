@@ -144,12 +144,92 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
     return CreatedAtAction(nameof(GetAllExerciseLog), new { id = exerciselogToCreate.Id }, response);
 }
 
+    [HttpPut("{id}")]
+    public IActionResult UpdateExerciseLog(int id, [FromBody] ExerciseLogUpdateDto updateDto)
+    {
+        var response = new Response();
 
+        if (updateDto == null)
+        {
+            response.AddError("validation", "Invalid request data.");
+            return BadRequest(response);
+        }
 
+        var exerciselog = _context
+            .Set<ExerciseLog>()
+            .FirstOrDefault(x => x.Id == id);
 
+        if (exerciselog == null)
+        {
+            response.AddError("id", "Exercise log not found.");
+            return NotFound(response);
+        }
 
+        if (updateDto.ExerciseId == 0)
+        {
+            response.AddError("exerciseId", "ExerciseId cannot be empty.");
+        }
 
+        if (updateDto.UserId == 0)
+        {
+            response.AddError("userId", "UserId cannot be empty.");
+        }
 
+        if (updateDto.Duration <= TimeSpan.Zero)
+        {
+            response.AddError("duration", "Duration must be greater than zero.");
+        }
+
+        if (response.HasErrors)
+        {
+            return BadRequest(response);
+        }
+
+        exerciselog.ExerciseId = updateDto.ExerciseId;
+        exerciselog.UserId = updateDto.UserId;
+        exerciselog.Rep = updateDto.Rep;
+        exerciselog.Duration = updateDto.Duration;
+        exerciselog.UpdatedDate = DateTime.UtcNow;
+
+        _context.SaveChanges();
+
+        var exerciselogToReturn = new ExerciseLogGetDto
+        {
+            Id = exerciselog.Id,
+            UserId = exerciselog.UserId,
+            ExerciseId = exerciselog.ExerciseId,
+            Duration = exerciselog.Duration,
+            Rep = exerciselog.Rep,
+            CaloriesBurned = exerciselog.CaloriesBurned,
+            CreateDate = exerciselog.CreateDate,
+            UpdatedDate = exerciselog.UpdatedDate
+        };
+
+        response.Data = exerciselogToReturn;
+        return Ok(response);
+    }
+    
+    [HttpDelete("{id}")]
+    public IActionResult DeleteExerciseLog(int id)
+    {
+        var response = new Response();
+
+        var exerciselog = _context
+            .Set<ExerciseLog>()
+            .FirstOrDefault(x => x.Id == id);
+
+        if (exerciselog == null)
+        {
+            response.AddError("id", "Exercise log not found.");
+            return NotFound(response);
+        }
+
+        _context.ExerciseLogs.Remove(exerciselog);
+        _context.SaveChanges();
+
+        response.Data = "Exercise log deleted successfully.";
+        return Ok(response);
+    }
 
 
 }
