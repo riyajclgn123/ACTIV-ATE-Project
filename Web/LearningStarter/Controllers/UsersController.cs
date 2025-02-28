@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LearningStarter.Common;
 using LearningStarter.Data;
 using LearningStarter.Entities;
@@ -33,7 +34,14 @@ public class UsersController : ControllerBase
                 Id = x.Id,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
-                UserName = x.UserName
+                UserName = x.UserName,
+                Email = x.Email,
+                DateofBirth = x.DateofBirth,
+                Gender = x.Gender,
+                Height = x.Height,
+                Weight = x.Weight,
+                CreateDate = x.CreateDate,
+                UpdatedDate = x.UpdatedDate,
             })
             .ToList();
 
@@ -59,7 +67,15 @@ public class UsersController : ControllerBase
             Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
+          Email = user.Email,
+          DateofBirth = user.DateofBirth,
+          Gender = user.Gender,
+          Height = user.Height,
+          Weight = user.Weight,
             UserName = user.UserName,
+            CreateDate = user.CreateDate,
+            UpdatedDate = user.UpdatedDate,
+    
         };
 
         response.Data = userGetDto;
@@ -92,6 +108,7 @@ public class UsersController : ControllerBase
         {
             response.AddError("password", "Password cannot be empty.");
         }
+        
 
         if (response.HasErrors)
         {
@@ -102,6 +119,12 @@ public class UsersController : ControllerBase
         {
             FirstName = userCreateDto.FirstName,
             LastName = userCreateDto.LastName,
+            Email = userCreateDto.Email,
+            DateofBirth = userCreateDto.DateofBirth,
+            Gender = userCreateDto.Gender,
+            Height = userCreateDto.Height,
+            Weight = userCreateDto.Weight,
+            CreateDate = DateTimeOffset.UtcNow,
             UserName = userCreateDto.UserName,
         };
 
@@ -114,7 +137,13 @@ public class UsersController : ControllerBase
             Id = userToCreate.Id,
             FirstName = userToCreate.FirstName,
             LastName = userToCreate.LastName,
-            UserName = userToCreate.UserName
+            Email = userToCreate.Email,
+            DateofBirth = userToCreate.DateofBirth,
+            Gender = userToCreate.Gender,
+            Height = userToCreate.Height,
+            Weight = userToCreate.Weight,
+            CreateDate = userToCreate.CreateDate,
+            UserName = userToCreate.UserName,
         };
 
         response.Data = userGetDto;
@@ -170,6 +199,12 @@ public class UsersController : ControllerBase
 
         userToEdit.FirstName = userUpdateDto.FirstName;
         userToEdit.LastName = userUpdateDto.LastName;
+        userToEdit.Email = userUpdateDto.Email;
+        userToEdit.DateofBirth = userUpdateDto.DateofBirth;
+        userToEdit.Gender = userUpdateDto.Gender;
+        userToEdit.Height = userUpdateDto.Height;
+        userToEdit.Weight = userUpdateDto.Weight;
+        userToEdit.UpdatedDate = DateTimeOffset.UtcNow;
         userToEdit.UserName = userUpdateDto.UserName;
 
         _context.SaveChanges();
@@ -179,6 +214,12 @@ public class UsersController : ControllerBase
             Id = userToEdit.Id,
             FirstName = userToEdit.FirstName,
             LastName = userToEdit.LastName,
+            Email = userToEdit.Email,
+            DateofBirth = userToEdit.DateofBirth,
+            Gender = userToEdit.Gender,
+            Height = userToEdit.Height,
+            Weight = userToEdit.Weight,
+            UpdatedDate = userToEdit.UpdatedDate,
             UserName = userToEdit.UserName,
         };
 
