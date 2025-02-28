@@ -6,6 +6,7 @@ public class ExerciseLog
 {
     public int Id { get; set; }
     public int ExerciseId { get; set; }
+    public string ExerciseName { get; set; }
     public int UserId { get; set; }
     public TimeSpan Duration { get; set; }
     public int Rep { get; set; }
