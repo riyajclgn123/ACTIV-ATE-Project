@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,14 @@ public class User : IdentityUser<int>
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public string Email { get; set; }
+    public string DateofBirth { get; set; }
+    public string UserName { get; set; }
+    //public string Password { get; set; }
+    public decimal Height { get; set; }
+    public decimal Weight { get; set; }
+    public DateTimeOffset? CreateDate { get; set; }
+    public DateTimeOffset? UpdatedDate { get; set; }
 
     public List<UserRole> UserRoles { get; set; } = new();
 }
@@ -20,6 +29,12 @@ public class UserCreateDto
     public string LastName { get; set; }
     public string UserName { get; set; }
     public string Password { get; set; }
+    public string Email { get; set; }
+    public string DateofBirth { get; set; }
+    public decimal Height { get; set; }
+    public decimal Weight { get; set; }
+    public DateTimeOffset? CreateDate { get; set; }
+    public DateTimeOffset? UpdatedDate { get; set; }
 }
 
 public class UserUpdateDto
@@ -29,6 +44,12 @@ public class UserUpdateDto
     public string LastName { get; set; }
     public string UserName { get; set; }
     public string Password { get; set; }
+    public string Email { get; set; }
+    public string DateofBirth { get; set; }
+    public decimal Height { get; set; }
+    public decimal Weight { get; set; }
+    public DateTimeOffset? CreateDate { get; set; }
+    public DateTimeOffset? UpdatedDate { get; set; }
 }
 
 public class UserGetDto
@@ -37,6 +58,12 @@ public class UserGetDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string UserName { get; set; }
+    public string Email { get; set; }
+    public string DateofBirth { get; set; }
+    public decimal Height { get; set; }
+    public decimal Weight { get; set; }
+    public DateTimeOffset? CreateDate { get; set; }
+    public DateTimeOffset? UpdatedDate { get; set; }
 }
 
 public class UserEntityConfiguration : IEntityTypeConfiguration<User>
