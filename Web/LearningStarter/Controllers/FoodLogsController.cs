@@ -26,7 +26,7 @@ public class FoodLogsController : ControllerBase
         var response = new Response();
 
         response.Data = _context
-            .FoodLogs
+            .Set<FoodLog>()
             .Include(fl => fl.Food)
             .Include(fl => fl.User)
             .Select(x => new FoodLogGetDto
@@ -189,7 +189,8 @@ public class FoodLogsController : ControllerBase
         }
 
         // Get the food with its nutrient information
-        var food = _context.Foods
+        var food = _context
+            .Set<Food>()
             .Include(f => f.Nutrients)
             .ThenInclude(n => n.NutrientType)
             .FirstOrDefault(f => f.Id == foodLogCreateDto.FoodId);
@@ -287,7 +288,8 @@ public class FoodLogsController : ControllerBase
         }
 
         // Get the food with its nutrient information
-        var food = _context.Foods
+        var food = _context
+            .Set<Food>()
             .Include(f => f.Nutrients)
             .ThenInclude(n => n.NutrientType)
             .FirstOrDefault(f => f.Id == foodLogUpdateDto.FoodId);
