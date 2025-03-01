@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LearningStarter.Common;
 using LearningStarter.Data;
 using LearningStarter.Entities;
@@ -109,17 +110,17 @@ public class UsersController : ControllerBase
         {
             response.AddError("email", "Email cannot be empty.");
         }
-
-        if (userCreateDto.DateofBirth == null)
+        
+        if (string.IsNullOrEmpty(userCreateDto.DateofBirth))
         {
             response.AddError("dateofBirth", "Date of birth cannot be empty.");
         }
-
+        
         if (userCreateDto.Height == 0)
         {
             response.AddError("height", "Height cannot be empty.");
         }
-
+        
         if (userCreateDto.Weight == 0)
         {
             response.AddError("weight", "Weight cannot be empty.");
@@ -139,7 +140,7 @@ public class UsersController : ControllerBase
             DateofBirth = userCreateDto.DateofBirth,
             Height = userCreateDto.Height,
             Weight = userCreateDto.Weight,
-            CreateDate = userCreateDto.CreateDate,
+            CreateDate = DateTimeOffset.UtcNow,
         };
 
         _userManager.CreateAsync(userToCreate, userCreateDto.Password).Wait();
@@ -157,7 +158,7 @@ public class UsersController : ControllerBase
             Height = userToCreate.Height,
             Weight = userToCreate.Weight,
             CreateDate = userToCreate.CreateDate,
-            UpdatedDate = userToCreate.UpdatedDate,
+            
         };
 
         response.Data = userGetDto;
@@ -210,17 +211,17 @@ public class UsersController : ControllerBase
         {
             response.AddError("email", "Email cannot be empty.");
         }
-
-        if (userUpdateDto.DateofBirth == null)
+        
+        if (string.IsNullOrEmpty(userUpdateDto.DateofBirth))
         {
             response.AddError("dateofBirth", "Date of birth cannot be empty.");
         }
-
+        
         if (userUpdateDto.Height == 0)
         {
             response.AddError("height", "Height cannot be empty.");
         }
-
+        
         if (userUpdateDto.Weight == 0)
         {
             response.AddError("weight", "Weight cannot be empty.");
@@ -253,7 +254,6 @@ public class UsersController : ControllerBase
             DateofBirth = userToEdit.DateofBirth,
             Height = userToEdit.Height,
             Weight = userToEdit.Weight,
-            CreateDate = userToEdit.CreateDate,
             UpdatedDate = userToEdit.UpdatedDate,
         };
 
