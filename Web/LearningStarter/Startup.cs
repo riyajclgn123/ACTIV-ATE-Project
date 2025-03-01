@@ -168,6 +168,12 @@ public class Startup
                 FirstName = "Seeded",
                 LastName = "User",
                 UserName = "admin",
+                Email = "admin@admin.com",
+                DateofBirth = "2004/06/14",
+                Height = 175,
+                Weight = 75,
+                CreateDate = DateTimeOffset.UtcNow,
+                UpdatedDate = DateTimeOffset.UtcNow,
             };
 
             await userManager.CreateAsync(seededUser, "Password");

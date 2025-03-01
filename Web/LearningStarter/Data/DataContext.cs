@@ -16,5 +16,13 @@ public DbSet<ExerciseLog> ExerciseLogs { get; set; }
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).GetTypeInfo().Assembly);
+        
+        modelBuilder.Entity<User>()
+            .Property(u => u.Height)
+            .HasColumnType("decimal(5,2)");  // Precision of 5 digits, 2 decimals
+        
+        modelBuilder.Entity<User>()
+            .Property(u => u.Weight)
+            .HasColumnType("decimal(5,2)"); 
     }
 }
