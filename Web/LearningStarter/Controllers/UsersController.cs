@@ -37,7 +37,6 @@ public class UsersController : ControllerBase
                 UserName = x.UserName,
                 Email = x.Email,
                 DateofBirth = x.DateofBirth,
-                Gender = x.Gender,
                 Height = x.Height,
                 Weight = x.Weight,
                 CreateDate = x.CreateDate,
@@ -73,9 +72,12 @@ public class UsersController : ControllerBase
           Height = user.Height,
           Weight = user.Weight,
             UserName = user.UserName,
+            Email = user.Email,
+            DateofBirth = user.DateofBirth,
+            Height = user.Height,
+            Weight = user.Weight,
             CreateDate = user.CreateDate,
             UpdatedDate = user.UpdatedDate,
-    
         };
 
         response.Data = userGetDto;
@@ -110,6 +112,26 @@ public class UsersController : ControllerBase
         }
         
 
+        if (string.IsNullOrEmpty(userCreateDto.Email))
+        {
+            response.AddError("email", "Email cannot be empty.");
+        }
+        
+        if (string.IsNullOrEmpty(userCreateDto.DateofBirth))
+        {
+            response.AddError("dateofBirth", "Date of birth cannot be empty.");
+        }
+        
+        if (userCreateDto.Height == 0)
+        {
+            response.AddError("height", "Height cannot be empty.");
+        }
+        
+        if (userCreateDto.Weight == 0)
+        {
+            response.AddError("weight", "Weight cannot be empty.");
+        }
+
         if (response.HasErrors)
         {
             return BadRequest(response);
@@ -126,6 +148,11 @@ public class UsersController : ControllerBase
             Weight = userCreateDto.Weight,
             CreateDate = DateTimeOffset.UtcNow,
             UserName = userCreateDto.UserName,
+            Email = userCreateDto.Email,
+            DateofBirth = userCreateDto.DateofBirth,
+            Height = userCreateDto.Height,
+            Weight = userCreateDto.Weight,
+            CreateDate = DateTimeOffset.UtcNow,
         };
 
         _userManager.CreateAsync(userToCreate, userCreateDto.Password).Wait();
@@ -137,13 +164,13 @@ public class UsersController : ControllerBase
             Id = userToCreate.Id,
             FirstName = userToCreate.FirstName,
             LastName = userToCreate.LastName,
+            UserName = userToCreate.UserName,
             Email = userToCreate.Email,
             DateofBirth = userToCreate.DateofBirth,
-            Gender = userToCreate.Gender,
             Height = userToCreate.Height,
             Weight = userToCreate.Weight,
             CreateDate = userToCreate.CreateDate,
-            UserName = userToCreate.UserName,
+            
         };
 
         response.Data = userGetDto;
@@ -191,6 +218,27 @@ public class UsersController : ControllerBase
         {
             response.AddError("password", "Password cannot be empty.");
         }
+        
+        if (string.IsNullOrEmpty(userUpdateDto.Email))
+        {
+            response.AddError("email", "Email cannot be empty.");
+        }
+        
+        if (string.IsNullOrEmpty(userUpdateDto.DateofBirth))
+        {
+            response.AddError("dateofBirth", "Date of birth cannot be empty.");
+        }
+        
+        if (userUpdateDto.Height == 0)
+        {
+            response.AddError("height", "Height cannot be empty.");
+        }
+        
+        if (userUpdateDto.Weight == 0)
+        {
+            response.AddError("weight", "Weight cannot be empty.");
+        }
+
 
         if (response.HasErrors)
         {
@@ -206,6 +254,11 @@ public class UsersController : ControllerBase
         userToEdit.Weight = userUpdateDto.Weight;
         userToEdit.UpdatedDate = DateTimeOffset.UtcNow;
         userToEdit.UserName = userUpdateDto.UserName;
+        userToEdit.Email = userUpdateDto.Email;
+        userToEdit.DateofBirth = userUpdateDto.DateofBirth;
+        userToEdit.Height = userUpdateDto.Height;
+        userToEdit.Weight = userUpdateDto.Weight;
+        userToEdit.UpdatedDate = userUpdateDto.UpdatedDate;
 
         _context.SaveChanges();
 
@@ -221,6 +274,11 @@ public class UsersController : ControllerBase
             Weight = userToEdit.Weight,
             UpdatedDate = userToEdit.UpdatedDate,
             UserName = userToEdit.UserName,
+            Email = userToEdit.Email,
+            DateofBirth = userToEdit.DateofBirth,
+            Height = userToEdit.Height,
+            Weight = userToEdit.Weight,
+            UpdatedDate = userToEdit.UpdatedDate,
         };
 
         response.Data = userGetDto;
