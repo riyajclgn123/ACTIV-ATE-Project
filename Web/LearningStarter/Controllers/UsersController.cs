@@ -66,11 +66,6 @@ public class UsersController : ControllerBase
             Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
-          Email = user.Email,
-          DateofBirth = user.DateofBirth,
-          Gender = user.Gender,
-          Height = user.Height,
-          Weight = user.Weight,
             UserName = user.UserName,
             Email = user.Email,
             DateofBirth = user.DateofBirth,
@@ -141,12 +136,6 @@ public class UsersController : ControllerBase
         {
             FirstName = userCreateDto.FirstName,
             LastName = userCreateDto.LastName,
-            Email = userCreateDto.Email,
-            DateofBirth = userCreateDto.DateofBirth,
-            Gender = userCreateDto.Gender,
-            Height = userCreateDto.Height,
-            Weight = userCreateDto.Weight,
-            CreateDate = DateTimeOffset.UtcNow,
             UserName = userCreateDto.UserName,
             Email = userCreateDto.Email,
             DateofBirth = userCreateDto.DateofBirth,
@@ -247,12 +236,6 @@ public class UsersController : ControllerBase
 
         userToEdit.FirstName = userUpdateDto.FirstName;
         userToEdit.LastName = userUpdateDto.LastName;
-        userToEdit.Email = userUpdateDto.Email;
-        userToEdit.DateofBirth = userUpdateDto.DateofBirth;
-        userToEdit.Gender = userUpdateDto.Gender;
-        userToEdit.Height = userUpdateDto.Height;
-        userToEdit.Weight = userUpdateDto.Weight;
-        userToEdit.UpdatedDate = DateTimeOffset.UtcNow;
         userToEdit.UserName = userUpdateDto.UserName;
         userToEdit.Email = userUpdateDto.Email;
         userToEdit.DateofBirth = userUpdateDto.DateofBirth;
@@ -267,12 +250,6 @@ public class UsersController : ControllerBase
             Id = userToEdit.Id,
             FirstName = userToEdit.FirstName,
             LastName = userToEdit.LastName,
-            Email = userToEdit.Email,
-            DateofBirth = userToEdit.DateofBirth,
-            Gender = userToEdit.Gender,
-            Height = userToEdit.Height,
-            Weight = userToEdit.Weight,
-            UpdatedDate = userToEdit.UpdatedDate,
             UserName = userToEdit.UserName,
             Email = userToEdit.Email,
             DateofBirth = userToEdit.DateofBirth,
