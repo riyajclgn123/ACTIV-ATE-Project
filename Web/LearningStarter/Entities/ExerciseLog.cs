@@ -36,7 +36,6 @@ public class ExerciseLogGetDto
 public class ExerciseLogCreateDto
 {
     public int ExerciseId { get; set; }
-    public string ExerciseName { get; set; }
     public int UserId { get; set; }
     public  string Duration { get; set; }
     public int Rep { get; set; }
@@ -47,9 +46,8 @@ public class ExerciseLogCreateDto
 public class ExerciseLogUpdateDto
 {
     public int ExerciseId { get; set; }
-    public string ExerciseName { get; set; }
     public int UserId { get; set; }
-    public TimeSpan Duration { get; set; }
+    public string Duration { get; set; }
     public int Rep { get; set; }
     public DateTimeOffset UpdatedDate { get; set; }
 

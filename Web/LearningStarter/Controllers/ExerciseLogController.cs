@@ -174,21 +174,39 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         {
             response.AddError("userId", "UserId cannot be empty.");
         }
-
-        if (updateDto.Duration <= TimeSpan.Zero)
+        var exercise = _context.Set<Exercise>().FirstOrDefault(f => f.Id == updateDto.ExerciseId);
+        if (exercise == null)
         {
-            response.AddError("duration", "Duration must be greater than zero.");
+            response.AddError("exercise", "Exercise not found.");
+            return NotFound(response);
+        }
+
+        if (!TimeSpan.TryParse(updateDto.Duration, out TimeSpan duration))
+        {
+            response.AddError("duration", "Invalid duration format. Please use the format 'hh:mm:ss'.");
+            return BadRequest(response);
+        }
+        var user = _context.Users.FirstOrDefault(u => u.Id == updateDto.UserId);
+        if (user == null)
+        {
+            response.AddError("user", "User not found.");
+            return NotFound(response);
         }
 
         if (response.HasErrors)
         {
             return BadRequest(response);
         }
+        double metValue = 8.0; // Placeholder MET value; replace with actual MET value based on exercise
+
+        // Calculate calories burned
+        decimal caloriesBurned = ExerciseCalorieCalculator.CalculateCaloriesBurned(duration, user.Weight, metValue);
 
         exerciselog.ExerciseId = updateDto.ExerciseId;
         exerciselog.UserId = updateDto.UserId;
         exerciselog.Rep = updateDto.Rep;
-        exerciselog.Duration = updateDto.Duration;
+        exerciselog.Duration = duration;
+        exerciselog.CaloriesBurned = caloriesBurned;
         exerciselog.UpdatedDate = DateTime.UtcNow;
 
         _context.SaveChanges();
