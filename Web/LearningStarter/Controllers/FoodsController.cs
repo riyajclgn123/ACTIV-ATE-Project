@@ -23,11 +23,11 @@ public class FoodsController : ControllerBase
         
         var data = _dataContext
             .Set<Foods>()
-            .Select(foods => new FoodsGetDto
+            .Select(food => new FoodsGetDto
             {
-                Id = foods.Id,
-                Name = foods.Name,
-                Description = foods.Description,
+                Id = food.Id,
+                Name = food.Name,
+                Description = food.Description,
             })
             .ToList();
 
@@ -35,10 +35,41 @@ public class FoodsController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id)
+    {
+        var response = new Response();
+        
+        var data = _dataContext
+            .Set<Foods>()
+            .Select(food => new FoodsGetDto
+            {
+                Id = food.Id,
+                Name = food.Name,
+                Description = food.Description,
+            })
+            .FirstOrDefault(food => food.Id == id);
+
+        response.Data = data;
+        return Ok(response);
+    }
+    
+
     [HttpPost]
     public IActionResult Create([FromBody] FoodsCreateDto createDto)
     {
         var response = new Response();
+
+        if (string.IsNullOrEmpty(createDto.Name))
+        {
+            response.AddError(nameof(createDto.Name), "Name must not be empty");
+        }
+
+        if (response.HasErrors)
+        {
+            return BadRequest(response);
+        }
+        
 
         var FoodToCreate = new Foods
         {
@@ -59,6 +90,76 @@ public class FoodsController : ControllerBase
         response.Data = foodToReturn;
 
         return Created("", response);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult Update([FromBody] FoodsUpdateDto updateDto, int id)
+    {
+        var response = new Response();
+        
+        if (string.IsNullOrEmpty(updateDto.Name))
+        {
+            response.AddError(nameof(updateDto.Name), "Name must not be empty");
+        }
+
+        if (response.HasErrors)
+        {
+            return BadRequest(response);
+        }
+
+        var foodToUpdate = _dataContext.Set<Foods>()
+            .FirstOrDefault(food => food.Id == id);
+        
+        if (foodToUpdate == null)
+        {
+            response.AddError("id", "Food not found");
+        }
+
+        if (response.HasErrors)
+        {
+            return BadRequest(response);
+        }
+
+        foodToUpdate.Name = updateDto.Name;
+        foodToUpdate.Description = updateDto.Description;
+
+        _dataContext.SaveChanges();
+
+        var foodToReturn = new FoodsGetDto
+        {
+            Id = foodToUpdate.Id,
+            Name = updateDto.Name,
+            Description = foodToUpdate.Description,
+        };
+
+        response.Data = foodToReturn;
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        var response = new Response();
+
+        var foodToDelete = _dataContext.Set<Foods>()
+            .FirstOrDefault(food => food.Id == id);
+
+        if (foodToDelete == null)
+        {
+            response.AddError("id", "Food not found");
+        }
+
+        if (response.HasErrors)
+        {
+            return BadRequest(response);
+        }
+
+        _dataContext.Set<Foods>().Remove(foodToDelete);
+        _dataContext.SaveChanges();
+
+        response.Data = true;
+        return Ok(response);
     }
     
     
