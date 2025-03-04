@@ -21,7 +21,7 @@ public class FoodsController : ControllerBase
     {
         var response = new Response();
         
-        var data = _dataContext
+        var foodsToReturn = _dataContext
             .Set<Foods>()
             .Select(food => new FoodsGetDto
             {
@@ -31,7 +31,7 @@ public class FoodsController : ControllerBase
             })
             .ToList();
 
-        response.Data = data;
+        response.Data = foodsToReturn;
         return Ok(response);
     }
 
@@ -40,7 +40,7 @@ public class FoodsController : ControllerBase
     {
         var response = new Response();
         
-        var data = _dataContext
+        var foodToReturn = _dataContext
             .Set<Foods>()
             .Select(food => new FoodsGetDto
             {
@@ -49,8 +49,14 @@ public class FoodsController : ControllerBase
                 Description = food.Description,
             })
             .FirstOrDefault(food => food.Id == id);
-
-        response.Data = data;
+        
+        if (foodToReturn == null)
+        {
+            response.AddError("id", "Food not found");
+            return BadRequest(response);
+        }
+        
+        response.Data = foodToReturn;
         return Ok(response);
     }
     
@@ -63,28 +69,23 @@ public class FoodsController : ControllerBase
         if (string.IsNullOrEmpty(createDto.Name))
         {
             response.AddError(nameof(createDto.Name), "Name must not be empty");
-        }
-
-        if (response.HasErrors)
-        {
             return BadRequest(response);
         }
-        
 
-        var FoodToCreate = new Foods
+        var foodToCreate = new Foods
         {
             Name = createDto.Name,
             Description = createDto.Description,
         };
 
-        _dataContext.Set<Foods>().Add(FoodToCreate);
+        _dataContext.Set<Foods>().Add(foodToCreate);
         _dataContext.SaveChanges();
 
         var foodToReturn = new FoodsGetDto
         {
-            Id = FoodToCreate.Id,
-            Name = FoodToCreate.Name,
-            Description = FoodToCreate.Description,
+            Id = foodToCreate.Id,
+            Name = foodToCreate.Name,
+            Description = foodToCreate.Description,
         };
 
         response.Data = foodToReturn;
@@ -100,10 +101,6 @@ public class FoodsController : ControllerBase
         if (string.IsNullOrEmpty(updateDto.Name))
         {
             response.AddError(nameof(updateDto.Name), "Name must not be empty");
-        }
-
-        if (response.HasErrors)
-        {
             return BadRequest(response);
         }
 
@@ -113,13 +110,9 @@ public class FoodsController : ControllerBase
         if (foodToUpdate == null)
         {
             response.AddError("id", "Food not found");
-        }
-
-        if (response.HasErrors)
-        {
             return BadRequest(response);
         }
-
+        
         foodToUpdate.Name = updateDto.Name;
         foodToUpdate.Description = updateDto.Description;
 
@@ -148,10 +141,6 @@ public class FoodsController : ControllerBase
         if (foodToDelete == null)
         {
             response.AddError("id", "Food not found");
-        }
-
-        if (response.HasErrors)
-        {
             return BadRequest(response);
         }
 
