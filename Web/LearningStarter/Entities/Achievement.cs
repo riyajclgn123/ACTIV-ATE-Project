@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningStarter.Entities;
 
-public class Achievements
+public class Achievement
 {
    public int Id { get; set; } 
    public int UserId { get; set; }
@@ -14,7 +14,7 @@ public class Achievements
    public String Description { get; set; }
 }
 
-public class AchievmentsGetDto
+public class AchievementGetDto
 {
    public int Id { get; set; } 
    public int UserId { get; set; }
@@ -23,7 +23,7 @@ public class AchievmentsGetDto
    public String Description { get; set; }
 }
 
-public class AchievmentsCreateDto
+public class AchievementCreateDto
 {
    public int UserId { get; set; }
    public string Type { get; set; }
@@ -31,7 +31,7 @@ public class AchievmentsCreateDto
    public String Description { get; set; }
 }
 
-public class AchievmentsUpdateDto
+public class AchievementUpdateDto
 {
    public int UserId { get; set; }
    public string Type { get; set; }
@@ -40,10 +40,10 @@ public class AchievmentsUpdateDto
 }
    
 
-public class AchievmentsEntityConfiguration : IEntityTypeConfiguration<Achievements>
+public class AchievmentEntityConfiguration : IEntityTypeConfiguration<Achievement>
 {
-   public void Configure(EntityTypeBuilder<Achievements> builder)
+   public void Configure(EntityTypeBuilder<Achievement> builder)
    {
-      builder.ToTable("Achievements");
+      builder.ToTable("Achievement");
    }
 }

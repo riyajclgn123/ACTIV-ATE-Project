@@ -23,8 +23,8 @@ public class AchievementsController : ControllerBase
         var response = new Response();
         
         var data = _dataContext
-            .Set<Achievements>()
-            .Select(achievements => new AchievmentsGetDto
+            .Set<Achievement>()
+            .Select(achievements => new AchievementGetDto
             {
                 Id = achievements.Id,
                 UserId = achievements.UserId,
@@ -46,8 +46,8 @@ public class AchievementsController : ControllerBase
         var response = new Response();
         
         var data = _dataContext
-            .Set<Achievements>()
-            .Select(achievements => new AchievmentsGetDto
+            .Set<Achievement>()
+            .Select(achievements => new AchievementGetDto
             {
                 Id = achievements.Id,
                 UserId = achievements.UserId,
@@ -64,7 +64,7 @@ public class AchievementsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] AchievmentsCreateDto createDto)
+    public IActionResult Create([FromBody] AchievementCreateDto createDto)
     {
         var response = new Response();
 
@@ -83,17 +83,17 @@ public class AchievementsController : ControllerBase
             return BadRequest(response);
         }
         
-        var achievementsToCreate = new Achievements
+        var achievementsToCreate = new Achievement
         {
             UserId = createDto.UserId,
             Type = createDto.Type,
             Description = createDto.Description,
             CreateDate = createDto.CreateDate,
         };
-        _dataContext.Set<Achievements>().Add(achievementsToCreate);
+        _dataContext.Set<Achievement>().Add(achievementsToCreate);
         _dataContext.SaveChanges();
 
-        var achievementsToReturn = new Achievements
+        var achievementsToReturn = new Achievement
         {
             Id = achievementsToCreate.Id,
             UserId = achievementsToCreate.UserId,
@@ -106,7 +106,7 @@ public class AchievementsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] AchievmentsUpdateDto updateDto)
+    public IActionResult Update(int id, [FromBody] AchievementUpdateDto updateDto)
     {
         var response = new Response();
         
@@ -120,7 +120,7 @@ public class AchievementsController : ControllerBase
             response.AddError(nameof(updateDto.Description),"Description is required");
         }
         
-        var achievementsToUpdate = _dataContext.Set<Achievements>()
+        var achievementsToUpdate = _dataContext.Set<Achievement>()
             .FirstOrDefault(achievements => achievements.Id == id);
         
         if (achievementsToUpdate == null)
@@ -132,14 +132,16 @@ public class AchievementsController : ControllerBase
         {
             return BadRequest(response);
         }
-        
+        achievementsToUpdate.UserId = updateDto.UserId;
         achievementsToUpdate.Type = updateDto.Type;
         achievementsToUpdate.Description = updateDto.Description;
         achievementsToUpdate.CreateDate = updateDto.CreateDate;
         _dataContext.SaveChanges();
 
-        var achievementsToReturn = new AchievmentsGetDto
+        var achievementsToReturn = new AchievementGetDto
         {
+            Id = achievementsToUpdate.Id,
+            UserId = achievementsToUpdate.UserId,
             Type = achievementsToUpdate.Type,
             Description = achievementsToUpdate.Description,
             CreateDate = achievementsToUpdate.CreateDate,
@@ -153,7 +155,7 @@ public class AchievementsController : ControllerBase
     public IActionResult Delete(int id)
     {
         var response = new Response();
-        var achievementsToDelete = _dataContext.Set<Achievements>()
+        var achievementsToDelete = _dataContext.Set<Achievement>()
             .FirstOrDefault(achievements => achievements.Id == id);
 
         if (achievementsToDelete == null)
@@ -166,7 +168,7 @@ public class AchievementsController : ControllerBase
             return BadRequest(response);
         }
 
-        _dataContext.Set<Achievements>().Remove(achievementsToDelete);
+        _dataContext.Set<Achievement>().Remove(achievementsToDelete);
         _dataContext.SaveChanges();
 
         response.Data = true;
