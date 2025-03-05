@@ -3,36 +3,36 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningStarter.Entities;
 
-public class Foods
+public class Food
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
 }
 
-public class FoodsGetDto
+public class FoodGetDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
 }
 
-public class FoodsCreateDto
+public class FoodCreateDto
 {
     public string Name { get; set; }
     public string Description { get; set; }
 }
 
-public class FoodsUpdateDto
+public class FoodUpdateDto
 {
     public string Name { get; set; }
     public string Description { get; set; }
 }
 
-public class FoodsEntityTypeConfiguration : IEntityTypeConfiguration<Foods>
+public class FoodsEntityTypeConfiguration : IEntityTypeConfiguration<Food>
 {
-    public void Configure(EntityTypeBuilder<Foods> builder)
+    public void Configure(EntityTypeBuilder<Food> builder)
     {
-        builder.ToTable("Foods");
+        builder.ToTable("Food");
     }
 }

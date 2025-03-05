@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearningStarter.Controllers;
 
 [ApiController]
-[Route("api/foods")]
+[Route("api/food")]
 public class FoodsController : ControllerBase
 {
     private readonly DataContext _dataContext;
@@ -22,8 +22,8 @@ public class FoodsController : ControllerBase
         var response = new Response();
         
         var foodsToReturn = _dataContext
-            .Set<Foods>()
-            .Select(food => new FoodsGetDto
+            .Set<Food>()
+            .Select(food => new FoodGetDto
             {
                 Id = food.Id,
                 Name = food.Name,
@@ -41,8 +41,8 @@ public class FoodsController : ControllerBase
         var response = new Response();
         
         var foodToReturn = _dataContext
-            .Set<Foods>()
-            .Select(food => new FoodsGetDto
+            .Set<Food>()
+            .Select(food => new FoodGetDto
             {
                 Id = food.Id,
                 Name = food.Name,
@@ -62,7 +62,7 @@ public class FoodsController : ControllerBase
     
 
     [HttpPost]
-    public IActionResult Create([FromBody] FoodsCreateDto createDto)
+    public IActionResult Create([FromBody] FoodCreateDto createDto)
     {
         var response = new Response();
 
@@ -72,16 +72,16 @@ public class FoodsController : ControllerBase
             return BadRequest(response);
         }
 
-        var foodToCreate = new Foods
+        var foodToCreate = new Food
         {
             Name = createDto.Name,
             Description = createDto.Description,
         };
 
-        _dataContext.Set<Foods>().Add(foodToCreate);
+        _dataContext.Set<Food>().Add(foodToCreate);
         _dataContext.SaveChanges();
 
-        var foodToReturn = new FoodsGetDto
+        var foodToReturn = new FoodGetDto
         {
             Id = foodToCreate.Id,
             Name = foodToCreate.Name,
@@ -94,7 +94,7 @@ public class FoodsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update([FromBody] FoodsUpdateDto updateDto, int id)
+    public IActionResult Update([FromBody] FoodUpdateDto updateDto, int id)
     {
         var response = new Response();
         
@@ -104,7 +104,7 @@ public class FoodsController : ControllerBase
             return BadRequest(response);
         }
 
-        var foodToUpdate = _dataContext.Set<Foods>()
+        var foodToUpdate = _dataContext.Set<Food>()
             .FirstOrDefault(food => food.Id == id);
         
         if (foodToUpdate == null)
@@ -118,7 +118,7 @@ public class FoodsController : ControllerBase
 
         _dataContext.SaveChanges();
 
-        var foodToReturn = new FoodsGetDto
+        var foodToReturn = new FoodGetDto
         {
             Id = foodToUpdate.Id,
             Name = updateDto.Name,
@@ -135,7 +135,7 @@ public class FoodsController : ControllerBase
     {
         var response = new Response();
 
-        var foodToDelete = _dataContext.Set<Foods>()
+        var foodToDelete = _dataContext.Set<Food>()
             .FirstOrDefault(food => food.Id == id);
 
         if (foodToDelete == null)
@@ -144,7 +144,7 @@ public class FoodsController : ControllerBase
             return BadRequest(response);
         }
 
-        _dataContext.Set<Foods>().Remove(foodToDelete);
+        _dataContext.Set<Food>().Remove(foodToDelete);
         _dataContext.SaveChanges();
 
         response.Data = true;
