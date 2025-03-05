@@ -11,6 +11,7 @@ public class WeightLog
     public decimal Value { get; set; }
     public DateTimeOffset LogDate { get; set; }
 }
+
 public class WeightLogEntityConfiguration : IEntityTypeConfiguration<WeightLog>
 {
    public void Configure(EntityTypeBuilder<WeightLog> builder)
@@ -38,12 +39,7 @@ public class WeightLogUpdateDto
    public decimal Value { get; set; }
    public DateTimeOffset LogDate { get; set; }
 }
-public class WeightLogDeleteDto
-{
-   public int UserId { get; set; }
-   public decimal Value  { get; set; }
-   public DateTimeOffset LogDate { get; set; }
-}
+
 
 
 

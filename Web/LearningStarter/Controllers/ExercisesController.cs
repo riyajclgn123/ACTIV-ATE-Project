@@ -34,6 +34,21 @@ public class ExerciseController : ControllerBase
         response.Data = data;
         return Ok(response);
     }
+    [HttpGet("{id}")]
+    public IActionResult GetExerciseById(int id)
+    {
+        var exercises = _context
+            .Set<Exercise>()
+            .Select(d => new ExerciseGetDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+            })
+            .FirstOrDefault(d => d.Id == id);
+
+        return Ok(exercises);
+    }
 
 
     [HttpPut("{id}")]
