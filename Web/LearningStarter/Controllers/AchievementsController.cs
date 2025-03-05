@@ -18,7 +18,7 @@ public class AchievementsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult SGetAll()
     {
         var response = new Response();
         
