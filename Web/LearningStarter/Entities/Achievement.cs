@@ -11,7 +11,7 @@ public class Achievement
    public User User { get; set; }
    public string Type { get; set; }
    public DateTimeOffset CreateDate { get; set; }
-   public String Description { get; set; }
+   public string Description { get; set; }
 }
 
 public class AchievementGetDto
@@ -20,7 +20,7 @@ public class AchievementGetDto
    public int UserId { get; set; }
    public string Type { get; set; }
    public DateTimeOffset CreateDate { get; set; }
-   public String Description { get; set; }
+   public string Description { get; set; }
 }
 
 public class AchievementCreateDto
@@ -28,7 +28,7 @@ public class AchievementCreateDto
    public int UserId { get; set; }
    public string Type { get; set; }
    public DateTimeOffset CreateDate { get; set; }
-   public String Description { get; set; }
+   public string Description { get; set; }
 }
 
 public class AchievementUpdateDto
@@ -36,7 +36,7 @@ public class AchievementUpdateDto
    public int UserId { get; set; }
    public string Type { get; set; }
    public DateTimeOffset CreateDate { get; set; }
-   public String Description { get; set; }
+   public string Description { get; set; }
 }
    
 
