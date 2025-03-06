@@ -108,8 +108,8 @@ public class ExerciseLogController : ControllerBase
         return Ok(response);
     }
     
-    [HttpGet("user/{userId}/calories-per-day")]
-    public IActionResult GetDailyCalorieBurnedByUser(int userId)
+    [HttpGet("/api/users/{userId}/calories-per-day")]
+    public IActionResult GetDailyCalorieBurnedByUser(int userId, [FromQuery] DateTime? date = null)
     {
         var response = new Response();
 
@@ -120,7 +120,7 @@ public class ExerciseLogController : ControllerBase
             return NotFound(response);
         }
 
-        var dailyCalories = _context
+        var query = _context
             .Set<ExerciseLog>()
             .Where(d => d.UserId == userId)
             .GroupBy(d => d.CreateDate.Date) // Group by date (ignoring time)
@@ -128,10 +128,15 @@ public class ExerciseLogController : ControllerBase
             {
                 Date = g.Key,
                 TotalCaloriesBurned = g.Sum(d => d.CaloriesBurned)
-            })
-            .OrderByDescending(d => d.Date)
-            .ToList();
+            });
 
+        if (date.HasValue)
+        {
+            query = query.Where(d => d.Date == date.Value.Date); // Filter for a specific date
+        }
+
+        var dailyCalories = query.OrderByDescending(d => d.Date).ToList();
+    
         response.Data = dailyCalories;
         return Ok(response);
     }
