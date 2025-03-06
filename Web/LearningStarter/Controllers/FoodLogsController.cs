@@ -89,7 +89,8 @@ public class FoodLogsController : ControllerBase
     {
         var response = new Response();
 
-        var query = _context.FoodLogs
+        var query = _context
+            .Set<FoodLog>()
             .Include(fl => fl.Food)
             .Where(x => x.UserId == userId);
 
