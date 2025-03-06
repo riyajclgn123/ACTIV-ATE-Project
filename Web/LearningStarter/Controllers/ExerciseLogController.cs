@@ -72,6 +72,70 @@ public class ExerciseLogController : ControllerBase
         return Ok(exerciselogs);
     }
     
+    [HttpGet("user/{userId}")]
+    public IActionResult GetExerciseLogsByUserId(int userId)
+    {
+        var response = new Response();
+
+        var userExists = _context
+            .Set<User>()
+            .Any(u => u.Id == userId);
+        if (!userExists)
+        {
+            response.AddError("userId", "User not found.");
+            return NotFound(response);
+        }
+
+        var exerciselogs = _context
+            .Set<ExerciseLog>()
+            .Include(d => d.Exercise)
+            .Where(d => d.UserId == userId)
+            .Select(d => new ExerciseLogGetDto
+            {
+                Id = d.Id,
+                UserId = d.UserId,
+                ExerciseId = d.ExerciseId,
+                ExerciseName = d.Exercise.Name,
+                Duration = d.Duration,
+                Rep = d.Rep,
+                CaloriesBurned = d.CaloriesBurned,
+                CreateDate = d.CreateDate,
+                UpdatedDate = d.UpdatedDate,
+            })
+            .ToList();
+
+        response.Data = exerciselogs;
+        return Ok(response);
+    }
+    
+    [HttpGet("user/{userId}/calories-per-day")]
+    public IActionResult GetDailyCalorieBurnedByUser(int userId)
+    {
+        var response = new Response();
+
+        var userExists = _context.Users.Any(u => u.Id == userId);
+        if (!userExists)
+        {
+            response.AddError("userId", "User not found.");
+            return NotFound(response);
+        }
+
+        var dailyCalories = _context
+            .Set<ExerciseLog>()
+            .Where(d => d.UserId == userId)
+            .GroupBy(d => d.CreateDate.Date) // Group by date (ignoring time)
+            .Select(g => new 
+            {
+                Date = g.Key,
+                TotalCaloriesBurned = g.Sum(d => d.CaloriesBurned)
+            })
+            .OrderByDescending(d => d.Date)
+            .ToList();
+
+        response.Data = dailyCalories;
+        return Ok(response);
+    }
+    
     [HttpPost]
 public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto)
 {
