@@ -7,31 +7,27 @@ namespace LearningStarter.Entities;
 public class NutrientTypes
 {
     public int Id { get; set; }
-    public string name { get; set; }
-    public DateTimeOffset createdAt { get; set; }
-    public DateTimeOffset updatedAt { get; set; }
+    public string Name { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
 }
 
 public class NutrientTypesGetDto
 {
     public int Id { get; set; }
-    public string name { get; set; }
-    public DateTimeOffset createdAt { get; set; }
-    public DateTimeOffset updatedAt { get; set; }
+    public string Name { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
 }
 
 public class NutrientTypesCreateDto
 {
-    public string name { get; set; }
-    public DateTimeOffset createdAt { get; set; }
-    public DateTimeOffset updatedAt { get; set; }
+    public string Name { get; set; }
 }
 
 public class NutrientTypesUpdateDto
 {
-    public string name { get; set; }
-    public DateTimeOffset createdAt { get; set; }
-    public DateTimeOffset updatedAt { get; set; }
+    public string Name { get; set; }
 }
 
 public class NutrientTypesTypeConfiguration : IEntityTypeConfiguration<NutrientTypes>
