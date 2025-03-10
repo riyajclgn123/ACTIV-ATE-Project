@@ -23,8 +23,8 @@ public class NutrientTypesController : ControllerBase
         var response = new Response();
         
         var nutrientTypeToReturn = _dataContext
-            .Set<NutrientTypes>()
-            .Select(nutrientType => new NutrientTypesGetDto
+            .Set<NutrientType>()
+            .Select(nutrientType => new NutrientTypeGetDto
             {
                 Id = nutrientType.Id,
                 Name = nutrientType.Name,
@@ -43,8 +43,8 @@ public class NutrientTypesController : ControllerBase
         var response = new Response();
         
         var nutrientTypeToReturn = _dataContext
-            .Set<NutrientTypes>()
-            .Select(nutrientType => new NutrientTypesGetDto
+            .Set<NutrientType>()
+            .Select(nutrientType => new NutrientTypeGetDto
             {
                 Id = nutrientType.Id,
                 Name = nutrientType.Name,
@@ -65,7 +65,7 @@ public class NutrientTypesController : ControllerBase
     
 
     [HttpPost]
-    public IActionResult Create([FromBody] NutrientTypesCreateDto createDto)
+    public IActionResult Create([FromBody] NutrientTypeCreateDto createDto)
     {
         var response = new Response();
 
@@ -75,17 +75,17 @@ public class NutrientTypesController : ControllerBase
             return BadRequest(response);
         }
 
-        var nutrientTypeToCreate = new NutrientTypes
+        var nutrientTypeToCreate = new NutrientType
         {
             Name = createDto.Name,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = null,
         };
 
-        _dataContext.Set<NutrientTypes>().Add(nutrientTypeToCreate);
+        _dataContext.Set<NutrientType>().Add(nutrientTypeToCreate);
         _dataContext.SaveChanges();
 
-        var nutrientTypeToReturn = new NutrientTypesGetDto
+        var nutrientTypeToReturn = new NutrientTypeGetDto
         {
             Id = nutrientTypeToCreate.Id,
             Name = nutrientTypeToCreate.Name,
@@ -99,7 +99,7 @@ public class NutrientTypesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update([FromBody] NutrientTypesUpdateDto updateDto, int id)
+    public IActionResult Update([FromBody] NutrientTypeUpdateDto updateDto, int id)
     {
         var response = new Response();
         
@@ -109,7 +109,7 @@ public class NutrientTypesController : ControllerBase
             return BadRequest(response);
         }
 
-        var nutrientTypeToUpdate = _dataContext.Set<NutrientTypes>()
+        var nutrientTypeToUpdate = _dataContext.Set<NutrientType>()
             .FirstOrDefault(nutrientType => nutrientType.Id == id);
         
         if (nutrientTypeToUpdate == null)
@@ -123,7 +123,7 @@ public class NutrientTypesController : ControllerBase
 
         _dataContext.SaveChanges();
 
-        var nutrientTypeToReturn = new NutrientTypesGetDto
+        var nutrientTypeToReturn = new NutrientTypeGetDto
         {
             Id = nutrientTypeToUpdate.Id,
             Name = nutrientTypeToUpdate.Name,
@@ -141,7 +141,7 @@ public class NutrientTypesController : ControllerBase
     {
         var response = new Response();
 
-        var nutrientTypeToDelete = _dataContext.Set<NutrientTypes>()
+        var nutrientTypeToDelete = _dataContext.Set<NutrientType>()
             .FirstOrDefault(nutrientType => nutrientType.Id == id);
 
         if (nutrientTypeToDelete == null)
@@ -150,7 +150,7 @@ public class NutrientTypesController : ControllerBase
             return BadRequest(response);
         }
 
-        _dataContext.Set<NutrientTypes>().Remove(nutrientTypeToDelete);
+        _dataContext.Set<NutrientType>().Remove(nutrientTypeToDelete);
         _dataContext.SaveChanges();
 
         response.Data = true;

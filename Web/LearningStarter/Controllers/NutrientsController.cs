@@ -23,8 +23,8 @@ public class NutrientsController : ControllerBase
         var response = new Response();
         
         var nutrientToReturn = _dataContext
-            .Set<Nutrients>()
-            .Select(nutrient => new NutrientsGetDto
+            .Set<Nutrient>()
+            .Select(nutrient => new NutrientGetDto
             {
                 Id = nutrient.Id,
                 NutrientTypeId = nutrient.NutrientTypeId,
@@ -44,8 +44,8 @@ public class NutrientsController : ControllerBase
         var response = new Response();
         
         var nutrientToReturn = _dataContext
-            .Set<Nutrients>()
-            .Select(nutrient => new NutrientsGetDto
+            .Set<Nutrient>()
+            .Select(nutrient => new NutrientGetDto
             {
                 Id = nutrient.Id,
                 NutrientTypeId = nutrient.NutrientTypeId,
@@ -66,13 +66,13 @@ public class NutrientsController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult Create([FromBody] NutrientsCreateDto createDto)
+    public IActionResult Create([FromBody] NutrientCreateDto createDto)
     {
         var response = new Response();
 
         // TODO Add input validation here
 
-        var nutrientToCreate = new Nutrients
+        var nutrientToCreate = new Nutrient
         {
             NutrientTypeId = createDto.NutrientTypeId,
             FoodId = createDto.FoodId,
@@ -80,10 +80,10 @@ public class NutrientsController : ControllerBase
             Value = createDto.Value
         };
 
-        _dataContext.Set<Nutrients>().Add(nutrientToCreate);
+        _dataContext.Set<Nutrient>().Add(nutrientToCreate);
         _dataContext.SaveChanges();
 
-        var nutrientToReturn = new NutrientsGetDto
+        var nutrientToReturn = new NutrientGetDto
         {
             Id = nutrientToCreate.Id,
             NutrientTypeId = nutrientToCreate.NutrientTypeId,
@@ -97,13 +97,13 @@ public class NutrientsController : ControllerBase
     }
     
     [HttpPut("{id}")]
-    public IActionResult Update([FromBody] NutrientsUpdateDto updateDto, int id)
+    public IActionResult Update([FromBody] NutrientUpdateDto updateDto, int id)
     {
         var response = new Response();
         
         // TODO add input validation here
 
-        var nutrientToUpdate = _dataContext.Set<Nutrients>()
+        var nutrientToUpdate = _dataContext.Set<Nutrient>()
             .FirstOrDefault(nutrient => nutrient.Id == id);
         
         if (nutrientToUpdate == null)
@@ -119,7 +119,7 @@ public class NutrientsController : ControllerBase
 
         _dataContext.SaveChanges();
         
-        var nutrientToReturn = new NutrientsGetDto
+        var nutrientToReturn = new NutrientGetDto
         {
             Id = nutrientToUpdate.Id,
             NutrientTypeId = nutrientToUpdate.NutrientTypeId,
@@ -137,7 +137,7 @@ public class NutrientsController : ControllerBase
     {
         var response = new Response();
 
-        var nutrientToDelete = _dataContext.Set<Nutrients>()
+        var nutrientToDelete = _dataContext.Set<Nutrient>()
             .FirstOrDefault(nutrient => nutrient.Id == id);
 
         if (nutrientToDelete == null)
@@ -146,7 +146,7 @@ public class NutrientsController : ControllerBase
             return BadRequest(response);
         }
 
-        _dataContext.Set<Nutrients>().Remove(nutrientToDelete);
+        _dataContext.Set<Nutrient>().Remove(nutrientToDelete);
         _dataContext.SaveChanges();
 
         response.Data = true;

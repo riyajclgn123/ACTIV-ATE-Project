@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningStarter.Entities;
 
-public class NutrientTypes
+public class NutrientType
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -12,7 +12,7 @@ public class NutrientTypes
     public DateTimeOffset? UpdatedAt { get; set; }
 }
 
-public class NutrientTypesGetDto
+public class NutrientTypeGetDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -20,19 +20,19 @@ public class NutrientTypesGetDto
     public DateTimeOffset? UpdatedAt { get; set; }
 }
 
-public class NutrientTypesCreateDto
+public class NutrientTypeCreateDto
 {
     public string Name { get; set; }
 }
 
-public class NutrientTypesUpdateDto
+public class NutrientTypeUpdateDto
 {
     public string Name { get; set; }
 }
 
-public class NutrientTypesTypeConfiguration : IEntityTypeConfiguration<NutrientTypes>
+public class NutrientTypesTypeConfiguration : IEntityTypeConfiguration<NutrientType>
 {
-    public void Configure(EntityTypeBuilder<NutrientTypes> builder)
+    public void Configure(EntityTypeBuilder<NutrientType> builder)
     {
         builder.ToTable("NutrientTypes");
     }

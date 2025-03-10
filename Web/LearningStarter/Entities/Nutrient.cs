@@ -3,7 +3,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningStarter.Entities;
 
-public class Nutrients
+public class Nutrient
+{
+    public int Id { get; set; }
+    public int NutrientTypeId { get; set; }
+    
+    public NutrientType NutrientType { get; set; } = null!;
+    public int FoodId { get; set; }
+    public int Value { get; set; }
+    public string Unit { get; set; }
+}
+
+public class NutrientGetDto
 {
     public int Id { get; set; }
     public int NutrientTypeId { get; set; }
@@ -12,16 +23,7 @@ public class Nutrients
     public string Unit { get; set; }
 }
 
-public class NutrientsGetDto
-{
-    public int Id { get; set; }
-    public int NutrientTypeId { get; set; }
-    public int FoodId { get; set; }
-    public int Value { get; set; }
-    public string Unit { get; set; }
-}
-
-public class NutrientsCreateDto
+public class NutrientCreateDto
 {
     public int NutrientTypeId { get; set; }
     public int FoodId { get; set; }
@@ -29,7 +31,7 @@ public class NutrientsCreateDto
     public string Unit { get; set; }
 }
 
-public class NutrientsUpdateDto
+public class NutrientUpdateDto
 {
     public int NutrientTypeId { get; set; }
     public int FoodId { get; set; }
@@ -37,9 +39,9 @@ public class NutrientsUpdateDto
     public string Unit { get; set; }
 }
 
-public class NutrientsTypeConfiguration : IEntityTypeConfiguration<Nutrients>
+public class NutrientTypeConfiguration : IEntityTypeConfiguration<Nutrient>
 {
-    public void Configure(EntityTypeBuilder<Nutrients> builder)
+    public void Configure(EntityTypeBuilder<Nutrient> builder)
     {
         builder.ToTable("Nutrients");
     }
