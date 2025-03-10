@@ -29,7 +29,7 @@ public class FoodUpdateDto
     public string Description { get; set; }
 }
 
-public class FoodsEntityTypeConfiguration : IEntityTypeConfiguration<Food>
+public class FoodEntityTypeConfiguration : IEntityTypeConfiguration<Food>
 {
     public void Configure(EntityTypeBuilder<Food> builder)
     {
