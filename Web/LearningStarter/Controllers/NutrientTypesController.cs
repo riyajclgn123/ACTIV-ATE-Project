@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearningStarter.Controllers;
 
 [ApiController]
-[Route("api/nutrient-types")]
+[Route("api/nutrienttypes")]
 public class NutrientTypesController : ControllerBase
 {
     private readonly DataContext _dataContext;
