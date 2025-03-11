@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 namespace LearningStarter.Controllers;
 
 [ApiController]
-[Route("api/weightLogs")]
+[Route("api/weight-logs")]
 public class WeightLogController : ControllerBase
 {
     private readonly DataContext _context;

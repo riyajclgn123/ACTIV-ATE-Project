@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningStarter.Controllers;
 [ApiController]
-[Route("api/exerciselogs")]
+[Route("api/exercise-logs")]
 
 public class ExerciseLogsController : ControllerBase
 {

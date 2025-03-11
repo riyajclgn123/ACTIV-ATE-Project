@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LearningStarter.Controllers;
 
 [ApiController]
-[Route("api/foodlogs")]
+[Route("api/food-logs")]
 public class FoodLogsController : ControllerBase
 {
     private readonly DataContext _context;
