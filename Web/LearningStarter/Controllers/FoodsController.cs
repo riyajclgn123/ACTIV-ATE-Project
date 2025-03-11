@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearningStarter.Controllers;
 
 [ApiController]
-[Route("api/food")]
+[Route("api/foods")]
 public class FoodsController : ControllerBase
 {
     private readonly DataContext _dataContext;

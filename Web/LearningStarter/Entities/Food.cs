@@ -35,6 +35,6 @@ public class FoodEntityTypeConfiguration : IEntityTypeConfiguration<Food>
 {
     public void Configure(EntityTypeBuilder<Food> builder)
     {
-        builder.ToTable("Food");
+        builder.ToTable("Foods");
     }
 }
