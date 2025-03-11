@@ -12,6 +12,8 @@ public sealed class DataContext : IdentityDbContext<User, Role, int>
     {
     }
 public DbSet<ExerciseLog> ExerciseLogs { get; set; }
+public DbSet<WeightLog> WeightLogs { get; set; }
+public DbSet<Exercise> Exercises { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
