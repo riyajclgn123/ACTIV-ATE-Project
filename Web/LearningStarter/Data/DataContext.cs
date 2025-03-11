@@ -11,7 +11,10 @@ public sealed class DataContext : IdentityDbContext<User, Role, int>
         : base(options)
     {
     }
-   public DbSet<FoodLog> FoodLogs { get; set; }
+public DbSet<ExerciseLog> ExerciseLogs { get; set; }
+public DbSet<WeightLog> WeightLogs { get; set; }
+public DbSet<Exercise> Exercises { get; set; }
+ public DbSet<FoodLog> FoodLogs { get; set; }
    public DbSet<Food> Foods { get; set; }
    public DbSet<Nutrient> Nutrients { get; set; }
    public DbSet<NutrientType> NutrientTypes { get; set; }

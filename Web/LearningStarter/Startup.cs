@@ -155,8 +155,44 @@ public class Startup
 
         SeedRoles(dataContext, roleManager).Wait();
         SeedUsers(dataContext, userManager).Wait();
-        SeedFoods(dataContext);
+        SeedExercises(dataContext);
+          SeedFoods(dataContext);
         SeedNutrientTypes(dataContext);
+    }
+    
+    public static void SeedExercises(DataContext dataContext)
+    {
+        if (dataContext.Exercises.Any())
+        {
+            return;
+        }
+
+        var seededExercise1 = new Exercise
+        {
+            Name = "Dumb bell",
+            Description = "Big one",
+        };
+        var seededExercise2 = new Exercise
+        {
+            Name = "Leg press",
+            Description = "Flat bench",
+        };
+        var seededExercise3 = new Exercise
+        {
+            Name = "Chest press",
+            Description = "Inclined",
+        };
+        var seededExercise4 = new Exercise
+        {
+            Name = "Cardio",
+            Description = "Manual one",
+        };
+        
+        dataContext.Set<Exercise>().Add(seededExercise1);
+        dataContext.Set<Exercise>().Add(seededExercise2);
+        dataContext.Set<Exercise>().Add(seededExercise3);
+        dataContext.Set<Exercise>().Add(seededExercise4);
+        dataContext.SaveChanges();
     }
 
     public static void SeedFoods(DataContext dataContext)
