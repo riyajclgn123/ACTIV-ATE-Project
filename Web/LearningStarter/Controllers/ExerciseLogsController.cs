@@ -11,11 +11,11 @@ namespace LearningStarter.Controllers;
 [ApiController]
 [Route("api/exerciselogs")]
 
-public class ExerciseLogController : ControllerBase
+public class ExerciseLogsController : ControllerBase
 {
     private readonly DataContext _context;
 
-    public ExerciseLogController(DataContext context)
+    public ExerciseLogsController(DataContext context)
     {
         _context = context;
     }
@@ -76,7 +76,6 @@ public class ExerciseLogController : ControllerBase
     public IActionResult GetExerciseLogsByUserId(int userId)
     {
         var response = new Response();
-
         var userExists = _context
             .Set<User>()
             .Any(u => u.Id == userId);
@@ -85,7 +84,6 @@ public class ExerciseLogController : ControllerBase
             response.AddError("userId", "User not found.");
             return NotFound(response);
         }
-
         var exerciselogs = _context
             .Set<ExerciseLog>()
             .Include(d => d.Exercise)
@@ -103,7 +101,6 @@ public class ExerciseLogController : ControllerBase
                 UpdatedDate = d.UpdatedDate,
             })
             .ToList();
-
         response.Data = exerciselogs;
         return Ok(response);
     }
@@ -134,9 +131,7 @@ public class ExerciseLogController : ControllerBase
         {
             query = query.Where(d => d.Date == date.Value.Date); // Filter for a specific date
         }
-
         var dailyCalories = query.OrderByDescending(d => d.Date).ToList();
-    
         response.Data = dailyCalories;
         return Ok(response);
     }
@@ -157,16 +152,14 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         response.AddError("duration", "Invalid duration format. Please use the format 'hh:mm:ss'.");
         return BadRequest(response);
     }
-
-    // Check if the User exists
+    
     var user = _context.Users.FirstOrDefault(u => u.Id == createDto.UserId);
     if (user == null)
     {
         response.AddError("user", "User not found.");
         return NotFound(response);
     }
-
-    // Check if the Exercise exists
+    
     var exercise = _context
         .Set<Exercise>()
         .FirstOrDefault(f => f.Id == createDto.ExerciseId);
@@ -177,7 +170,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         return NotFound(response);
     }
 
-    double metValue = 8.0; // Placeholder MET value; replace with actual MET value based on exercise
+    double metValue = 8.0; 
 
     // Calculate calories burned
     decimal caloriesBurned = ExerciseCalorieCalculator.CalculateCaloriesBurned(duration, user.Weight, metValue);
@@ -266,9 +259,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         {
             return BadRequest(response);
         }
-        double metValue = 8.0; // Placeholder MET value; replace with actual MET value based on exercise
-
-        // Calculate calories burned
+        double metValue = 8.0; 
         decimal caloriesBurned = ExerciseCalorieCalculator.CalculateCaloriesBurned(duration, user.Weight, metValue);
 
         exerciselog.ExerciseId = updateDto.ExerciseId;

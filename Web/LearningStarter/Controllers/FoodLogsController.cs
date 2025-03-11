@@ -3,6 +3,7 @@ using System.Linq;
 using LearningStarter.Common;
 using LearningStarter.Data;
 using LearningStarter.Entities;
+using LearningStarter.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,10 +28,10 @@ public class FoodLogsController : ControllerBase
 
         response.Data = _context
             .Set<FoodLog>()
-            .Include(fl => fl.Food) // Include Food
-            .ThenInclude(f => f.Nutrients) // Include Nutrients for Food
-            .ThenInclude(n => n.NutrientType) // Include NutrientType for Nutrients
-            .Include(fl => fl.User) // Include User
+            .Include(fl => fl.Food) 
+            .ThenInclude(f => f.Nutrients) 
+            .ThenInclude(n => n.NutrientType) 
+            .Include(fl => fl.User) 
             .Select(x => new FoodLogGetDto
             {
                 Id = x.Id,
@@ -39,8 +40,9 @@ public class FoodLogsController : ControllerBase
                 FoodName = x.Food.Name,
                 ServingSize = x.ServingSize,
                 Calories = x.Calories,
-                // CaloriesPerServing = x.Food.Nutrients
-                //     .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0, // Fetch calories per serving
+                CaloriesPerServing = x.Food.Nutrients
+                    .FirstOrDefault(n => n.NutrientType.Name == "Calories") != null ? x.Food.Nutrients
+                    .FirstOrDefault(n => n.NutrientType.Name == "Calories").Value : 0, 
                 CreateDate = x.CreateDate,
                 UpdatedDate = x.UpdatedDate
             })
@@ -58,8 +60,8 @@ public class FoodLogsController : ControllerBase
 
         var foodLog = _context
             .Set<FoodLog>()
-            .Include(fl => fl.Food) // Include Food
-            .ThenInclude(f => f.Nutrients) // Include Nutrients for Food
+            .Include(fl => fl.Food) 
+            .ThenInclude(f => f.Nutrients) 
             .ThenInclude(n => n.NutrientType) 
             .Include(fl => fl.User)
             .FirstOrDefault(x => x.Id == id);
@@ -82,7 +84,7 @@ public class FoodLogsController : ControllerBase
             FoodName = foodLog.Food.Name,
             ServingSize = foodLog.ServingSize,
             CaloriesPerServing = foodLog.Food.Nutrients
-                .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0, // Fetch calor
+                .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0, 
             Calories = foodLog.Calories,
             CreateDate = foodLog.CreateDate,
             UpdatedDate = foodLog.UpdatedDate
@@ -103,6 +105,8 @@ public class FoodLogsController : ControllerBase
         var query = _context
             .Set<FoodLog>()
             .Include(fl => fl.Food)
+            .ThenInclude(f => f.Nutrients)
+            .ThenInclude(n => n.NutrientType)
             .Where(x => x.UserId == userId);
 
         if (date.HasValue)
@@ -121,6 +125,9 @@ public class FoodLogsController : ControllerBase
                 FoodId = x.FoodId,
                 FoodName = x.Food.Name,
                 ServingSize = x.ServingSize,
+                CaloriesPerServing = x.Food.Nutrients
+                    .FirstOrDefault(n => n.NutrientType.Name == "Calories") != null ? x.Food.Nutrients
+                    .FirstOrDefault(n => n.NutrientType.Name == "Calories").Value : 0, // Fetch calories per serving
                 Calories = x.Calories,
                 CreateDate = x.CreateDate,
                 UpdatedDate = x.UpdatedDate
@@ -131,56 +138,154 @@ public class FoodLogsController : ControllerBase
     }
 
     [HttpGet("user/{userId}/daily-calories")]
-    public IActionResult GetDailyCalories(
-        [FromRoute] int userId,
-        [FromQuery] DateTimeOffset date)
+public IActionResult GetDailyCalories(
+    [FromRoute] int userId,
+    [FromQuery] DateTimeOffset date)
+{
+    var response = new Response();
+    
+    var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+    if (user == null)
     {
-        var response = new Response();
-
-        // Filter by the specific date (ignoring time)
-        var startDate = date.Date;
-        var endDate = startDate.AddDays(1);
-
-        var foodLogs = _context.FoodLogs
-            .Include(fl => fl.Food)
-            .ThenInclude(f => f.Nutrients) // Include Nutrients for Food
-            .ThenInclude(n => n.NutrientType)
-            .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate < endDate)
-            .ToList();
-
-        if (foodLogs.Count == 0)
-        {
-            response.AddError("date", "No food logs found for this date.");
-            return NotFound(response);
-        }
-        
-
-        var totalCalories = foodLogs.Sum(x => x.Calories);
-        
-        var dailyCaloriesDto = new 
-        {
-            Date = date.Date,
-            TotalCalories = totalCalories,
-            FoodLogs = foodLogs.Select(x => new FoodLogGetDto
-            {
-                Id = x.Id,
-                UserId = x.UserId,
-                FoodId = x.FoodId,
-                FoodName = x.Food.Name,
-                ServingSize = x.ServingSize,
-                CaloriesPerServing = x.Food.Nutrients
-                    .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0, // Fetch calories per serving
-                Calories = x.Calories,
-                CreateDate = x.CreateDate,
-                UpdatedDate = x.UpdatedDate
-            }).ToList()
-        };
-
-        response.Data = dailyCaloriesDto;
-
-        return Ok(response);
+        response.AddError("userId", "User not found.");
+        return NotFound(response);
     }
 
+    var goal = _context.Goals.FirstOrDefault(g => g.UserId == userId);
+    if (goal == null)
+    {
+        response.AddError("goal", "No goal set for this user.");
+        return NotFound(response);
+    }
+
+    decimal dailyCalorieGoal;
+    try
+    {
+        dailyCalorieGoal = FoodCalorieCalculator.CalculateDailyCalorieGoal(
+            currentWeight: user.Weight,
+            height: user.Height,
+            dateOfBirth: user.DateofBirth,
+            gender: user.Gender,
+            activityLevel: goal.ActivityLevel,
+            targetWeight: goal.Value,
+            timePeriodInDays: goal.TimePeriod
+        );
+    }
+    catch (ArgumentException ex)
+    {
+        response.AddError("dateOfBirth", ex.Message);
+        return BadRequest(response);
+    }
+    
+    var startDate = date.Date;
+    var endDate = startDate.AddDays(1);
+
+    var foodLogs = _context.FoodLogs
+        .Include(fl => fl.Food)
+        .ThenInclude(f => f.Nutrients)
+        .ThenInclude(n => n.NutrientType)
+        .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate < endDate)
+        .ToList();
+
+    var totalCalories = foodLogs.Sum(x => x.Calories);
+    
+    string calorieStatus;
+    decimal calorieDifference = totalCalories - dailyCalorieGoal;
+
+    if (calorieDifference <= -200)
+    {
+        calorieStatus = "Less calories for today.";
+    }
+    else if (calorieDifference >= 100)
+    {
+        calorieStatus = "Eaten more calories for today.";
+    }
+    else
+    {
+        calorieStatus = "Calories are within the expected range.";
+    }
+    
+    var dailyCaloriesDto = new 
+    {
+        Date = date.Date,
+        DailyCalorieGoal = dailyCalorieGoal,
+        TotalCalories = totalCalories,
+        CalorieDifference = calorieDifference,
+        CalorieStatus = calorieStatus,
+        FoodLogs = foodLogs.Select(x => new FoodLogGetDto
+        {
+            Id = x.Id,
+            UserId = x.UserId,
+            FoodId = x.FoodId,
+            FoodName = x.Food.Name,
+            ServingSize = x.ServingSize,
+            CaloriesPerServing = x.Food.Nutrients
+                .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0,
+            Calories = x.Calories,
+            CreateDate = x.CreateDate,
+            UpdatedDate = x.UpdatedDate
+        }).ToList()
+    };
+
+    response.Data = dailyCaloriesDto;
+    return Ok(response);
+}
+    
+    [HttpGet("user/{userId}/daily-calorie-goal")]
+public IActionResult GetDailyCalorieGoal(
+    [FromRoute] int userId)
+{
+    var response = new Response();
+    
+    var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+    if (user == null)
+    {
+        response.AddError("userId", "User not found.");
+        return NotFound(response);
+    }
+    
+    var goal = _context.Goals.FirstOrDefault(g => g.UserId == userId);
+    if (goal == null)
+    {
+        response.AddError("goal", "No goal set for this user.");
+        return NotFound(response);
+    }
+
+    try
+    {
+        decimal dailyCalorieGoal = FoodCalorieCalculator.CalculateDailyCalorieGoal(
+            currentWeight: user.Weight, 
+            height: user.Height, 
+            dateOfBirth: user.DateofBirth, 
+            gender: user.Gender, 
+            activityLevel: goal.ActivityLevel, 
+            targetWeight: goal.Value, 
+            timePeriodInDays: goal.TimePeriod
+        );
+        
+        var result = new
+        {
+            UserId = userId,
+            DailyCalorieGoal = dailyCalorieGoal,
+            CurrentWeight = user.Weight,
+            TargetWeight = goal.Value,
+            Height = user.Height,
+            Age = FoodCalorieCalculator.CalculateAge(user.DateofBirth),
+            Gender = user.Gender,
+            ActivityLevel = goal.ActivityLevel,
+            TimePeriodInDays = goal.TimePeriod,
+        };
+
+        response.Data = result;
+        return Ok(response);
+    }
+    catch (ArgumentException ex)
+    {
+        response.AddError("dateOfBirth", ex.Message);
+        return BadRequest(response);
+    }
+}
+    
     [HttpPost]
     public IActionResult Create(
         [FromBody] FoodLogCreateDto foodLogCreateDto)
@@ -207,8 +312,6 @@ public class FoodLogsController : ControllerBase
             return BadRequest(response);
         }
         
-
-        // Get the food with its nutrient information
         var food = _context
             .Set<Food>()
             .Include(f => f.Nutrients)
@@ -220,8 +323,7 @@ public class FoodLogsController : ControllerBase
             response.AddError("foodId", "Food not found.");
             return BadRequest(response);
         }
-
-        // Find the Calories nutrient type
+        
         var calorieNutrient = food.Nutrients
             .FirstOrDefault(n => n.NutrientType.Name == "Calories");
 
@@ -230,8 +332,7 @@ public class FoodLogsController : ControllerBase
             response.AddError("calories", "Calorie information not found for this food.");
             return BadRequest(response);
         }
-
-        // Calculate the calories based on serving size
+        
         var totalCalories = calorieNutrient.Value * foodLogCreateDto.ServingSize;
 
         // Create the new food log
@@ -308,8 +409,7 @@ public class FoodLogsController : ControllerBase
         {
             return BadRequest(response);
         }
-
-        // Get the food with its nutrient information
+        
         var food = _context
             .Set<Food>()
             .Include(f => f.Nutrients)
@@ -321,8 +421,7 @@ public class FoodLogsController : ControllerBase
             response.AddError("foodId", "Food not found.");
             return BadRequest(response);
         }
-
-        // Find the Calories nutrient type
+        
         var calorieNutrient = food.Nutrients
             .FirstOrDefault(n => n.NutrientType.Name == "Calories");
 
@@ -331,8 +430,7 @@ public class FoodLogsController : ControllerBase
             response.AddError("calories", "Calorie information not found for this food.");
             return BadRequest(response);
         }
-
-        // Calculate the calories based on serving size
+        
         var totalCalories = calorieNutrient.Value * foodLogUpdateDto.ServingSize;
 
         foodLogToEdit.UserId = foodLogUpdateDto.UserId;

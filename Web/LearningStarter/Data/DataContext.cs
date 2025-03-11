@@ -18,6 +18,8 @@ public DbSet<Exercise> Exercises { get; set; }
    public DbSet<Food> Foods { get; set; }
    public DbSet<Nutrient> Nutrients { get; set; }
    public DbSet<NutrientType> NutrientTypes { get; set; }
+   public DbSet<Achievement> Achievements { get; set; }
+   public DbSet<Goal> Goals { get; set; }
    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

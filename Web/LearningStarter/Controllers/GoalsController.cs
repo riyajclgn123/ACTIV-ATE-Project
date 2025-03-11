@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace LearningStarter.Controllers;
 
 [ApiController]
-[Route("api/goal")]
-public class GoalController : ControllerBase
+[Route("api/goals")]
+public class GoalsController : ControllerBase
 {
     private readonly DataContext _dataContext;
 
-    public GoalController(DataContext dataContext)
+    public GoalsController(DataContext dataContext)
     {
         _dataContext = dataContext;
     }
@@ -35,6 +35,7 @@ public class GoalController : ControllerBase
                 CreateDate = goal.CreateDate,
                 UpdateDate = goal.UpdateDate,
                 Type = goal.Type,
+                ActivityLevel = goal.ActivityLevel,
 
             })
             .ToList();
@@ -60,6 +61,7 @@ public class GoalController : ControllerBase
                 CreateDate = goal.CreateDate,
                 UpdateDate = goal.UpdateDate,
                 Type = goal.Type,
+                ActivityLevel = goal.ActivityLevel,
             })
             .FirstOrDefault(goal => goal.Id == id);
         
@@ -72,6 +74,26 @@ public class GoalController : ControllerBase
     public IActionResult Create([FromBody] GoalCreateDto createDto)
     {
         var response = new Response();
+        
+        if (createDto.TimePeriod ==0)
+        {
+            response.AddError(nameof(createDto.TimePeriod), "TimePeriod is required"); 
+        }
+
+        if (string.IsNullOrEmpty(createDto.Type))
+        {
+            response.AddError(nameof(createDto.Type), "Type is required");
+        }
+        if (createDto == null || createDto.UserId == 0)
+        {
+            response.AddError("validation", " UserId are required.");
+        }
+
+        if (response.HasErrors)
+        {
+            return BadRequest(response);
+        }
+
 
         var goalToCreate = new Goal
         {
@@ -81,11 +103,12 @@ public class GoalController : ControllerBase
             CreateDate = createDto.CreateDate,
             UpdateDate = createDto.UpdateDate,
             Type = createDto.Type,
+            ActivityLevel = createDto.ActivityLevel,
         };
         _dataContext.Add(goalToCreate);
         _dataContext.SaveChanges();
 
-        var goalToReturn = new Goal
+        var goalToReturn = new GoalGetDto
         {
             Id = goalToCreate.Id,
             UserId = goalToCreate.UserId,
@@ -94,6 +117,7 @@ public class GoalController : ControllerBase
             CreateDate = goalToCreate.CreateDate,
             UpdateDate = goalToCreate.UpdateDate,
             Type = goalToCreate.Type,
+            ActivityLevel = goalToCreate.ActivityLevel,
         };
         response.Data = goalToReturn;
         return Created("", response);
@@ -104,7 +128,7 @@ public class GoalController : ControllerBase
     {
         var response = new Response();
 
-        if (string.IsNullOrEmpty(updateDto.TimePeriod))
+        if (updateDto.TimePeriod ==0)
         {
            response.AddError(nameof(updateDto.TimePeriod), "TimePeriod is required"); 
         }
@@ -126,21 +150,25 @@ public class GoalController : ControllerBase
         {
             return BadRequest(response);
         }
-        
+        GoalToUpdate.UserId= updateDto.UserId;
         GoalToUpdate.Value = updateDto.Value;
         GoalToUpdate.TimePeriod = updateDto.TimePeriod;
         GoalToUpdate.CreateDate = updateDto.CreateDate;
         GoalToUpdate.UpdateDate = updateDto.UpdateDate;
+        GoalToUpdate.Type = updateDto.Type;
+        GoalToUpdate.ActivityLevel = updateDto.ActivityLevel;
         _dataContext.SaveChanges();
 
         var goalToReturn = new GoalGetDto
         {
+            Id = updateDto.UserId,
             UserId = updateDto.UserId,
             Value = updateDto.Value,
             TimePeriod = updateDto.TimePeriod,
             CreateDate = updateDto.CreateDate,
             UpdateDate = updateDto.UpdateDate,
             Type = updateDto.Type,
+            ActivityLevel = updateDto.ActivityLevel,
         };
         response.Data = goalToReturn;
         return Ok(response);

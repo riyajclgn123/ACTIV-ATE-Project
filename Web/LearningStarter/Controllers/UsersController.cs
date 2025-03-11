@@ -37,6 +37,7 @@ public class UsersController : ControllerBase
                 UserName = x.UserName,
                 Email = x.Email,
                 DateofBirth = x.DateofBirth,
+                Gender = x.Gender,
                 Height = x.Height,
                 Weight = x.Weight,
                 CreateDate = x.CreateDate,
@@ -69,6 +70,7 @@ public class UsersController : ControllerBase
             UserName = user.UserName,
             Email = user.Email,
             DateofBirth = user.DateofBirth,
+            Gender = user.Gender,
             Height = user.Height,
             Weight = user.Weight,
             CreateDate = user.CreateDate,
@@ -117,6 +119,11 @@ public class UsersController : ControllerBase
             response.AddError("dateofBirth", "Date of birth cannot be empty.");
         }
         
+        if (string.IsNullOrEmpty(userCreateDto.Gender))
+        {
+            response.AddError("gender", "Gender cannot be empty.");
+        }
+        
         if (userCreateDto.Height == 0)
         {
             response.AddError("height", "Height cannot be empty.");
@@ -139,6 +146,7 @@ public class UsersController : ControllerBase
             UserName = userCreateDto.UserName,
             Email = userCreateDto.Email,
             DateofBirth = userCreateDto.DateofBirth,
+            Gender = userCreateDto.Gender,
             Height = userCreateDto.Height,
             Weight = userCreateDto.Weight,
             CreateDate = DateTimeOffset.UtcNow,
@@ -156,6 +164,7 @@ public class UsersController : ControllerBase
             UserName = userToCreate.UserName,
             Email = userToCreate.Email,
             DateofBirth = userToCreate.DateofBirth,
+            Gender = userToCreate.Gender,
             Height = userToCreate.Height,
             Weight = userToCreate.Weight,
             CreateDate = userToCreate.CreateDate,
@@ -217,6 +226,10 @@ public class UsersController : ControllerBase
         {
             response.AddError("dateofBirth", "Date of birth cannot be empty.");
         }
+        if (string.IsNullOrEmpty(userUpdateDto.Gender))
+        {
+            response.AddError("gender", "Gender cannot be empty.");
+        }
         
         if (userUpdateDto.Height == 0)
         {
@@ -238,6 +251,7 @@ public class UsersController : ControllerBase
         userToEdit.LastName = userUpdateDto.LastName;
         userToEdit.UserName = userUpdateDto.UserName;
         userToEdit.Email = userUpdateDto.Email;
+        userToEdit.Gender = userUpdateDto.Gender;
         userToEdit.DateofBirth = userUpdateDto.DateofBirth;
         userToEdit.Height = userUpdateDto.Height;
         userToEdit.Weight = userUpdateDto.Weight;
@@ -253,6 +267,7 @@ public class UsersController : ControllerBase
             UserName = userToEdit.UserName,
             Email = userToEdit.Email,
             DateofBirth = userToEdit.DateofBirth,
+            Gender = userToEdit.Gender,
             Height = userToEdit.Height,
             Weight = userToEdit.Weight,
             UpdatedDate = userToEdit.UpdatedDate,
