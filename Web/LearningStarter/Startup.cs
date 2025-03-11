@@ -155,7 +155,82 @@ public class Startup
 
         SeedRoles(dataContext, roleManager).Wait();
         SeedUsers(dataContext, userManager).Wait();
+        SeedFoods(dataContext);
+        SeedNutrientTypes(dataContext);
     }
+
+    public static void SeedFoods(DataContext dataContext)
+    {
+        if (dataContext.Foods.Any())
+        {
+            return;
+        }
+
+        var seededFood1 = new Food
+        {
+            Name = "Pizza",
+            Description = "Made of Chicken",
+        };
+        var seededFood2 = new Food
+        {
+            Name = "Burger",
+            Description = "Made of Chicken",
+        };
+        var seededFood3 = new Food
+        {
+            Name = "Biryani",
+            Description = "Made of Chicken and rice",
+        };
+        var seededFood4 = new Food
+        {
+            Name = "Momo",
+            Description = "Made of Chicken and wheat",
+        };
+        
+        dataContext.Set<Food>().Add(seededFood1);
+        dataContext.Set<Food>().Add(seededFood2);
+        dataContext.Set<Food>().Add(seededFood3);
+        dataContext.Set<Food>().Add(seededFood4);
+        dataContext.SaveChanges();
+    }
+  
+    
+    public static void SeedNutrientTypes(DataContext dataContext)
+    {
+        if (dataContext.NutrientTypes.Any())
+        {
+            return;
+        }
+
+        var seededNutrientType1 = new NutrientType
+        {
+            Name="Calories",
+        };
+        var seededNutrientType2 = new NutrientType
+        {
+            Name="Proteins",
+        };
+        var seededNutrientType3 = new NutrientType
+        {
+            Name="Carbohydrates",
+        };
+        var seededNutrientType4 = new NutrientType
+        {
+            Name="Sugars",
+        };
+        var seededNutrientType5 = new NutrientType
+        {
+            Name="Fibers",
+        };
+        dataContext.Set<NutrientType>().Add(seededNutrientType1);
+        dataContext.Set<NutrientType>().Add(seededNutrientType2);
+        dataContext.Set<NutrientType>().Add(seededNutrientType3);
+        dataContext.Set<NutrientType>().Add(seededNutrientType4);
+        dataContext.Set<NutrientType>().Add(seededNutrientType5);
+        dataContext.SaveChanges();
+    }
+
+
 
     private static async Task SeedUsers(DataContext dataContext, UserManager<User> userManager)
     {

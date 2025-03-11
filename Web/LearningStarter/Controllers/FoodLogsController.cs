@@ -27,15 +27,20 @@ public class FoodLogsController : ControllerBase
 
         response.Data = _context
             .Set<FoodLog>()
-            .Include(fl => fl.Food)
-            .Include(fl => fl.User)
+            .Include(fl => fl.Food) // Include Food
+            .ThenInclude(f => f.Nutrients) // Include Nutrients for Food
+            .ThenInclude(n => n.NutrientType) // Include NutrientType for Nutrients
+            .Include(fl => fl.User) // Include User
             .Select(x => new FoodLogGetDto
             {
                 Id = x.Id,
                 UserId = x.UserId,
                 FoodId = x.FoodId,
+                FoodName = x.Food.Name,
                 ServingSize = x.ServingSize,
                 Calories = x.Calories,
+                // CaloriesPerServing = x.Food.Nutrients
+                //     .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0, // Fetch calories per serving
                 CreateDate = x.CreateDate,
                 UpdatedDate = x.UpdatedDate
             })
@@ -43,7 +48,8 @@ public class FoodLogsController : ControllerBase
 
         return Ok(response);
     }
-
+    
+    
     [HttpGet("{id}")]
     public IActionResult GetById(
         [FromRoute] int id)
@@ -52,7 +58,9 @@ public class FoodLogsController : ControllerBase
 
         var foodLog = _context
             .Set<FoodLog>()
-            .Include(fl => fl.Food)
+            .Include(fl => fl.Food) // Include Food
+            .ThenInclude(f => f.Nutrients) // Include Nutrients for Food
+            .ThenInclude(n => n.NutrientType) 
             .Include(fl => fl.User)
             .FirstOrDefault(x => x.Id == id);
 
@@ -71,7 +79,10 @@ public class FoodLogsController : ControllerBase
             Id = foodLog.Id,
             UserId = foodLog.UserId,
             FoodId = foodLog.FoodId,
+            FoodName = foodLog.Food.Name,
             ServingSize = foodLog.ServingSize,
+            CaloriesPerServing = foodLog.Food.Nutrients
+                .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0, // Fetch calor
             Calories = foodLog.Calories,
             CreateDate = foodLog.CreateDate,
             UpdatedDate = foodLog.UpdatedDate
@@ -108,6 +119,7 @@ public class FoodLogsController : ControllerBase
                 Id = x.Id,
                 UserId = x.UserId,
                 FoodId = x.FoodId,
+                FoodName = x.Food.Name,
                 ServingSize = x.ServingSize,
                 Calories = x.Calories,
                 CreateDate = x.CreateDate,
@@ -131,6 +143,8 @@ public class FoodLogsController : ControllerBase
 
         var foodLogs = _context.FoodLogs
             .Include(fl => fl.Food)
+            .ThenInclude(f => f.Nutrients) // Include Nutrients for Food
+            .ThenInclude(n => n.NutrientType)
             .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate < endDate)
             .ToList();
 
@@ -139,6 +153,7 @@ public class FoodLogsController : ControllerBase
             response.AddError("date", "No food logs found for this date.");
             return NotFound(response);
         }
+        
 
         var totalCalories = foodLogs.Sum(x => x.Calories);
         
@@ -151,7 +166,10 @@ public class FoodLogsController : ControllerBase
                 Id = x.Id,
                 UserId = x.UserId,
                 FoodId = x.FoodId,
+                FoodName = x.Food.Name,
                 ServingSize = x.ServingSize,
+                CaloriesPerServing = x.Food.Nutrients
+                    .FirstOrDefault(n => n.NutrientType.Name == "Calories")?.Value ?? 0, // Fetch calories per serving
                 Calories = x.Calories,
                 CreateDate = x.CreateDate,
                 UpdatedDate = x.UpdatedDate
@@ -188,6 +206,7 @@ public class FoodLogsController : ControllerBase
         {
             return BadRequest(response);
         }
+        
 
         // Get the food with its nutrient information
         var food = _context
@@ -234,7 +253,9 @@ public class FoodLogsController : ControllerBase
             Id = foodLogToCreate.Id,
             UserId = foodLogToCreate.UserId,
             FoodId = foodLogToCreate.FoodId,
+            FoodName = foodLogToCreate.Food.Name,
             ServingSize = foodLogToCreate.ServingSize,
+            CaloriesPerServing = calorieNutrient.Value,
             Calories = foodLogToCreate.Calories,
             CreateDate = foodLogToCreate.CreateDate,
             UpdatedDate = foodLogToCreate.UpdatedDate
@@ -259,7 +280,7 @@ public class FoodLogsController : ControllerBase
         }
 
         var foodLogToEdit = _context
-            .Set<FoodLog>()
+            .Set<FoodLog>().Include(foodLog => foodLog.Food)
             .FirstOrDefault(x => x.Id == id);
 
         if (foodLogToEdit == null)
@@ -327,7 +348,9 @@ public class FoodLogsController : ControllerBase
             Id = foodLogToEdit.Id,
             UserId = foodLogToEdit.UserId,
             FoodId = foodLogToEdit.FoodId,
+            FoodName = foodLogToEdit.Food.Name,
             ServingSize = foodLogToEdit.ServingSize,
+            CaloriesPerServing = calorieNutrient.Value,
             Calories = foodLogToEdit.Calories,
             CreateDate = foodLogToEdit.CreateDate,
             UpdatedDate = foodLogToEdit.UpdatedDate

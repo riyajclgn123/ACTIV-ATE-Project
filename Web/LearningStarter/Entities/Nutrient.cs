@@ -8,8 +8,9 @@ public class Nutrient
     public int Id { get; set; }
     public int NutrientTypeId { get; set; }
     
-    public NutrientType NutrientType { get; set; } = null!;
+    public NutrientType NutrientType { get; set; } 
     public int FoodId { get; set; }
+    public Food Food { get; set; } 
     public int Value { get; set; }
     public string Unit { get; set; }
 }
@@ -39,7 +40,7 @@ public class NutrientUpdateDto
     public string Unit { get; set; }
 }
 
-public class NutrientTypeConfiguration : IEntityTypeConfiguration<Nutrient>
+public class NutrientEntityConfiguration : IEntityTypeConfiguration<Nutrient>
 {
     public void Configure(EntityTypeBuilder<Nutrient> builder)
     {

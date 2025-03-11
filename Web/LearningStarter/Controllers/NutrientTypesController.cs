@@ -79,7 +79,6 @@ public class NutrientTypesController : ControllerBase
         {
             Name = createDto.Name,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = null,
         };
 
         _dataContext.Set<NutrientType>().Add(nutrientTypeToCreate);

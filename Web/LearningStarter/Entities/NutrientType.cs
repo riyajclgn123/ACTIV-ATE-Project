@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +11,7 @@ public class NutrientType
     public string Name { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
+    public ICollection<Nutrient> Nutrients { get; set; } = new List<Nutrient>();
 }
 
 public class NutrientTypeGetDto
@@ -23,14 +25,16 @@ public class NutrientTypeGetDto
 public class NutrientTypeCreateDto
 {
     public string Name { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; }
 }
 
 public class NutrientTypeUpdateDto
 {
     public string Name { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
 }
 
-public class NutrientTypesTypeConfiguration : IEntityTypeConfiguration<NutrientType>
+public class NutrientTypeEntityConfiguration : IEntityTypeConfiguration<NutrientType>
 {
     public void Configure(EntityTypeBuilder<NutrientType> builder)
     {

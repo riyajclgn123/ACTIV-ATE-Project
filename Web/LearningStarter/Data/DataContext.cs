@@ -12,6 +12,9 @@ public sealed class DataContext : IdentityDbContext<User, Role, int>
     {
     }
    public DbSet<FoodLog> FoodLogs { get; set; }
+   public DbSet<Food> Foods { get; set; }
+   public DbSet<Nutrient> Nutrients { get; set; }
+   public DbSet<NutrientType> NutrientTypes { get; set; }
    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +9,7 @@ public class Food
     public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
+    public ICollection<Nutrient> Nutrients { get; set; } = new List<Nutrient>();
 }
 
 public class FoodGetDto
