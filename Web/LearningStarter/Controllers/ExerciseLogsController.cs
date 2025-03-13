@@ -105,7 +105,7 @@ public class ExerciseLogsController : ControllerBase
         return Ok(response);
     }
     
-    [HttpGet("/api/users/{userId}/calories-per-day")]
+    [HttpGet("/api/users/{userId}/calories-burned-per-day")]
     public IActionResult GetDailyCalorieBurnedByUser(int userId, [FromQuery] DateTime? date = null)
     {
         var response = new Response();

@@ -137,7 +137,7 @@ public class FoodLogsController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("user/{userId}/daily-calories")]
+    [HttpGet("user/{userId}/calories-consumed-per-day")]
 public IActionResult GetDailyCalories(
     [FromRoute] int userId,
     [FromQuery] DateTimeOffset date)
