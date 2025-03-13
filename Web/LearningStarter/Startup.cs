@@ -158,6 +158,7 @@ public class Startup
         SeedExercises(dataContext);
           SeedFoods(dataContext);
         SeedNutrientTypes(dataContext);
+        SeedNutrient(dataContext);
     }
     
     public static void SeedExercises(DataContext dataContext)
@@ -192,6 +193,113 @@ public class Startup
         dataContext.Set<Exercise>().Add(seededExercise2);
         dataContext.Set<Exercise>().Add(seededExercise3);
         dataContext.Set<Exercise>().Add(seededExercise4);
+        dataContext.SaveChanges();
+    }
+    
+    public static void SeedNutrient(DataContext dataContext)
+    {
+        if (dataContext.Nutrients.Any())
+        {
+            return;
+        }
+
+        var seededNutrient1 = new Nutrient
+        {
+            NutrientTypeId = 1,
+                FoodId = 1,
+                Value = 300,
+                Unit = "Calories",
+        };
+        var seededNutrient2 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 1,
+            Value = 30,
+            Unit = "gm",
+        };
+        var seededNutrient3 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 1,
+            Value = 150,
+            Unit = "gm",
+        };
+        var seededNutrient4 = new Nutrient
+        {
+            NutrientTypeId = 4,
+            FoodId = 1,
+            Value = 50,
+            Unit = "gm",
+        };
+        var seededNutrient5 = new Nutrient
+        {
+            NutrientTypeId = 1,
+            FoodId = 2,
+            Value = 350,
+            Unit = "Calories",
+        };
+        var seededNutrient6 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 2,
+            Value = 40,
+            Unit = "gm",
+        };
+        var seededNutrient7 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 2,
+            Value = 200,
+            Unit = "gm",
+        };
+        var seededNutrient8 = new Nutrient
+        {
+            NutrientTypeId = 4,
+            FoodId = 2,
+            Value = 40,
+            Unit = "gm",
+        };
+        var seededNutrient9= new Nutrient
+        {
+            NutrientTypeId = 1,
+            FoodId = 3,
+            Value = 400,
+            Unit = "Calories",
+        };
+        var seededNutrient10 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 3,
+            Value = 70,
+            Unit = "gm",
+        };
+        var seededNutrient11 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 3,
+            Value = 390,
+            Unit = "gm",
+        };
+        var seededNutrient12 = new Nutrient
+        {
+            NutrientTypeId = 4,
+            FoodId = 3,
+            Value = 65,
+            Unit = "gm",
+        };
+        
+        dataContext.Set<Nutrient>().Add(seededNutrient1);
+        dataContext.Set<Nutrient>().Add(seededNutrient2);
+        dataContext.Set<Nutrient>().Add(seededNutrient3);
+        dataContext.Set<Nutrient>().Add(seededNutrient4);
+        dataContext.Set<Nutrient>().Add(seededNutrient5);
+        dataContext.Set<Nutrient>().Add(seededNutrient6);
+        dataContext.Set<Nutrient>().Add(seededNutrient7);
+        dataContext.Set<Nutrient>().Add(seededNutrient8);
+        dataContext.Set<Nutrient>().Add(seededNutrient9);
+        dataContext.Set<Nutrient>().Add(seededNutrient10);
+        dataContext.Set<Nutrient>().Add(seededNutrient11);
+        dataContext.Set<Nutrient>().Add(seededNutrient12);
         dataContext.SaveChanges();
     }
 
