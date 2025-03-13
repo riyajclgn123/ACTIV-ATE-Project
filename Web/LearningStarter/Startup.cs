@@ -280,10 +280,10 @@ public class Startup
                 LastName = "User",
                 UserName = "admin",
                 Email = "admin@admin.com",
-                DateofBirth = "2003/03/14",
+                DateofBirth = "2004/06/14",
                 Gender = "Male",
                 Height = 176,
-                Weight = 65,
+                Weight = 85,
                 CreateDate = DateTimeOffset.UtcNow,
                 UpdatedDate = DateTimeOffset.UtcNow,
             };
