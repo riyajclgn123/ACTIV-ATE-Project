@@ -5,6 +5,8 @@ import { createStyles } from "@mantine/emotion";
 export const UserPage = () => {
   const user = useUser();
   const { classes } = useStyles();
+
+  console.log("i am here", user)
   return (
     <Container>
       <Container>
@@ -25,6 +27,64 @@ export const UserPage = () => {
             </Text>
             <Text size="md">{user.lastName}</Text>
           </Flex>
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Email:
+            </Text>
+            <Text size="md">{user.email}</Text>
+          </Flex> 
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Username:
+            </Text>
+            <Text size="md">{user.userName}</Text>  
+          </Flex>
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Weight:
+            </Text>
+            <Text size="md">{user.weight}</Text> 
+          </Flex>
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Height:
+            </Text>
+            <Text size="md">{user.height}</Text>
+          </Flex>
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Date of Birth:
+            </Text>
+            <Text size="md">{user.dateofBirth}</Text>
+          </Flex>
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Gender:
+            </Text>
+            <Text size="md">{user.gender}</Text>
+          </Flex>
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Created At:
+            </Text>
+            <Text size="md">{user.createDate}</Text>
+          </Flex>
+          <Divider />
+          <Flex direction="row">
+            <Text size="md" className={classes.labelText}>
+              Updated At:
+            </Text>
+            <Text size="md">{user.updatedDate}</Text>
+          </Flex>
+          <Divider />
+
         </Container>
       </Container>
     </Container>

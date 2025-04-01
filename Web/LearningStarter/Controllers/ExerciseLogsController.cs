@@ -51,6 +51,7 @@ public class ExerciseLogsController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetExerciseLogById(int id)
     {
+        var response = new Response();
         var exerciselogs = _context
             .Set<ExerciseLog>()
             .Include(d => d.Exercise)
@@ -69,7 +70,8 @@ public class ExerciseLogsController : ControllerBase
             })
             .FirstOrDefault(d => d.Id == id);
 
-        return Ok(exerciselogs);
+        response.Data = exerciselogs;
+        return Ok(response);
     }
     
     [HttpGet("user/{userId}")]
@@ -267,6 +269,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         exerciselog.Rep = updateDto.Rep;
         exerciselog.Duration = duration;
         exerciselog.CaloriesBurned = caloriesBurned;
+        exerciselog.ExerciseName = exercise.Name;
         exerciselog.UpdatedDate = DateTime.UtcNow;
 
         _context.SaveChanges();
@@ -276,6 +279,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
             Id = exerciselog.Id,
             UserId = exerciselog.UserId,
             ExerciseId = exerciselog.ExerciseId,
+            ExerciseName = exerciselog.ExerciseName,
             Duration = exerciselog.Duration,
             Rep = exerciselog.Rep,
             CaloriesBurned = exerciselog.CaloriesBurned,

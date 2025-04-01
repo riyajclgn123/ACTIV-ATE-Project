@@ -1,6 +1,20 @@
+
+
 //This is where you will declare all of your routes (the ones that show up in the search bar)
 export const routes = {
   root: `/`,
   home: `/home`,
   user: `/user`,
+  exercises: `/exercises`,
+  exerciseCreate: `/exercises/create`,
+  exerciseUpdate: `/exercises/update/:id`,
+  exerciseLogCreate: `/exercise-logs/create/:id`,
+  exerciseLogUpdate: `/exercise-logs/update/:id`,
+  exerciseLog: `/exercise-logs`,
+  foods: `/foods`,
+  foodUpdate: `/foods/update/:id`,
+  foodCreate: `/foods/create`,
+  bmi: `/bmi`,
+  mealplanner: `/mealplanner`,
+  
 };

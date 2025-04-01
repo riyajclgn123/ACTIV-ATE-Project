@@ -15,13 +15,14 @@ import {
   Title,
   useMantineTheme,
   parseThemeColor,
+  Divider,
 } from "@mantine/core";
 import {
   NAVBAR_HEIGHT,
   NAVBAR_HEIGHT_NUMBER,
 } from "../../constants/theme-constants";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Activ-Ate.png";
 import { UserDto } from "../../constants/types";
 import { useAuth } from "../../authentication/use-auth";
 import { createStyles } from "@mantine/emotion";
@@ -65,6 +66,34 @@ const navigation: NavigationItem[] = [
     hide: false,
     nav: {
       to: routes.user,
+    },
+  },
+  {
+    text: "Exercises",
+    hide: false,
+    nav: {
+      to: routes.exercises,
+    },
+  },
+  {
+    text: "Foods",
+    hide: false,
+    nav: {
+      to: routes.foods,
+    },
+  },
+  {
+    text: "BMI Indicator",
+    hide: false,
+    nav: {
+      to: routes.user,
+    },
+  },
+  {
+    text: "Meal Plans",
+    hide: false,
+    nav: {
+      to: routes.mealplanner,
     },
   },
 ];
@@ -150,7 +179,7 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
   return (
-    <Title order={4}>
+    <Title className={classes.container} order={4}>
       <Container px={20} fluid>
         <Flex direction="row" justify="space-between" align="center">
           <Group>
@@ -179,10 +208,17 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                   </Avatar>
                 </Menu.Target>
                 <Menu.Dropdown>
+                <Menu.Label>Profile</Menu.Label>
                   <Menu.Item onClick={() => toggleColorScheme()}>
                     {dark ? "Light mode" : "Dark mode"}
                   </Menu.Item>
-                  <Menu.Item onClick={() => logout()}>Sign Out</Menu.Item>
+                  
+                  <Menu.Item onClick={() => logout()}>Settings</Menu.Item>
+                  <Menu.Item onClick={() => logout()}>Profile</Menu.Item>
+                  <Menu.Item onClick={() => logout()}>Weekly Report</Menu.Item>
+                  <Menu.Item onClick={() => logout()}>Weight Measure</Menu.Item>
+                  <Divider my={5} />
+                  <Menu.Item onClick={() => logout()} color="red">Sign Out</Menu.Item>
                 </Menu.Dropdown>
               </Menu>
             )}
@@ -218,6 +254,9 @@ const useStyles = createStyles((theme) => {
     },
     fullHeight: {
       height: "100%",
+    },
+    container: {
+      backgroundColor: "#b2f2bb",
     },
   };
 });

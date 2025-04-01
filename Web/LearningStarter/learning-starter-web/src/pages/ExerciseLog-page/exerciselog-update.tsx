@@ -1,0 +1,232 @@
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { 
+  NumberInput, 
+  Button, 
+  Group, 
+  Box, 
+  Text, 
+  Title, 
+  Card, 
+  TextInput,
+  Select,
+  Stack,
+  LoadingOverlay
+} from "@mantine/core";
+import { routes } from "../../routes";
+import api from "../../config/axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { showNotification } from "@mantine/notifications";
+import { ApiResponse, ExerciseLogGetDto } from "../../constants/types";
+
+interface ExerciseLogResponse {
+  data: {
+    id: number;
+    caloriesBurned: number;
+    duration: string;
+    rep: number;
+    exerciseName: string;
+  };
+}
+
+export const ExerciseLogUpdate = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
+  const [duration, setDuration] = useState<string>("");
+  const [durationUnit, setDurationUnit] = useState<string>("minutes");
+  const [reps, setReps] = useState<number>(0);
+  const [caloriesBurned, setCaloriesBurned] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [exerciseName, setExerciseName] = useState<string>("");
+
+  const durationUnits = [
+    { value: "seconds", label: "Seconds" },
+    { value: "minutes", label: "Minutes" },
+    { value: "hours", label: "Hours" },
+  ];
+
+  useEffect(() => {
+    fetchLog();
+  }, [id]);
+
+  const fetchLog = async () => {
+    setIsLoading(true);
+    try {
+     
+        if (!id) {
+            throw new Error("Invalid exercise log ID");
+          }
+
+          console.log(`Fetching exercise log with ID: ${id}`);
+
+      const response = await api.get<ApiResponse<ExerciseLogGetDto>>(`/api/exercise-logs/${id}`);
+      
+         // Check if response is valid
+
+         console.log("API Response:", response);
+    if (!response.data) {
+        throw new Error("No response data received");
+      }
+  
+      // Check for API errors
+      if (response.data.hasErrors || !response.data.data) {
+        throw new Error(response.data.errors?.join(", ") || "Exercise log not found");
+      }
+      const logData = response.data.data;
+      setExerciseName(logData.exerciseName);
+      setDuration(logData.duration.toString());
+      setReps(logData.rep);
+      setCaloriesBurned(logData.caloriesBurned);
+      
+    } catch (error: any) {
+      console.error("Error fetching exercise log:", error);
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.errors?.join(", ") || error.message || "Failed to fetch log",
+        color: "red"
+      });
+     
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      // Validate inputs
+      if (!id) {
+        throw new Error("Invalid exercise log ID");
+    }
+  
+      const durationValue = parseFloat(duration);
+      if (isNaN(durationValue) || durationValue <= 0) {
+        throw new Error("Please enter a valid duration");
+    }
+      const totalSeconds = durationUnit === "seconds" ? durationValue : 
+                         durationUnit === "minutes" ? durationValue * 60 : 
+                         durationValue * 3600;
+  
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+      
+      const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  
+      const response = await api.put(`/api/exercise-logs/${id}`, {
+        duration: formattedDuration,
+        rep: reps,
+        updatedDate: new Date().toISOString()
+      });
+  
+      if (response.status !== 200) {
+        throw new Error(`Update failed with status ${response.status}`);
+      }
+  
+      showNotification({
+        title: "Success",
+        message: "Exercise log updated successfully!",
+        color: "green"
+      });
+      navigate(routes.exerciseLog);
+
+    } catch (error: any) {
+      console.error("Error updating exercise:", error);
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || error.message || "Failed to update exercise log",
+        color: "red"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading && !exerciseName) return <LoadingOverlay visible />;
+
+  return (
+    <Box maw={600} mx="auto" p="md" pos="relative">
+      <LoadingOverlay visible={isLoading} />
+      
+      <Button 
+        variant="outline" 
+        mb="xl"
+        onClick={() => navigate(routes.exerciseLog)}
+        leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
+      >
+        Back to Logs
+      </Button>
+      <Button 
+        onClick={() => navigate(routes.exerciseLog)}
+        leftSection={<FontAwesomeIcon icon={faHistory} />}
+      >
+        View My Logs
+      </Button>
+
+      <Title order={2} mb="xl">Update Exercise: {exerciseName}</Title>
+      
+      <Card withBorder shadow="sm" p="lg">
+        <Stack>
+          {/* Duration Input */}
+          <Group align="flex-end" grow>
+            <TextInput
+              label="Duration"
+              value={duration}
+              onChange={(e) => setDuration(e.currentTarget.value)}
+              type="number"
+              min={1}
+              required
+            />
+            <Select
+              label="Unit"
+              value={durationUnit}
+              onChange={(val) => setDurationUnit(val || "minutes")}
+              data={durationUnits}
+              required
+            />
+          </Group>
+
+          {/* Reps Input */}
+          <NumberInput
+            label="Repetitions"
+            value={reps}
+            onChange={(val) => setReps(Number(val) || 0)}
+            min={0}
+            required
+          />
+
+          {/* Submit Button */}
+          <Group mt="xl">
+            <Button 
+              onClick={handleSubmit}
+              loading={isLoading}
+              size="md"
+              disabled={!duration || isNaN(parseFloat(duration))}
+            >
+              Update Log
+            </Button>
+          </Group>
+
+          {caloriesBurned !== null && (
+            <Card mt="xl" withBorder p="lg" style={{ textAlign: "center" }}>
+              <Text size="xl" fw={500}>
+                Exercise Summary
+              </Text>
+              <Text mt="sm" size="lg">
+                <Text span fw={500}>Calories Burned:</Text>{" "}
+                <Text span c="green" fw={700}>
+                  {caloriesBurned.toFixed(2)}
+                </Text>
+              </Text>
+              <Text size="sm" c="dimmed" mt="xs">
+                Based on {duration} {durationUnit} and {reps} reps
+              </Text>
+            </Card>
+          )}
+        </Stack>
+      </Card>
+    </Box>
+  );
+};
