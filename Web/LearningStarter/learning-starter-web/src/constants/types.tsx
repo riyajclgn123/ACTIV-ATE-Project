@@ -56,7 +56,7 @@ export type ExerciseLogGetDto = {
   exerciseId: number;
   exerciseName: string;
   userId: number;
-  duration: number;
+  duration: string;
   rep: number;
   caloriesBurned: number;
   createDate: string;

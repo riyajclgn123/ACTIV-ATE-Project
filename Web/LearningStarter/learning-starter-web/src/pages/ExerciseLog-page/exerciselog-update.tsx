@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { 
   NumberInput, 
   Button, 
@@ -31,6 +31,12 @@ interface ExerciseLogResponse {
 }
 
 export const ExerciseLogUpdate = () => {
+      const location = useLocation();
+      const locationState = location.state || {};
+      const { exercise, userId } = locationState as {
+        exercise?: { id: number; name: string };
+        userId?: number;
+      };
   const { id } = useParams();
   const navigate = useNavigate();
   
@@ -76,7 +82,16 @@ export const ExerciseLogUpdate = () => {
       }
       const logData = response.data.data;
       setExerciseName(logData.exerciseName);
-      setDuration(logData.duration.toString());
+      
+      if (typeof logData.duration !== 'string') {
+        throw new Error("Invalid duration format received from server");
+      }
+  
+      // Now TypeScript knows duration is a string
+      const [hours, minutes, seconds] = logData.duration.split(':').map(Number);
+      const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+      setDuration(totalSeconds.toString());
+
       setReps(logData.rep);
       setCaloriesBurned(logData.caloriesBurned);
       
@@ -100,6 +115,10 @@ export const ExerciseLogUpdate = () => {
       if (!id) {
         throw new Error("Invalid exercise log ID");
     }
+    if (!exercise || !userId) {
+        throw new Error("Exercise or User ID is missing");
+     }
+
   
       const durationValue = parseFloat(duration);
       if (isNaN(durationValue) || durationValue <= 0) {
@@ -115,15 +134,30 @@ export const ExerciseLogUpdate = () => {
       
       const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   
-      const response = await api.put(`/api/exercise-logs/${id}`, {
-        duration: formattedDuration,
-        rep: reps,
-        updatedDate: new Date().toISOString()
-      });
+      try {
+        const checkResponse = await api.get(`/api/exercise-logs/${id}`);
+        if (checkResponse.status !== 200) {
+          throw new Error("Exercise log not found");
+        }
+      } catch (error) {
+        throw new Error("Failed to verify exercise log before updating.");
+      }
+      
+    // 2. Then make the update request
+    const response = await api.put<ExerciseLogResponse>(`/api/exercise-logs/${id}`, {
+        exerciseId: exercise.id,
+      userId: userId,
+      duration: formattedDuration,
+      rep: reps,
+      updatedDate: new Date().toISOString()
+    });
   
       if (response.status !== 200) {
         throw new Error(`Update failed with status ${response.status}`);
       }
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(`Update failed with status ${response.status}`);
+     }
   
       showNotification({
         title: "Success",

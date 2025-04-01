@@ -35,6 +35,21 @@ export const ExerciseLogListing = () => {
         }
     };
 
+    const handleEdit = (log: ExerciseLogGetDto) => {
+        navigate(
+            routes.exerciseLogUpdate.replace(":id", log.id.toString()),
+            {
+                state: {
+                    exercise: { 
+                        id: log.exerciseId, 
+                        name: log.exerciseName 
+                    },
+                    userId: log.userId
+                }
+            }
+        );
+    };
+
     const handleDelete = async (id: number) => {
         try {
             await api.delete(`/api/exercise-logs/${id}`);
@@ -71,7 +86,7 @@ export const ExerciseLogListing = () => {
                                 <Group>
                                     <ActionIcon 
                                         color="blue" 
-                                        onClick={() => navigate(routes.exerciseLogUpdate.replace(":id", log.id.toString()))}
+                                        onClick={() => handleEdit(log)}
                                     >
                                         <FontAwesomeIcon icon={faEdit} />
                                     </ActionIcon>
