@@ -70,65 +70,15 @@ export const ExerciseListing = () => {
           }
       });
   };
-
+     
+  const handleEditClick = (exerciseId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    navigate(`/exercises/update/${exerciseId}`);
+};
 
   return (
     <>
-    <Container>
-        <Flex direction="row" justify={"space-between"} >
-            <Title order={2}>Exercises</Title>
-            <Button onClick = {() => {
-            navigate(routes.exerciseCreate);
-            }
-         }>
-            <FontAwesomeIcon icon={faPlus} />
-            <Space w={8} /> 
-            New Exercise
-        </Button>
-        <Button 
-    onClick={() => navigate(routes.exerciseLog)}
-    leftSection={<FontAwesomeIcon icon={faHistory} />}
->
-    View My Logs
-</Button>
-        </Flex>
-      <Space h="md"/>
-      <h1>Exercises</h1>
-      <p>Exercises page content goes here.</p>
-      {exercises && (
-        <Table striped>
-          <thead>
-            <tr> 
-              <th>Name</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {exercises.map((exercise) => {
-              return (
-              <tr>
-                <td>
-                    <FontAwesomeIcon 
-                    className={classes.iconButton} 
-                    icon={faPencil} 
-                    onClick={() => {
-                      navigate(routes.exerciseUpdate.replace(":id", `${exercise.id}`)
-                    );
-                    }}
-                    />
-                </td>
-                <td>{exercise.name}</td>
-                <td>{exercise.description}</td>
-              </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      )}
-
-    
-       
-        </Container>
 
 <section>
     <div className={classes.container}>
@@ -148,13 +98,22 @@ export const ExerciseListing = () => {
               <div className={classes.dropdown}>
                 {filteredExercises.length > 0 ? (
                   filteredExercises.map((exercise) => (
-                  <div 
+                    <div 
                     key={exercise.id} 
-                    className={classes.dropdownItem} 
-                    onClick={() => handleExerciseClick(exercise)}
-                  >
-                    {exercise.name}
-                  </div>
+                    className={classes.dropdownItemContainer}
+                >
+                    <div 
+                        className={classes.dropdownItem} 
+                        onClick={() => handleExerciseClick(exercise)}
+                    >
+                        {exercise.name}
+                    </div>
+                    <FontAwesomeIcon 
+                        className={classes.iconButton} 
+                        icon={faPencil} 
+                        onClick={(e) => handleEditClick(exercise.id, e)}
+                    />
+                </div>
                 ))
               ):(
                  // "Create New Exercise" option if no match found
@@ -176,6 +135,24 @@ export const ExerciseListing = () => {
               )}
               </div>
             )}
+
+            <div className={classes.buttonBackground}>
+
+<Button onClick = {() => {
+            navigate(routes.exerciseCreate);
+            }
+         }>
+            <FontAwesomeIcon icon={faPlus} />
+            <Space w={8} /> 
+            New Exercise
+        </Button>
+        <Button 
+    onClick={() => navigate(routes.exerciseLog)}
+    leftSection={<FontAwesomeIcon icon={faHistory} />}
+>
+    View My Logs
+</Button>
+</div>
       </div>
     </div>
       <div >
@@ -267,6 +244,20 @@ const useStyles = createStyles (() =>{
         padding: "5px",
   
       },
+
+      buttonBackground:{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "20px",
+        padding: "10px",
+        borderRadius: "5px",
+        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+        marginTop: "20px",
+        width:"100%",
+
+      },
+
       calorieburnestimator:{
        display: "flex",
        justifyContent: "center",
@@ -338,6 +329,16 @@ const useStyles = createStyles (() =>{
       },
       fontSize: "20px",
     },
+    dropdownItemContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "100%",
+      borderBottom: "1px solid #eee",
+      "&:hover": {
+          backgroundColor: "#f5f5f5",
+      },
+  },
 
     }
 })

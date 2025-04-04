@@ -1,92 +1,203 @@
-import { FormErrors, UseForm } from "@mantine/form/lib/types";
-import { ApiResponse, ExerciseCreateDto, ExerciseGetDto, ExerciseUpdateDto } from "../../constants/types";
-import { useForm } from "@mantine/form";
-import { Button, Container, Flex, Space, TextInput } from "@mantine/core";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { 
+  Button, 
+  Container, 
+  TextInput, 
+  LoadingOverlay,
+  Title,
+  Stack,
+  Group
+} from "@mantine/core";
 import { routes } from "../../routes";
-import { useNavigate, useParams } from "react-router-dom";
 import api from "../../config/axios";
 import { showNotification } from "@mantine/notifications";
-import { useEffect, useState } from "react";
+import { ApiResponse, ExerciseGetDto } from "../../constants/types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 export const ExerciseUpdate = () => {
-    const [exercise, setExercise] = useState<ExerciseGetDto>();
+    const { id } = useParams();
     const navigate = useNavigate();
-    const {id} = useParams();
+    const location = useLocation();
+    const locationState = location.state || {};
+    const { exercise: locationExercise } = locationState as {
+        exercise?: { id: number; name: string; description: string };
+    };
 
-    const mantineForm = useForm<ExerciseUpdateDto>({
-        initialValues: {
-            name: "",
-            description: "",
-        }
-    });
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [exercise, setExercise] = useState<ExerciseGetDto>();
 
     useEffect(() => {
         fetchExercise();
-        async function fetchExercise() {
+    }, [id]);
+
+    const fetchExercise = async () => {
+        setIsLoading(true);
+        try {
+            if (!id) {
+                throw new Error("Invalid exercise ID");
+            }
+
+            console.log(`Fetching exercise with ID: ${id}`);
             const response = await api.get<ApiResponse<ExerciseGetDto>>(`/api/exercises/${id}`);
-            if (response.data.hasErrors) {
-                showNotification ({message: "Error fetching exercise", color: "red"});
-            }
-            if(response.data.data) {
-                setExercise(response.data.data);
-            }
-        }
-    
-    },[id]);
-
-    const submitExercise = async (values: ExerciseCreateDto) => {
-        const response = await api.put<ApiResponse<ExerciseGetDto>>(`/api/exercises/${id}`, values);
-        if (response.data.hasErrors) {
-
-            const formErrors : FormErrors = response.data.errors.reduce((prev, curr)=> {
-                Object.assign(prev, {[curr.property]: curr.message});
-                return prev;
-            }, {} as FormErrors
-            );
-            mantineForm.setErrors(formErrors);
-        }
-        if (response.data.data) {
-            showNotification({
-                message: "Exercise updated successfully",
-                color: "green",
-            }); 
-            navigate(routes.exercises);
-        }
-    }
             
+            console.log("API Response:", response);
+            if (!response.data) {
+                throw new Error("No response data received");
+            }
 
-    return(
-        <Container>
-            {exercise && (
-            <form onSubmit={mantineForm.onSubmit(submitExercise)}>
-                < TextInput 
-                 {...mantineForm.getInputProps("name")}
+            if (response.data.hasErrors || !response.data.data) {
+                throw new Error(response.data.errors?.join(", ") || "Exercise not found");
+            }
+
+            const exerciseData = response.data.data;
+            setExercise(exerciseData);
+            setName(exerciseData.name);
+            setDescription(exerciseData.description);
+            
+        } catch (error: any) {
+            console.error("Error fetching exercise:", error);
+            showNotification({
+                title: "Error",
+                message: error.response?.data?.errors?.join(", ") || error.message || "Failed to fetch exercise",
+                color: "red"
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        try {
+            if (!id) {
+                throw new Error("Invalid exercise ID");
+            }
+
+            if (!name) {
+                throw new Error("Name is required");
+            }
+
+            const response = await api.put<ApiResponse<ExerciseGetDto>>(`/api/exercises/${id}`, {
+                name,
+                description
+            });
+
+            if (response.data.hasErrors || !response.data.data) {
+                throw new Error(response.data.errors?.join(", ") || "Update failed");
+            }
+
+            showNotification({
+                title: "Success",
+                message: "Exercise updated successfully!",
+                color: "green"
+            });
+            navigate(routes.exercises);
+
+        } catch (error: any) {
+            console.error("Error updating exercise:", error);
+            showNotification({
+                title: "Error",
+                message: error.response?.data?.message || error.message || "Failed to update exercise",
+                color: "red"
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        setIsLoading(true);
+        try {
+            if (!id) {
+                throw new Error("Invalid exercise ID");
+            }
+
+            const response = await api.delete<ApiResponse<ExerciseGetDto>>(`/api/exercises/${id}`);
+            
+            if (response.data.hasErrors) {
+                throw new Error(response.data.errors?.join(", ") || "Delete failed");
+            }
+
+            showNotification({
+                title: "Success",
+                message: "Exercise deleted successfully!",
+                color: "green"
+            });
+            navigate(routes.exercises);
+
+        } catch (error: any) {
+            console.error("Error deleting exercise:", error);
+            showNotification({
+                title: "Error",
+                message: error.response?.data?.message || error.message || "Failed to delete exercise",
+                color: "red"
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    if (isLoading && !exercise) return <LoadingOverlay visible />;
+
+    return (
+        <Container size="md" p="md" pos="relative">
+            <LoadingOverlay visible={isLoading} />
+            
+            <Button 
+                variant="outline" 
+                mb="xl"
+                onClick={() => navigate(routes.exercises)}
+                leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
+            >
+                Back to Exercises
+            </Button>
+
+            <Title order={2} mb="xl">Update Exercise: {exercise?.name}</Title>
+            
+            <Stack>
+                <TextInput
                     label="Name"
-                    placeholder="Enter exercise name"
+                    value={name}
+                    onChange={(e) => setName(e.currentTarget.value)}
+                    required
                     withAsterisk
-                   /> 
-                   < TextInput 
-                 {...mantineForm.getInputProps("description")}
-                    label="Descriptions"
-                    placeholder="Enter exercise name"
-                    withAsterisk
-                   /> 
-                    <Space h={18} />
-                    <Flex direction={"row"}>
-                        <Button type="submit" >Submit</Button>
-                        <Button 
-                        type="button" 
-                        variant="outline" 
-                        color="red" 
-                        ml={10} 
-                        onClick={() => {navigate(routes.exercises);
-                        }}>
-                            Cancel
-                        </Button>
+                />
 
-                    </Flex>
-            </form>
-            )}
+                <TextInput
+                    label="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.currentTarget.value)}
+                />
+
+                <Group mt="xl">
+                    <Button 
+                        onClick={handleSubmit}
+                        loading={isLoading}
+                        disabled={!name}
+                    >
+                        Update Exercise
+                    </Button>
+                    
+                    <Button 
+                        variant="outline"
+                        onClick={() => navigate(routes.exercises)}
+                    >
+                        Cancel
+                    </Button>
+                    
+                    <Button 
+                        color="red"
+                        onClick={handleDelete}
+                        loading={isLoading}
+                    >
+                        Delete Exercise
+                    </Button>
+                </Group>
+            </Stack>
         </Container>
     );
 };

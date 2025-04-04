@@ -8,8 +8,10 @@ import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from "../../authentication/use-auth";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
+import { createStyles } from "@mantine/emotion";
 
 export const ExerciseLogListing = () => {
+    const { classes } = useStyles();
     const [logs, setLogs] = useState<ExerciseLogGetDto[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
@@ -61,28 +63,29 @@ export const ExerciseLogListing = () => {
     };
 
     return (
-        <Container>
-            <Title order={2} mb="md">Your Exercise Logs</Title>
+        <>
+        <div className={classes.log}>
+            <Title order={2} mb="md">My Exercise Logs</Title>
             <Table striped highlightOnHover>
-                <thead>
-                    <tr>
-                        <th>Exercise</th>
-                        <th>Duration</th>
-                        <th>Reps</th>
-                        <th>Calories</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th>Exercise</Table.Th>
+                        <Table.Th>Duration</Table.Th>
+                        <Table.Th>Reps</Table.Th>
+                        <Table.Th>Calories</Table.Th>
+                        <Table.Th>Date</Table.Th>
+                        <Table.Th>Actions</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                     {logs.map(log => (
-                        <tr key={log.id}>
-                            <td>{log.exerciseName}</td>
-                            <td>{log.duration}</td>
-                            <td>{log.rep}</td>
-                            <td>{log.caloriesBurned.toFixed(2)}</td>
-                            <td>{new Date(log.createDate).toLocaleDateString()}</td>
-                            <td>
+                        <Table.Tr key={log.id}>
+                            <Table.Td>{log.exerciseName}</Table.Td>
+                            <Table.Td>{log.duration}</Table.Td>
+                            <Table.Td>{log.rep}</Table.Td>
+                            <Table.Td>{log.caloriesBurned.toFixed(2)}</Table.Td>
+                            <Table.Td>{new Date(log.createDate).toLocaleDateString()}</Table.Td>
+                            <Table.Td>
                                 <Group>
                                     <ActionIcon 
                                         color="blue" 
@@ -97,11 +100,23 @@ export const ExerciseLogListing = () => {
                                         <FontAwesomeIcon icon={faTrash} />
                                     </ActionIcon>
                                 </Group>
-                            </td>
-                        </tr>
+                            </Table.Td>
+                        </Table.Tr>
                     ))}
-                </tbody>
+                </Table.Tbody>
             </Table>
-        </Container>
+            </div>
+           </>
     );
 };
+
+const useStyles = createStyles(() => {
+    return {
+      log:{
+        margin: "20px",
+      },
+  
+  
+    };
+  });
+  

@@ -1,3 +1,4 @@
+import { BMIIndicator } from "../pages/BMI-Indicator/bmiIndicator";
 
 
 //This is where you will declare all of your routes (the ones that show up in the search bar)
@@ -16,5 +17,6 @@ export const routes = {
   foodCreate: `/foods/create`,
   bmi: `/bmi`,
   mealplanner: `/mealplanner`,
+  profile: `/profile`,
   
 };

@@ -21,7 +21,7 @@ import {
   NAVBAR_HEIGHT,
   NAVBAR_HEIGHT_NUMBER,
 } from "../../constants/theme-constants";
-import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
+import { NavLink, NavLinkProps, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/Activ-Ate.png";
 import { UserDto } from "../../constants/types";
 import { useAuth } from "../../authentication/use-auth";
@@ -55,19 +55,19 @@ export type NavigationItemForceNav = {
 
 const navigation: NavigationItem[] = [
   {
-    text: "Home",
+    text: "Dashboard",
     hide: false,
     nav: {
       to: routes.home,
     },
   },
-  {
-    text: "User",
-    hide: false,
-    nav: {
-      to: routes.user,
-    },
-  },
+  // {
+  //   text: "User",
+  //   hide: false,
+  //   nav: {
+  //     to: routes.user,
+  //   },
+  // },
   {
     text: "Exercises",
     hide: false,
@@ -86,7 +86,7 @@ const navigation: NavigationItem[] = [
     text: "BMI Indicator",
     hide: false,
     nav: {
-      to: routes.user,
+      to: routes.bmi,
     },
   },
   {
@@ -177,6 +177,7 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
   const { classes } = useStyles();
   const { logout } = useAuth();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const navigate = useNavigate();
   const dark = colorScheme === "dark";
   return (
     <Title className={classes.container} order={4}>
@@ -188,7 +189,7 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                 <Image
                   className={classes.logo}
                   w={60}
-                  h={50}
+                  h={45}
                   radius="sm"
                   fallbackSrc="https://placehold.co/600x400?text=Placeholder"
                   src={logo}
@@ -208,15 +209,13 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                   </Avatar>
                 </Menu.Target>
                 <Menu.Dropdown>
-                <Menu.Label>Profile</Menu.Label>
                   <Menu.Item onClick={() => toggleColorScheme()}>
                     {dark ? "Light mode" : "Dark mode"}
                   </Menu.Item>
-                  
-                  <Menu.Item onClick={() => logout()}>Settings</Menu.Item>
-                  <Menu.Item onClick={() => logout()}>Profile</Menu.Item>
-                  <Menu.Item onClick={() => logout()}>Weekly Report</Menu.Item>
-                  <Menu.Item onClick={() => logout()}>Weight Measure</Menu.Item>
+                 <Menu.Item onClick={() => navigate(routes.profile)}>Profile</Menu.Item>
+                 
+                  <Menu.Item onClick={() => navigate(routes.profile)}>Weekly Report</Menu.Item>
+                  <Menu.Item onClick={() => navigate(routes.profile)}>Weight Measure</Menu.Item>
                   <Divider my={5} />
                   <Menu.Item onClick={() => logout()} color="red">Sign Out</Menu.Item>
                 </Menu.Dropdown>

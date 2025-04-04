@@ -1,4 +1,4 @@
-import { Container, Text } from "@mantine/core";
+import { Box, Card, Container, Space, Text } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import food from "../../assets/foodtracking.jpg";
 import exercise from "../../assets/fitnesstracking.png";
@@ -9,19 +9,22 @@ import pregnancy from "../assets/pregnancy1.jpg";
 import meal from "../assets/meal.png";
 import intermediate from "../assets/intermediate.jpg";
 import bgImage from '../../assets/bg.jpeg';
+import { RingProgress } from "@mantine/core";
+import { useState } from "react";
+import { ExerciseLogListing } from "../ExerciseLog-page/exerciselog-listing";
 
 
 //This is a basic Component, and since it is used inside of
 //'../../routes/config.tsx' line 31, that also makes it a page
 export const LandingPage = () => {
   const { classes } = useStyles();
+  const [hovered, setHovered] = useState<string | null>(null);
+  const reset = () => setHovered(null);
+
+
+
   return (
     <>
-    <Container className={classes.homePageContainer}>
-      <Text size="lg">Home Page</Text>
-    </Container>
-
-
     <section id="backgrounddesign">
     <div className={classes.container1}>
       {/* Text overlay on background */}
@@ -35,127 +38,69 @@ export const LandingPage = () => {
         <p className={classes.threeword}>
           Track. Plan. Achieve.
         </p>
-
-        {/* <Drawer 
-        offset={8} 
-        radius="md" 
-        opened={opened} 
-        onClose={close} 
-        title="Authentication" 
-        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
-        transitionProps={{ transition: 'rotate-left', duration: 150, timingFunction: 'linear' }}
-        >
-    <div>
-      <h2> Register an account</h2>
-      <form>
-            <div className={classes.authentication}>
-              <label>First Name: </label>
-              <input
-                type="text"
-                name="firstName"
-                required
-              />
-            </div>
-
-            <div className={classes.authentication}>
-              <label>Last Name: </label>
-              <input
-                type="text"
-                name="lastName"
-                required
-              />
-            </div>
-
-        <div className={classes.authentication}>
-          <label>Email: </label>
-          <input
-            type="email"
-            name="email"
-            required
-          />
-        </div>
-            <div className={classes.authentication}>
-              <label>Create Password: </label>
-              <input
-                type="password"
-                name="password"
-                required
-              />
-            </div>
-
-            <div className={classes.authentication}>
-              <label>Verify Password: </label>
-              <input
-                type="password"
-                name="verifyPassword"
-                required
-              />
-            </div>
-
-            <div className={classes.authentication}>
-              <label>Height (in cm): </label>
-              <input
-                type="number"
-                name="height"
-                required
-              />
-            </div>
-
-            <div className={classes.authentication}>
-              <label>Age: </label>
-              <input
-                type="number"
-                name="age"
-                required
-              />
-            </div>
-
-            <div className={classes.authentication}>
-              <label>Weight (kg): </label>
-              <input
-                type="number"
-                name="weight"
-                required
-              />
-            </div>
-            <div className={classes.authentication}>
-            <Button type="submit" >Register</Button>
-            </div>
-        
-      </form>
-
-      <p>
-          <span className={classes.authentication}>
-            Already have an account? 
-            
-          </span>
-          <div className={classes.authentication}>
-          <Button >Login here</Button>
-          </div>
-          
-      </p>
-    </div>
-
-      </Drawer> */}
-{/* 
-      <Button variant="default" onClick={open} className={classes.button} size="lg" color="blue">
-        Login || Register 
-      </Button>
-        */}
-
-
       </div>
     </div>
     </section>
 
-    <section id="after background design">
-        <div className={classes.container2}>Start your Journey with adding your Exercise and Food to track our health </div>
+    <section id="after background design" style={{ marginTop: "50px" }}>
+
+
+        {/* <div className={classes.container2}>Start your Journey with adding your Exercise and Food to track our health </div>
         <div className={classes.photocontainer}>
           <div className={classes.box}><img src={exercise} style={{width:"400px", height:"400px"}} /><p>Explain photo</p></div>
           <div className={classes.box}><img src={food} style={{width:"400px", height:"400px"}} /><p>Explain photo</p></div>
-        </div>
+        </div> */}
+
+        <Container>
+
+        <Card withBorder shadow="sm" p="lg"  >
+         <Text size="25px" style={{ fontWeight: 'bold' }}> Calories Consumed  </Text>
+          <div className={classes.coursel}>
+        <RingProgress
+      label={
+        <Text size="lg" ta="center" style={{ fontWeight: 'bold' }}>
+          {hovered || '1,273 Remaining'}
+        </Text>
+      }
+      size = {300}
+      thickness={20}
+      sections={[
+        { value: 40, color: 'cyan', onMouseEnter: () => setHovered('Breakfast'), onMouseLeave: reset },
+        { value: 20, color: 'blue', onMouseEnter: () => setHovered('Snack'), onMouseLeave: reset },
+        { value: 15, color: 'indigo', onMouseEnter: () => setHovered('Lunch'), onMouseLeave: reset },
+        { value: 12, color: 'red', onMouseEnter: () => setHovered('Dinner'), onMouseLeave: reset },
+      ]}
+    />
+       
+    <div className={classes.text}>
+    <Space h="sm"/>
+    <Text size="18px" ta="center" mt="lg" style={{ fontWeight: 'bold' }}> Base Goal </Text>
+    <Text size="16px" ta="center" mt="md" style={{ color:"gray" }}> 1500 kcal </Text>
+      <Space h="sm"/>
+      <Text size="18px" ta="center" mt="lg" style={{ fontWeight: 'bold' }}> Food Count </Text>
+      <Text size="16px" ta="center" mt="md" style={{ color:"gray"  }}> 2 </Text>
+      <Space h="sm"/>
+      <Text size="18px" ta="center" mt="lg" style={{ fontWeight: 'bold' }}> Exercise Count </Text>
+      <Text size="16px" ta="center" mt="md" style={{color:"gray" }}> 3 </Text>
+      <Space h="sm"/>
+
+      
+    </div>
+    </div>
+    </Card>
+    </Container>
+
 
     </section>
+
+
+    <Container className={classes.exerciselog}>
+    <Card withBorder shadow="sm" p="lg"  >
+      <ExerciseLogListing/>
+      </Card>
+    </Container>
+
+    
 
     </>
   );
@@ -306,19 +251,23 @@ const useStyles = createStyles(() => {
       },
     },
   
-    box: {
-    
-  
+    exerciselog: {
+      marginTop: "30px",
+      marginBottom: "30px",
+
     },
-  
-  
-  
+
+    box: {
+
+    },
+
     coursel: {
+      backgroundColor: "white",
+      gap: "100px",
+      flexDirection: "row",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "white",
-      margin: "5px",
   
       [`@media (maxWidth: 768px)`]: {
         flexDirection: "column", // Stack carousel items for smaller screens
@@ -337,6 +286,12 @@ const useStyles = createStyles(() => {
         gap: "10px", // Space between items
       },
     },
+    text: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+    }
 
 
   };
