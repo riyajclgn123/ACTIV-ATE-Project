@@ -96,3 +96,31 @@ export type FoodUpdateDto = {
   fiber: number;
   sugar: number;
 };
+
+
+
+export type FoodLogGetDto = {
+  id: number;
+  userId: number;
+  foodId: number;
+  foodName: string;
+  caloriesPerServing: number;
+  servingSize: number;
+  calories: number;
+  createDate: string;
+  updatedDate: string;
+};
+
+export type FoodLogCreateDto = {
+  foodId: number;
+  userId: number;
+  servingSize: number;
+  createDate: string;
+};
+
+export type FoodLogUpdateDto = {
+  userId: number;
+  foodId: number;
+  servingSize: number;
+  updateDate: string;
+};
