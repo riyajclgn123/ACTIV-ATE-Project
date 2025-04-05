@@ -30,6 +30,19 @@ export type UserDto = {
 
 };
 
+export type UserCreateDto = {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  password: string;
+  weight: number;
+  height: number;
+  dateofBirth: string;
+  gender: string;
+  createDate: string;
+};
+
 export type ExerciseGetDto = {
   id: number;
   name: string;
