@@ -51,6 +51,7 @@ export type ExerciseLogCreateDto = {
   rep: number;
   createDate: string;
 };
+
 export type ExerciseLogGetDto = {
   id: number;
   exerciseId: number;
@@ -76,6 +77,7 @@ export type FoodGetDto = {
   name: string;
   description: string;
 };
+
 export type FoodCreateDto = {
   name: string;
   description: string;
@@ -86,6 +88,7 @@ export type FoodCreateDto = {
   fiber: number;
   sugar: number;
 };
+
 export type FoodUpdateDto = {
   name: string;
   description: string;
