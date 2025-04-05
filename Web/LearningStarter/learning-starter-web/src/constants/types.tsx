@@ -64,6 +64,7 @@ export type ExerciseLogCreateDto = {
   rep: number;
   createDate: string;
 };
+
 export type ExerciseLogGetDto = {
   id: number;
   exerciseId: number;
@@ -89,6 +90,7 @@ export type FoodGetDto = {
   name: string;
   description: string;
 };
+
 export type FoodCreateDto = {
   name: string;
   description: string;
@@ -99,6 +101,7 @@ export type FoodCreateDto = {
   fiber: number;
   sugar: number;
 };
+
 export type FoodUpdateDto = {
   name: string;
   description: string;
@@ -108,4 +111,32 @@ export type FoodUpdateDto = {
   fat: number;
   fiber: number;
   sugar: number;
+};
+
+
+
+export type FoodLogGetDto = {
+  id: number;
+  userId: number;
+  foodId: number;
+  foodName: string;
+  caloriesPerServing: number;
+  servingSize: number;
+  calories: number;
+  createDate: string;
+  updatedDate: string;
+};
+
+export type FoodLogCreateDto = {
+  foodId: number;
+  userId: number;
+  servingSize: number;
+  createDate: string;
+};
+
+export type FoodLogUpdateDto = {
+  userId: number;
+  foodId: number;
+  servingSize: number;
+  updateDate: string;
 };
