@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
     ApiResponse,
-    ExerciseLogGetDto,
     FoodLogGetDto,
 } from "../../constants/types";
 import { showNotification } from "@mantine/notifications";
@@ -37,9 +36,7 @@ export const FoodLogListing = () => {
 
         setLoading(true);
         try {
-            const response = await api.get<ApiResponse<FoodLogGetDto[]>>(
-                `/api/food-logs/user/${user.id}`
-            );
+            const response = await api.get<ApiResponse<FoodLogGetDto[]>>(`/api/food-logs/user/${user.id}`);
             if (response.data.data) {
                 setLogs(response.data.data);
             }
@@ -93,6 +90,7 @@ export const FoodLogListing = () => {
                             <Table.Th>Carbohydrate</Table.Th>
                             <Table.Th>Fat</Table.Th>
                             <Table.Th>Servings</Table.Th>
+                            <Table.Th>Date</Table.Th>
                             <Table.Th>Actions</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
@@ -101,10 +99,11 @@ export const FoodLogListing = () => {
                             <Table.Tr key={log.id}>
                                 <Table.Td>{log.foodName}</Table.Td>
                                 <Table.Td>{log.calories}</Table.Td>
-                                <Table.Td>dummy protein</Table.Td>
-                                <Table.Td>dummy carb</Table.Td>
-                                <Table.Td>dummy fat</Table.Td>
+                                <Table.Td>{log.protein}</Table.Td>
+                                <Table.Td>{log.carbs}</Table.Td>
+                                <Table.Td>{log.fat}</Table.Td>
                                 <Table.Td>{log.servingSize}</Table.Td>
+                                <Table.Td>{new Date(log.createDate).toLocaleDateString()}</Table.Td>
                                 <Table.Td>
                                     <Group>
                                         <ActionIcon

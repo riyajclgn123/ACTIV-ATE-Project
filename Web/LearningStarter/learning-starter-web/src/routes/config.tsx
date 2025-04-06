@@ -6,18 +6,18 @@ import { UserPage } from "../pages/user-page/user-page";
 import { PageWrapper } from "../components/page-wrapper/page-wrapper";
 import { routes } from ".";
 import { ExerciseListing } from "../pages/Exercises-page/exercise-listing";
-import { FoodListing } from "../pages/foods-page/food-listing";
+import { FoodListing } from "../pages/Foods-page/food-listing";
 import { MealPlanner } from "../pages/MealPlanner/mealplanner";
-import { FoodCreate } from "../pages/foods-page/food-create";
-import { FoodUpdate } from "../pages/foods-page/food-update";
+import { FoodCreate } from "../pages/Foods-page/food-create";
+import { FoodUpdate } from "../pages/Foods-page/food-update";
 import { ExerciseCreate } from "../pages/Exercises-page/exercise-create";
 import { ExerciseUpdate } from "../pages/Exercises-page/exercise-update";
-import { ExerciseLogCreate } from "../pages/ExerciseLog-page/exerciselog-create";
-import { ExerciseLogListing } from "../pages/ExerciseLog-page/exerciselog-listing";
-import { ExerciseLogUpdate } from "../pages/ExerciseLog-page/exerciselog-update";
+import { ExerciseLogCreate } from "../pages/ExerciseLogs-page/exerciselog-create";
+import { ExerciseLogListing } from "../pages/ExerciseLogs-page/exerciselog-listing";
+import { ExerciseLogUpdate } from "../pages/ExerciseLogs-page/exerciselog-update";
 import { BMIIndicator } from "../pages/BMI-Indicator/bmiIndicator";
 import { Profile } from "../pages/profile/profile";
-import { FoodLogListing } from "../pages/food-logs-page/food-logs-listing";
+import { FoodLogListing } from "../pages/Foodlogs-page/food-logs-listing";
 
 
 //This is where you will tell React Router what to render when the path matches the route specified.

@@ -189,7 +189,7 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                 <Image
                   className={classes.logo}
                   w={60}
-                  h={45}
+                  h={40}
                   radius="sm"
                   fallbackSrc="https://placehold.co/600x400?text=Placeholder"
                   src={logo}
