@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
     ApiResponse,
-    ExerciseLogGetDto,
     FoodLogGetDto,
     NutrientGetDto,
 } from "../../constants/types";
@@ -42,9 +41,7 @@ export const FoodLogListing = () => {
 
         setLoading(true);
         try {
-            const response = await api.get<ApiResponse<FoodLogGetDto[]>>(
-                `/api/food-logs/user/${user.id}`
-            );
+            const response = await api.get<ApiResponse<FoodLogGetDto[]>>(`/api/food-logs/user/${user.id}`);
             if (response.data.data) {
                 setLogs(response.data.data);
             }
@@ -127,6 +124,7 @@ export const FoodLogListing = () => {
                             <Table.Th>Carbohydrate</Table.Th>
                             <Table.Th>Fat</Table.Th>
                             <Table.Th>Servings</Table.Th>
+                            <Table.Th>Date</Table.Th>
                             <Table.Th>Actions</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
@@ -140,6 +138,7 @@ export const FoodLogListing = () => {
                                 <Table.Td>{carbs}</Table.Td>
                                 <Table.Td>{fat}</Table.Td>
                                 <Table.Td>{log.servingSize}</Table.Td>
+                                <Table.Td>{new Date(log.createDate).toLocaleDateString()}</Table.Td>
                                 <Table.Td>
                                     <Group>
                                         <ActionIcon

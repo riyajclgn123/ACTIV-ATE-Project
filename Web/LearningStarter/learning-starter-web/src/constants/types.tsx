@@ -120,6 +120,9 @@ export type FoodLogGetDto = {
   userId: number;
   foodId: number;
   foodName: string;
+  protein: number;
+  carbs: number;
+  fat: number;
   caloriesPerServing: number;
   servingSize: number;
   calories: number;

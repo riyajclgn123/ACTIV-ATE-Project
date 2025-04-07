@@ -106,22 +106,21 @@ export const FoodListing = () => {
 
                     {/* Search Dropdown */}
                     {filteredFoods.length > 0 && (
-                        <Container className={classes.dropdown}>
+                        <div className={classes.dropdown}>
                             {filteredFoods.map((food) => (
-                                <Container
+                                <div
                                     key={food.id}
                                     className={classes.dropdownItemContainer}
                                     onClick={() => setSearchQuery(food.name)}
                                 >
-                                    <Container
+                                    <div
                                         className={classes.dropdownItem}
                                         onClick={() => {
                                             handleFoodClick(food);
                                         }}
                                     >
                                         {food.name}
-                                    </Container>
-                                    <Container className={classes.dropdownItem}>
+                                    </div>
                                         <FontAwesomeIcon
                                             className={
                                                 classes.editFoodItemButton
@@ -131,10 +130,9 @@ export const FoodListing = () => {
                                                 handleEditClick(food.id, event);
                                             }}
                                         />
-                                    </Container>
-                                </Container>
+                                </div>
                             ))}
-                        </Container>
+                        </div>
                     )}
                     <Space h="md" />
                     <Container className={classes.buttonContainer}>
@@ -163,8 +161,6 @@ export const FoodListing = () => {
 const useStyles = createStyles(() => {
     return {
         dropdown: {
-            display: "flex",
-            flexDirection: "column",
             position: "absolute",
             top: "100%",
             width: "80%",
@@ -172,8 +168,9 @@ const useStyles = createStyles(() => {
             borderRadius: "5px",
             boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
             zIndex: 10,
-            marginTop: "10px",
-        },
+            marginTop: "5px",
+          },
+
         buttonContainer: {
             display: "flex",
             justifyContent: "space-around",
@@ -181,26 +178,29 @@ const useStyles = createStyles(() => {
             width: "100%",
             margin: "20px",
         },
+
         dropdownItemContainer: {
-            padding: "0px",
-            margin: "0px",
             display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
             width: "100%",
             borderBottom: "1px solid #eee",
             "&:hover": {
                 backgroundColor: "#f5f5f5",
             },
         },
+
         dropdownItem: {
-            width: "100%",
             padding: "5px",
-            cursor: "pointer",
-            "&:hover": {
-                backgroundColor: "#f5f5f5",
-            },
-            color: "black",
-            fontSize: "20px",
+      cursor: "pointer",
+      borderBottom: "1px solid #eee",
+      "&:hover": {
+        backgroundColor: "#f5f5f5",
+      },
+      color: "black",
+      fontSize: "20px",
         },
+
         editFoodItemButton: {
             cursor: "pointer",
             color: "black",
@@ -208,6 +208,7 @@ const useStyles = createStyles(() => {
                 color: "blue",
             },
         },
+        
         container: {
             display: "flex",
             justifyContent: "center",

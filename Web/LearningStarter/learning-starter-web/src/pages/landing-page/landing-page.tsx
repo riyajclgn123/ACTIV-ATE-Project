@@ -1,17 +1,11 @@
 import { Box, Card, Container, Space, Text } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
-import food from "../../assets/foodtracking.jpg";
-import exercise from "../../assets/fitnesstracking.png";
-import setup from "../assets/setup1.jpg";
-import transform from "../assets/transform.jpg";
-import protein from "../assets/okay11.jpg";
-import pregnancy from "../assets/pregnancy1.jpg";
-import meal from "../assets/meal.png";
-import intermediate from "../assets/intermediate.jpg";
 import bgImage from '../../assets/bg.jpeg';
 import { RingProgress } from "@mantine/core";
 import { useState } from "react";
-import { ExerciseLogListing } from "../ExerciseLog-page/exerciselog-listing";
+import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
+import { FoodLogListing } from "../Foodlogs-page/food-logs-listing";
+
 
 
 //This is a basic Component, and since it is used inside of
@@ -42,7 +36,7 @@ export const LandingPage = () => {
     </div>
     </section>
 
-    <section id="after background design" style={{ marginTop: "50px" }}>
+    <section id="after background design" className={classes.afterBackground}>
 
 
         {/* <div className={classes.container2}>Start your Journey with adding your Exercise and Food to track our health </div>
@@ -100,7 +94,16 @@ export const LandingPage = () => {
       </Card>
     </Container>
 
+    <Container className={classes.foodlog}>
+    <Card withBorder shadow="sm" p="lg"  >
+      <FoodLogListing/>
+      </Card>
+    </Container>
+
+    <section>
     
+
+    </section>
 
     </>
   );
@@ -148,7 +151,6 @@ const useStyles = createStyles(() => {
       fontSize: "30px", // Default font size for text
       fontWeight: "bold", // Bold the text
       maxWidth: "60%", // Limit the text width for better readability
-      margin: "0px 0px", // Center align the text
       zIndex: 1, // Make sure text is above the background image
       wordWrap: "break-word", // Ensure text wraps within the container
   
@@ -257,6 +259,12 @@ const useStyles = createStyles(() => {
 
     },
 
+    foodlog: {
+      marginTop: "30px",
+      marginBottom: "30px",
+
+    },
+
     box: {
 
     },
@@ -291,8 +299,10 @@ const useStyles = createStyles(() => {
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
-    }
-
+    },
+    afterBackground: {
+      marginTop: "50px",
+    },
 
   };
 });
