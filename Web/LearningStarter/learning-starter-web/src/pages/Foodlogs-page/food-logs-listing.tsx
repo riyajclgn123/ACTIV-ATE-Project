@@ -17,23 +17,27 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../authentication/use-auth";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate} from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
 
+interface FoodLogWithNutrients extends FoodLogGetDto {
+    nutrients: {
+        protein: number;
+        carbs: number;
+        fat: number;
+    };
+    }
+
 export const FoodLogListing = () => {
     const { classes } = useStyles();
-    const [logs, setLogs] = useState<FoodLogGetDto[]>([]);
+    const [logs, setLogs] = useState<FoodLogWithNutrients[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [nutrients, setNutrients] = useState<NutrientGetDto[]>([]);
-    const [protein, setProtein] = useState<number>(0);
-    const [carbs, setCarbs] = useState<number>(0);
-    const [fat, setFat] = useState<number>(0);
 
     useEffect(() => {
-        fetchLogs();
+        fetchLogs()
     }, [user?.id]);
 
     const fetchLogs = async () => {
@@ -42,9 +46,61 @@ export const FoodLogListing = () => {
         setLoading(true);
         try {
             const response = await api.get<ApiResponse<FoodLogGetDto[]>>(`/api/food-logs/user/${user.id}`);
-            if (response.data.data) {
-                setLogs(response.data.data);
+            if (!response.data.data) {
+                setLogs([]);
+                return;
             }
+              const logsWithNutrients = await Promise.all(
+                response.data.data.map(async (log) => {
+                    try {
+                        const nutrientsResponse = await api.get<ApiResponse<NutrientGetDto[]>>(
+                            `/api/nutrients/by-food/${log.foodId}`
+                        );
+
+                        let protein = 0;
+                        let carbs = 0;
+                        let fat = 0;
+
+                        nutrientsResponse.data.data?.forEach((nutrient) => {
+                            const value = nutrient.value * log.servingSize;
+                            switch (nutrient.nutrientTypeName) {
+                                case "Protein":
+                                    protein = value;
+                                    break;
+                                case "Carbohydrates":
+                                    carbs = value;
+                                    break;
+                                case "Fat":
+                                    fat = value;
+                                    break;
+                            }
+                        });
+
+                        return {
+                            ...log,
+                            nutrients: {
+                                protein,
+                                carbs,
+                                fat,
+                            },
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching nutrients for food ${log.foodId}:`, error);
+                        return {
+                            ...log,
+                            nutrients: {
+                                protein: 0,
+                                carbs: 0,
+                                fat: 0,
+                            },
+                        };
+                    }
+                })
+            );
+
+            setLogs(logsWithNutrients);
+
+
         } catch (error) {
             showNotification({
                 message: "Error fetching food logs",
@@ -55,36 +111,7 @@ export const FoodLogListing = () => {
         }
     };
 
-    const fetchNutrients = async (log: FoodLogGetDto) => {
-        const nutrients = await api.get<ApiResponse<NutrientGetDto[]>>(
-            `/api/nutrients/by-food/${log.foodId}`
-        );
-        console.log("Nutrient API response:", nutrients.data);
-
-        let baseCalories = 0;
-        let baseProtein = 0;
-        let baseCarbs = 0;
-        let baseFat = 0;
-        nutrients.data.data?.forEach((nutrient) => {
-            if (nutrient.nutrientTypeName === "Protein") {
-                baseProtein = nutrient.value;
-            }
-            if (nutrient.nutrientTypeName === "Carbohydrates") {
-                baseCarbs = nutrient.value;
-            }
-            if (nutrient.nutrientTypeName === "Fat") {
-                baseFat = nutrient.value;
-            }
-        });
-        const calculate = async () => {
-            setProtein(baseProtein * log.servingSize);
-            setCarbs(baseCarbs * log.servingSize);
-            setFat(baseFat * log.servingSize);
-        };
-        await calculate();
-    };
-
-    const handleEdit = (log: FoodLogGetDto) => {
+    const handleEdit = (log: FoodLogWithNutrients) => {
         navigate(routes.foodLogUpdate.replace(":id", log.id.toString()), {
             state: {
                 food: {
@@ -134,9 +161,9 @@ export const FoodLogListing = () => {
                             <Table.Tr key={log.id}>
                                 <Table.Td>{log.foodName}</Table.Td>
                                 <Table.Td>{log.calories}</Table.Td>
-                                <Table.Td>{protein}</Table.Td>
-                                <Table.Td>{carbs}</Table.Td>
-                                <Table.Td>{fat}</Table.Td>
+                                <Table.Td>{log.nutrients.protein.toFixed(1)}</Table.Td>
+                                <Table.Td>{log.nutrients.carbs.toFixed(1)}</Table.Td>
+                                <Table.Td>{log.nutrients.fat.toFixed(1)}</Table.Td>
                                 <Table.Td>{log.servingSize}</Table.Td>
                                 <Table.Td>{new Date(log.createDate).toLocaleDateString()}</Table.Td>
                                 <Table.Td>

@@ -17,9 +17,9 @@ import { ExerciseLogListing } from "../pages/ExerciseLogs-page/exerciselog-listi
 import { ExerciseLogUpdate } from "../pages/ExerciseLogs-page/exerciselog-update";
 import { BMIIndicator } from "../pages/BMI-Indicator/bmiIndicator";
 import { Profile } from "../pages/profile/profile";
-import { FoodLogCreate } from "../pages/food-logs-page/food-logs-create";
+import { FoodLogCreate } from "../pages/FoodLogs-page/food-logs-create";
 {/* import { FoodLogUpdate } from "../pages/food-logs-page/food-logs-update"; */}
-import { FoodLogListing } from "../pages/Foodlogs-page/food-logs-listing";
+import { FoodLogListing } from "../pages/FoodLogs-page/food-logs-listing";
 
 
 //This is where you will tell React Router what to render when the path matches the route specified.

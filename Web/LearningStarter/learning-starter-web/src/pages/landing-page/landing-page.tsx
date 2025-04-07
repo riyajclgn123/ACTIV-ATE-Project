@@ -4,7 +4,7 @@ import bgImage from '../../assets/bg.jpeg';
 import { RingProgress } from "@mantine/core";
 import { useState } from "react";
 import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
-import { FoodLogListing } from "../Foodlogs-page/food-logs-listing";
+import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
 
 
 
