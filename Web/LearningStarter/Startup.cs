@@ -352,7 +352,7 @@ public class Startup
         };
         var seededNutrientType2 = new NutrientType
         {
-            Name="Proteins",
+            Name="Protein",
         };
         var seededNutrientType3 = new NutrientType
         {
@@ -360,17 +360,22 @@ public class Startup
         };
         var seededNutrientType4 = new NutrientType
         {
-            Name="Sugars",
+            Name="Sugar",
         };
         var seededNutrientType5 = new NutrientType
         {
-            Name="Fibers",
+            Name="Fiber",
+        };
+        var seededNutrientType6 = new NutrientType
+        {
+            Name="Fat",
         };
         dataContext.Set<NutrientType>().Add(seededNutrientType1);
         dataContext.Set<NutrientType>().Add(seededNutrientType2);
         dataContext.Set<NutrientType>().Add(seededNutrientType3);
         dataContext.Set<NutrientType>().Add(seededNutrientType4);
         dataContext.Set<NutrientType>().Add(seededNutrientType5);
+        dataContext.Set<NutrientType>().Add(seededNutrientType6);
         dataContext.SaveChanges();
     }
 

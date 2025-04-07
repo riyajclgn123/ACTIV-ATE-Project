@@ -19,6 +19,7 @@ public class NutrientGetDto
 {
     public int Id { get; set; }
     public int NutrientTypeId { get; set; }
+    public string NutrientTypeName { get; set; }
     public int FoodId { get; set; }
     public int Value { get; set; }
     public string Unit { get; set; }

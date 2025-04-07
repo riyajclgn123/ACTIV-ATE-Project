@@ -25,6 +25,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
 import { createStyles } from "@mantine/emotion";
+import { ApiResponse, NutrientGetDto } from "../../constants/types";
 
 interface FoodLogResponse {
     data: {
@@ -70,7 +71,7 @@ export const FoodLogCreate = () => {
                 );
                 if (response.data.data) {
                     setFoodDetails(response.data.data);
-                    calculateNutrition(response.data.data, servings, unit);
+                    calculateNutrition(servings, unit);
                 }
             } catch (error) {
                 console.error("Error fetching food details:", error);
@@ -109,17 +110,20 @@ export const FoodLogCreate = () => {
                 throw new Error("Missing food or user information");
             }
 
+            console.log("servings, unit:", servings, unit);
+
             if (isNaN(servings) || servings <= 0) {
                 throw new Error("Please enter the number of servings");
             }
 
             const response = await api.post<FoodLogResponse>("/api/food-logs", {
-                foodId: food.id,
-                userId: userId,
-                servings: servings,
-                createDate: new Date().toISOString(),
+                FoodId: food.id,
+                UserId: userId,
+                ServingSize: servings,
+                CreateDate: new Date().toISOString(),
             });
-            if (response.data.data) {
+            console.log("Food log post API response:", response.data);
+            if (response.data) {
                 showNotification({
                     title: "Success",
                     message: "Food logged successfully",
@@ -142,34 +146,42 @@ export const FoodLogCreate = () => {
         }
     };
 
-    const calculateNutrition = (
-        foodData: any,
+    const calculateNutrition = async (
         servingAmount: number,
         unitType: string
     ) => {
-        console.log("Calculating nutrition...");
-        console.log("Food Data:", foodData);
-        console.log("Serving Amount:", servingAmount);
-        console.log("Unit Type:", unitType);
+        const nutrients = await api.get<ApiResponse<NutrientGetDto[]>>(
+            `/api/nutrients/by-food/${food.id}`
+        );
+        console.log("Nutrient API response:", nutrients.data);
 
-        if (!foodData) return;
-
-        const baseCalories = foodData.calories || 0;
-        const baseProtein = foodData.protein || 0;
-        const baseCarbs = foodData.carbohydrates || 0;
-        const baseFat = foodData.fat || 0;
-
-        let multiplier = servingAmount;
-        if (unitType === "Grams" && foodData.servingSizeGrams) {
-            multiplier = servingAmount / foodData.servingSizeGrams;
-        } else if (unitType === "Ounces" && foodData.servingSizeGrams) {
-            // Convert ounces to grams (1 oz ≈ 28.35g) then calculate
-            multiplier = (servingAmount * 28.35) / foodData.servingSizeGrams;
+        let baseCalories = 0;
+        let baseProtein = 0;
+        let baseCarbs = 0;
+        let baseFat = 0;
+        nutrients.data.data?.forEach((nutrient) => {
+            if (nutrient.nutrientTypeName === "Calories") {
+                baseCalories = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Protein") {
+                baseProtein = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Carbohydrates") {
+                baseCarbs = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Fat") {
+                baseFat = nutrient.value;
+            }
         }
-        setCalories(baseCalories * multiplier);
-        setProtein(baseProtein * multiplier);
-        setCarbs(baseCarbs * multiplier);
-        setFat(baseFat * multiplier);
+        );
+
+        const calculate = async () => {
+            setCalories(baseCalories * servings);
+            setProtein(baseProtein * servings);
+            setCarbs(baseCarbs * servings);
+            setFat(baseFat * servings);
+        };
+        await calculate();
     };
 
     return (
@@ -207,11 +219,7 @@ export const FoodLogCreate = () => {
                             onChange={(value) => {
                                 const newServings = Number(value) || 1;
                                 setServings(newServings);
-                                calculateNutrition(
-                                    foodDetails,
-                                    newServings,
-                                    unit
-                                );
+                                calculateNutrition(newServings, unit);
                             }}
                             min={1}
                             required
@@ -222,11 +230,7 @@ export const FoodLogCreate = () => {
                             onChange={(val) => {
                                 const newUnit = val || "Serving";
                                 setUnit(newUnit);
-                                calculateNutrition(
-                                    foodDetails,
-                                    servings,
-                                    newUnit
-                                );
+                                calculateNutrition(servings, newUnit);
                             }}
                             data={units}
                             required

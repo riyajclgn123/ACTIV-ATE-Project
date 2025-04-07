@@ -3,6 +3,7 @@ import {
     ApiResponse,
     ExerciseLogGetDto,
     FoodLogGetDto,
+    NutrientGetDto,
 } from "../../constants/types";
 import { showNotification } from "@mantine/notifications";
 import api from "../../config/axios";
@@ -17,7 +18,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../authentication/use-auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
 
@@ -27,6 +28,10 @@ export const FoodLogListing = () => {
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [nutrients, setNutrients] = useState<NutrientGetDto[]>([]);
+    const [protein, setProtein] = useState<number>(0);
+    const [carbs, setCarbs] = useState<number>(0);
+    const [fat, setFat] = useState<number>(0);
 
     useEffect(() => {
         fetchLogs();
@@ -51,6 +56,35 @@ export const FoodLogListing = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const fetchNutrients = async (log: FoodLogGetDto) => {
+        const nutrients = await api.get<ApiResponse<NutrientGetDto[]>>(
+            `/api/nutrients/by-food/${log.foodId}`
+        );
+        console.log("Nutrient API response:", nutrients.data);
+
+        let baseCalories = 0;
+        let baseProtein = 0;
+        let baseCarbs = 0;
+        let baseFat = 0;
+        nutrients.data.data?.forEach((nutrient) => {
+            if (nutrient.nutrientTypeName === "Protein") {
+                baseProtein = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Carbohydrates") {
+                baseCarbs = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Fat") {
+                baseFat = nutrient.value;
+            }
+        });
+        const calculate = async () => {
+            setProtein(baseProtein * log.servingSize);
+            setCarbs(baseCarbs * log.servingSize);
+            setFat(baseFat * log.servingSize);
+        };
+        await calculate();
     };
 
     const handleEdit = (log: FoodLogGetDto) => {
@@ -98,12 +132,13 @@ export const FoodLogListing = () => {
                     </Table.Thead>
                     <Table.Tbody>
                         {logs.map((log) => (
+                            //fetchNutrients(log),
                             <Table.Tr key={log.id}>
                                 <Table.Td>{log.foodName}</Table.Td>
                                 <Table.Td>{log.calories}</Table.Td>
-                                <Table.Td>dummy protein</Table.Td>
-                                <Table.Td>dummy carb</Table.Td>
-                                <Table.Td>dummy fat</Table.Td>
+                                <Table.Td>{protein}</Table.Td>
+                                <Table.Td>{carbs}</Table.Td>
+                                <Table.Td>{fat}</Table.Td>
                                 <Table.Td>{log.servingSize}</Table.Td>
                                 <Table.Td>
                                     <Group>

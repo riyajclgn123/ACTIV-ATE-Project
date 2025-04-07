@@ -65,6 +65,35 @@ public class NutrientsController : ControllerBase
         return Ok(response);
     }
     
+    [HttpGet("by-food/{foodId}")]
+    public IActionResult GetByFoodId(int foodId)
+    {
+        var response = new Response();
+
+        var nutrients = _dataContext
+            .Set<Nutrient>()
+            .Where(n => n.FoodId == foodId)
+            .Select(nutrient => new NutrientGetDto
+            {
+                Id = nutrient.Id,
+                NutrientTypeId = nutrient.NutrientTypeId,
+                NutrientTypeName = nutrient.NutrientType.Name,
+                FoodId = nutrient.FoodId,
+                Unit = nutrient.Unit,
+                Value = nutrient.Value
+            })
+            .ToList();
+
+        if (nutrients == null || !nutrients.Any())
+        {
+            response.AddError("foodId", "No nutrients found for the given Food Id");
+            return NotFound(response);
+        }
+
+        response.Data = nutrients;
+        return Ok(response);
+    }
+    
     [HttpPost]
     public IActionResult Create([FromBody] NutrientCreateDto createDto)
     {

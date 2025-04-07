@@ -1,5 +1,11 @@
 import { FormErrors, UseForm } from "@mantine/form/lib/types";
-import { ApiResponse, FoodCreateDto, FoodGetDto } from "../../constants/types";
+import {
+    ApiResponse,
+    FoodCreateDto,
+    FoodGetDto,
+    NutrientGetDto,
+    NutrientTypeGetDto,
+} from "../../constants/types";
 import { useForm } from "@mantine/form";
 import {
     Button,
@@ -13,8 +19,16 @@ import { routes } from "../../routes";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { showNotification } from "@mantine/notifications";
+import { useState } from "react";
 
 export const FoodCreate = () => {
+    const [calories, setCalories] = useState<number>(0);
+    const [protein, setProtein] = useState<number>(0);
+    const [carbs, setCarbs] = useState<number>(0);
+    const [fat, setFat] = useState<number>(0);
+    const [fiber, setFiber] = useState<number>(0);
+    const [sugar, setSugar] = useState<number>(0);
+
     const navigate = useNavigate();
     const mantineForm = useForm<FoodCreateDto>({
         initialValues: {
@@ -36,13 +50,56 @@ export const FoodCreate = () => {
     });
 
     const submitFood = async (values: FoodCreateDto) => {
-        const response = await api.post<ApiResponse<FoodGetDto>>(
+        const foodResponse = await api.post<ApiResponse<FoodGetDto>>(
             "/api/foods",
-            values
+            {
+                name: values.name,
+                description: values.description,
+            }
         );
 
-        if (response.data.hasErrors) {
-            const formErrors: FormErrors = response.data.errors.reduce(
+        const postNutrients = async () => {
+            api.post<ApiResponse<NutrientGetDto>>("/api/nutrients", {
+                Unit: "g",
+                Value: calories,
+                FoodId: foodResponse.data.data?.id,
+                NutrientTypeId: 1,
+            });
+            api.post<ApiResponse<NutrientGetDto>>("/api/nutrients", {
+                Unit: "g",
+                Value: protein,
+                FoodId: foodResponse.data.data?.id,
+                NutrientTypeId: 2,
+            });
+            api.post<ApiResponse<NutrientGetDto>>("/api/nutrients", {
+                Unit: "g",
+                Value: carbs,
+                FoodId: foodResponse.data.data?.id,
+                NutrientTypeId: 3,
+            });
+            api.post<ApiResponse<NutrientGetDto>>("/api/nutrients", {
+                Unit: "g",
+                Value: sugar,
+                FoodId: foodResponse.data.data?.id,
+                NutrientTypeId: 4,
+            });
+            api.post<ApiResponse<NutrientGetDto>>("/api/nutrients", {
+                Unit: "g",
+                Value: fiber,
+                FoodId: foodResponse.data.data?.id,
+                NutrientTypeId: 5,
+            });
+            api.post<ApiResponse<NutrientGetDto>>("/api/nutrients", {
+                Unit: "g",
+                Value: fat,
+                FoodId: foodResponse.data.data?.id,
+                NutrientTypeId: 6,
+            });
+        };
+        await postNutrients();
+
+        if (foodResponse.data.hasErrors) {
+            const formErrors: FormErrors = foodResponse.data.errors.reduce(
                 (prev, curr) => {
                     Object.assign(prev, { [curr.property]: curr.message });
                     return prev;
@@ -52,7 +109,7 @@ export const FoodCreate = () => {
             mantineForm.setErrors(formErrors);
         }
 
-        if (response.data.data) {
+        if (foodResponse.data.data) {
             showNotification({
                 message: "Food created successfully",
                 color: "green",
@@ -82,6 +139,7 @@ export const FoodCreate = () => {
                     placeholder="Enter food calories"
                     withAsterisk
                     min={0}
+                    onChange={(value) => setCalories(Number(value) || 0)}
                 />
                 <NumberInput
                     {...mantineForm.getInputProps("protein")}
@@ -89,6 +147,7 @@ export const FoodCreate = () => {
                     placeholder="Enter food protein"
                     withAsterisk
                     min={0}
+                    onChange={(value) => setProtein(Number(value) || 0)}
                 />
                 <NumberInput
                     {...mantineForm.getInputProps("carbs")}
@@ -96,6 +155,7 @@ export const FoodCreate = () => {
                     placeholder="Enter food carbs"
                     withAsterisk
                     min={0}
+                    onChange={(value) => setCarbs(Number(value) || 0)}
                 />
                 <NumberInput
                     {...mantineForm.getInputProps("fat")}
@@ -103,6 +163,7 @@ export const FoodCreate = () => {
                     placeholder="Enter food fat"
                     withAsterisk
                     min={0}
+                    onChange={(value) => setFat(Number(value) || 0)}
                 />
                 <NumberInput
                     {...mantineForm.getInputProps("fiber")}
@@ -110,6 +171,7 @@ export const FoodCreate = () => {
                     placeholder="Enter food fiber"
                     withAsterisk
                     min={0}
+                    onChange={(value) => setFiber(Number(value) || 0)}
                 />
                 <NumberInput
                     {...mantineForm.getInputProps("sugar")}
@@ -117,6 +179,7 @@ export const FoodCreate = () => {
                     placeholder="Enter food sugar"
                     withAsterisk
                     min={0}
+                    onChange={(value) => setSugar(Number(value) || 0)}
                 />
                 <Space h={18} />
                 <Flex direction={"row"}>
