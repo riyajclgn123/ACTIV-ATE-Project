@@ -2,7 +2,7 @@ import { Box, Card, Container, Space, Text } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import { Tabs } from '@mantine/core';
 import { UserPage } from "../user-page/user-page";
-
+import { WeightMeasure } from "./WeightMeasure";
 
 
 
@@ -41,7 +41,7 @@ export const Profile = () => {
       </Tabs.Panel>
 
       <Tabs.Panel value="weightMeasure">
-        Weight Measure tab content
+        <WeightMeasure/>
       </Tabs.Panel>
     </Tabs>
 

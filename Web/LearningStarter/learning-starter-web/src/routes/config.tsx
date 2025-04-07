@@ -6,10 +6,9 @@ import { UserPage } from "../pages/user-page/user-page";
 import { PageWrapper } from "../components/page-wrapper/page-wrapper";
 import { routes } from ".";
 import { ExerciseListing } from "../pages/Exercises-page/exercise-listing";
-import { FoodListing } from "../pages/foods-page/food-listing";
 import { MealPlanner } from "../pages/MealPlanner/mealplanner";
-import { FoodCreate } from "../pages/foods-page/food-create";
-import { FoodUpdate } from "../pages/foods-page/food-update";
+import { FoodCreate } from "../pages/Foods-page/food-create";
+import { FoodUpdate } from "../pages/Foods-page/food-update";
 import { ExerciseCreate } from "../pages/Exercises-page/exercise-create";
 import { ExerciseUpdate } from "../pages/Exercises-page/exercise-update";
 import { ExerciseLogCreate } from "../pages/ExerciseLog-page/exerciselog-create";
@@ -44,7 +43,7 @@ export const Routes = () => {
 
           {/* When path === /foods render FoodListing */}`
 
-          <Route path={routes.foods} element={<FoodListing />} />
+          <Route path={routes.foods} element={<FoodLogListing />} />
           <Route path={routes.foodCreate} element={<FoodCreate />} />
           <Route path={routes.foodUpdate} element={<FoodUpdate />} />
 
