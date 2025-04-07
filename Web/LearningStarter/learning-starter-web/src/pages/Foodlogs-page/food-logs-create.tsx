@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
  import { useNavigate, useLocation } from "react-router-dom";
  import {
@@ -25,16 +26,19 @@ import { useEffect, useState } from "react";
  } from "@fortawesome/free-solid-svg-icons";
  import { showNotification } from "@mantine/notifications";
  import { createStyles } from "@mantine/emotion";
+ import { ApiResponse, FoodLogGetDto, NutrientGetDto } from "../../constants/types";
  
  interface FoodLogResponse {
-     data: {
-         id: number;
-         calories: number;
-         protein: number;
-         carbs: number;
-         fat: number;
-     };
- }
+    data: {
+        id: number;
+        calories: number;
+        servings: number;
+
+
+
+        
+    };
+}
  
  export const FoodLogCreate = () => {
      const { classes } = useStyles();
@@ -61,27 +65,28 @@ import { useEffect, useState } from "react";
              userId: number;
          }) || {};
  
-     useEffect(() => {
-         async function fetchFoodDetails() {
-             setIsLoading(true);
-             try {
-                 const response = await api.get<FoodLogResponse>(
-                     `/api/foods/${food.id}`
-                 );
-                 if (response.data.data) {
-                     setFoodDetails(response.data.data);
-                     calculateNutrition(response.data.data, servings, unit);
-                 }
-             } catch (error) {
-                 console.error("Error fetching food details:", error);
-             } finally {
-                 setIsLoading(false);
-             }
-         }
-         if (food?.id) {
-             fetchFoodDetails();
-         }
-     }, [food.id, servings, unit]);
+         useEffect(() => {
+            async function fetchFoodDetails() {
+                setIsLoading(true);
+                try {
+                    const response = await api.get<FoodLogResponse>(
+                        `/api/foods/${food.id}`
+                    );
+                    if (response.data.data) {
+                        setFoodDetails(response.data.data);
+                        calculateNutrition(servings, unit);
+                    }
+                } catch (error) {
+                    console.error("Error fetching food details:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+            if (food?.id) {
+                fetchFoodDetails();
+            }
+        }, [food.id, servings, unit]);
+
  
      if (!food?.id || !userId) {
          return (
@@ -108,18 +113,23 @@ import { useEffect, useState } from "react";
              if (!food?.id || !userId) {
                  throw new Error("Missing food or user information");
              }
+             console.log("servings, unit:", servings, unit);
  
              if (isNaN(servings) || servings <= 0) {
-                 throw new Error("Please enter the number of servings");
-             }
+                throw new Error("Serving size must be greater than zero");
+            }
  
              const response = await api.post<FoodLogResponse>("/api/food-logs", {
                  foodId: food.id,
                  userId: userId,
-                 servings: servings,
+                 servingSize: servings,
+                 calories: calories,
                  createDate: new Date().toISOString(),
              });
-             if (response.data.data) {
+
+             console.log("Food log post API response:", response.data);
+
+             if (response.data) {
                  showNotification({
                      title: "Success",
                      message: "Food logged successfully",
@@ -142,35 +152,44 @@ import { useEffect, useState } from "react";
          }
      };
  
-     const calculateNutrition = (
-         foodData: any,
-         servingAmount: number,
-         unitType: string
-     ) => {
-         console.log("Calculating nutrition...");
-         console.log("Food Data:", foodData);
-         console.log("Serving Amount:", servingAmount);
-         console.log("Unit Type:", unitType);
- 
-         if (!foodData) return;
- 
-         const baseCalories = foodData.calories || 0;
-         const baseProtein = foodData.protein || 0;
-         const baseCarbs = foodData.carbohydrates || 0;
-         const baseFat = foodData.fat || 0;
- 
-         let multiplier = servingAmount;
-         if (unitType === "Grams" && foodData.servingSizeGrams) {
-             multiplier = servingAmount / foodData.servingSizeGrams;
-         } else if (unitType === "Ounces" && foodData.servingSizeGrams) {
-             // Convert ounces to grams (1 oz ≈ 28.35g) then calculate
-             multiplier = (servingAmount * 28.35) / foodData.servingSizeGrams;
-         }
-         setCalories(baseCalories * multiplier);
-         setProtein(baseProtein * multiplier);
-         setCarbs(baseCarbs * multiplier);
-         setFat(baseFat * multiplier);
-     };
+     const calculateNutrition = async(
+        servingAmount: number,
+        unitType: string
+    ) => {
+        try {
+        const nutrients = await api.get<ApiResponse<NutrientGetDto[]>>(
+            `/api/nutrients/by-food/${food.id}`
+        );
+        console.log("Nutrient API response:", nutrients.data);
+        
+    
+        let baseCalories = 0;
+        let baseProtein = 0;
+        let baseCarbs = 0;
+        let baseFat = 0;
+
+        nutrients.data.data?.forEach((nutrient) => {
+            if (nutrient.nutrientTypeName === "Calories") {
+                baseCalories = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Protein") {
+                baseProtein = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Carbohydrates") {
+                baseCarbs = nutrient.value;
+            }
+            if (nutrient.nutrientTypeName === "Fat") {
+                baseFat = nutrient.value;
+            }
+        });
+        setCalories(baseCalories * servingAmount);
+        setProtein(baseProtein * servingAmount);
+        setCarbs(baseCarbs * servingAmount);
+        setFat(baseFat * servingAmount);
+    } catch (error) {
+        console.error("Error calculating nutrition:", error);
+    }
+};
  
      return (
          <Box maw={600} mx="auto" p="md" pos="relative">
@@ -207,11 +226,7 @@ import { useEffect, useState } from "react";
                              onChange={(value) => {
                                  const newServings = Number(value) || 1;
                                  setServings(newServings);
-                                 calculateNutrition(
-                                     foodDetails,
-                                     newServings,
-                                     unit
-                                 );
+                                calculateNutrition(newServings, unit);
                              }}
                              min={1}
                              required
@@ -222,11 +237,7 @@ import { useEffect, useState } from "react";
                              onChange={(val) => {
                                  const newUnit = val || "Serving";
                                  setUnit(newUnit);
-                                 calculateNutrition(
-                                     foodDetails,
-                                     servings,
-                                     newUnit
-                                 );
+                                 calculateNutrition(servings, newUnit);
                              }}
                              data={units}
                              required
