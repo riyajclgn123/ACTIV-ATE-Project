@@ -4,7 +4,6 @@ import {
     FoodCreateDto,
     FoodGetDto,
     NutrientGetDto,
-    NutrientTypeGetDto,
 } from "../../constants/types";
 import { useForm } from "@mantine/form";
 import {

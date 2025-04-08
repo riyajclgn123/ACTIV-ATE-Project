@@ -143,6 +143,14 @@ export type FoodLogUpdateDto = {
   servingSize: number;
   updateDate: string;
 };
+export type NutrientGetDto = {
+  id: number;
+  nutrientTypeId : number;
+  foodId: number;
+  nutrientTypeName: string;
+  value: number;
+  unit: string;
+};
 
 export type WeightLogGetDto={
   id: number;

@@ -22,5 +22,4 @@ export const routes = {
   mealplanner: `/mealplanner`,
   profile: `/profile`,
   
-  
 };

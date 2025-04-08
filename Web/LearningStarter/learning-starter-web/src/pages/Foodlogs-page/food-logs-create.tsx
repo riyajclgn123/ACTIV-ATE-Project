@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
  import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
  import {
      faArrowLeft,
-     faArrowRight,
      faCheck,
      faHistory,
  } from "@fortawesome/free-solid-svg-icons";
@@ -33,10 +32,6 @@ import { useEffect, useState } from "react";
         id: number;
         calories: number;
         servings: number;
-
-
-
-        
     };
 }
  

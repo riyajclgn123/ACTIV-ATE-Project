@@ -89,7 +89,7 @@ export const FoodListing = () => {
                 className={classes.container}
                 fluid
                 p={0}
-                style={{ maxWidth: "auto" }}
+                style={{ maxWidth: "100vw" }}
             >
                 <Container className={classes.overlayText}>
                     <h2>Insert your Food</h2>
@@ -224,18 +224,6 @@ const useStyles = createStyles(() => {
             backgroundPosition: "center", // Center the image in the container
             backgroundRepeat: "no-repeat", // Prevent repeating the background image
             padding: "0px",
-            [`@media (max-width: 1024px)`]: {
-                maxWidth: "500px", // Reduce width for medium screens
-              },
-        
-              [`@media (max-width: 768px)`]: {
-                maxWidth: "450px", // Further reduce for tablets
-              },
-        
-              [`@media (max-width: 480px)`]: {
-                height: "400px",
-                padding: "5px",
-              },
         },
 
         overlayText: {
@@ -250,9 +238,6 @@ const useStyles = createStyles(() => {
             fontWeight: "bold", // Bold the text
             maxWidth: "80%", // Limit the text width for better readability
             zIndex: 1, // Make sure text is above the background image
-            [`@media (max-width: 768px)`]: {
-                fontSize: "24px",
-              },
         },
 
         searchbox: {
