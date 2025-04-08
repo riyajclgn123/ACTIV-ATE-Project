@@ -36,7 +36,7 @@ const useStyles = createStyles(() => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#b2f2bb", // Dark theme background
+        backgroundColor: "#1c7ed6", // Dark theme background
         fontSize: "15px",
         width: "100%",  // Ensures the footer takes full width of the screen
         marginTop: "10px",

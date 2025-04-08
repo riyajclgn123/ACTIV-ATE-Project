@@ -241,6 +241,7 @@ const useStyles = createStyles((theme) => {
     },
     paddedMenuItem: {
       margin: "0px 5px 0px 5px",
+      color:"black"
     },
     linkActive: {
       "&, &:hover": {
@@ -250,12 +251,14 @@ const useStyles = createStyles((theme) => {
     },
     desktopNav: {
       height: NAVBAR_HEIGHT,
+       
     },
     fullHeight: {
       height: "100%",
+     
     },
     container: {
-      backgroundColor: "#b2f2bb",
+      backgroundColor: "#1c7ed6",
     },
   };
 });

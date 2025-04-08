@@ -18,26 +18,41 @@ export const MealPlanner = () => {
     
 
   return (
-    <Container>
+    <div >
       {/* <Header height = {32}>Exercises</Header> */}
       <Space h="md"/>
-      <Title>Meal Planner</Title>
+      <Title  style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize:"50px",
+        fontWeight: 500,
+        color: "sandybrown",
+
+      }}>
+        
+        Meal Plans
+        
+      </Title>
 
       <Space h="md"/>
 
       <div className={classes.container}>
 
-      <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={mealplan1}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
       <Group align="apart" mt="md" mb="xs">
-        <Text size="lg" fw={500}>Norway Ford Adventures</Text>
+        <Text size="lg" fw={500}>High Calorie Meal</Text>
         <Badge color="blue" variant="light">
           New
         </Badge>
@@ -48,21 +63,24 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+        Look for Ingredient and Recipes
       </Button>
     </Card>
 
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={mealplan2}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
       <Group align="apart" mt="md" mb="xs">
-        <Text size="lg" fw={500}>Norway Fjord Adventures</Text>
+        <Text size="lg" fw={500}>High Protein Meal</Text>
         <Badge color="blue" variant="light">
           New
         </Badge>
@@ -73,21 +91,24 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
 
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={mealplan3}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
       <Group align="apart" mt="md" mb="xs">
-        <Text size="lg" fw={500}>Norway Fjord Adventures</Text>
+        <Text size="lg" fw={500}>High Carbohydrate Meal</Text>
         <Badge color="blue" variant="light">
           New
         </Badge>
@@ -98,18 +119,21 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
     </div>
    
     <div className={classes.container}>
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={mealplan4}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
@@ -125,16 +149,19 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
 
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={mealplan5}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
@@ -150,16 +177,19 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
 
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={mealplan6}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
@@ -175,19 +205,22 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
 
     </div>
 
     <div className={classes.container}>
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={meal1}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
@@ -203,16 +236,19 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
 
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={classes.card}>
       <Card.Section>
         <Image
           src={meal2}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
@@ -228,16 +264,19 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
 
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder  className={classes.card}>
       <Card.Section>
         <Image
           src={meal3}
-          height={160}
+          height={600}
+          width="100%"
+          fit="fill"
           alt="Norway"
+           radius="md"
         />
       </Card.Section>
 
@@ -253,14 +292,14 @@ export const MealPlanner = () => {
       </Text>
 
       <Button color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
+      Look for Ingredient and Recipes
       </Button>
     </Card>
 
     </div>
     
 
-    </Container>
+    </div>
   );
 };
 
@@ -270,9 +309,18 @@ const useStyles = createStyles (() =>{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        margin: "10px",
-        gap: "20px",
+        margin: "30px",
+        gap: "50px",
     },
+    card:{
+      
+      "&:hover": {
+        cursor: "pointer",
+        //boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+        transform: "scale(1.05)",
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+      },
+    }
 
   }
 })

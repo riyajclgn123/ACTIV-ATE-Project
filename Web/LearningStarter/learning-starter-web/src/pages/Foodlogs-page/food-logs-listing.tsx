@@ -50,7 +50,7 @@ export const FoodLogListing = () => {
                 setLogs([]);
                 return;
             }
-              const logsWithNutrients = await Promise.all(
+            const logsWithNutrients = await Promise.all(
                 response.data.data.map(async (log) => {
                     try {
                         const nutrientsResponse = await api.get<ApiResponse<NutrientGetDto[]>>(
