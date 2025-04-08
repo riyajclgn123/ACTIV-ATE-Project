@@ -144,16 +144,15 @@ export type FoodLogUpdateDto = {
   updateDate: string;
 };
 
-export type NutrientGetDto = {
+export type WeightLogGetDto={
   id: number;
-  nutrientTypeId : number;
-  foodId: number;
-  nutrientTypeName: string;
+  userId: number;
   value: number;
-  unit: string;
-};
+  logDate: string;
+}
 
-export type NutrientTypeGetDto = {
-  id: number;
-  name: string;
-};
+export type WeightLogCreateDto={
+  userId: number;
+  value: number;
+  logDate: string;
+}

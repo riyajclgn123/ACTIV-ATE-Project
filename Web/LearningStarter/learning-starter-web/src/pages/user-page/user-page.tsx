@@ -6,7 +6,7 @@ export const UserPage = () => {
   const user = useUser();
   const { classes } = useStyles();
 
-  console.log("i am here", user)
+
   return (
     <Container>
       <Container>

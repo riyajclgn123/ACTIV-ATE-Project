@@ -40,6 +40,13 @@ public class WeightLogUpdateDto
    public DateTimeOffset LogDate { get; set; }
 }
 
+public class WeightLogDeleteDto
+{
+   public int UserId { get; set; }
+   public DateTimeOffset LogDate { get; set; }
+   public decimal Value { get; set; }
+}
+
 
 
 
