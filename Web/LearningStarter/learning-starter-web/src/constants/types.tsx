@@ -127,3 +127,16 @@ export type FoodLogUpdateDto = {
   servingSize: number;
   updateDate: string;
 };
+
+export type WeightLogGetDto={
+  id: number;
+  userId: number;
+  value: number;
+  logDate: string;
+}
+
+export type WeightLogCreateDto={
+  userId: number;
+  value: number;
+  logDate: string;
+}

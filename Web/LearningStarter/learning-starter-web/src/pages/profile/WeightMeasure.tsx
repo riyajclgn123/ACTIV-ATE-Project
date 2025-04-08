@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Text, Button, TextInput, Loader, Table, Notification } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import axios from "axios";
 
 import { useAuth } from "../../authentication/use-auth"; 
+import { createStyles } from "@mantine/emotion";
+import { ApiResponse, WeightLogGetDto } from "../../constants/types";
+import api from "../../config/axios";
 
 interface WeightLog {
   id: number;
@@ -14,9 +16,9 @@ interface WeightLog {
 
 export const WeightMeasure = () => {
   const { user } = useAuth();
-  const userId = user ?.id;
-  
-  const [weightLogs, setWeightLogs] = useState<WeightLog[]>([]);
+  const userId = user?.id;
+  const {classes} = useStyles();
+  const [weightLogs, setWeightLogs] = useState<WeightLogGetDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -44,22 +46,27 @@ export const WeightMeasure = () => {
     
     try {
       setLoading(true);
-      const response = await axios.get("/api/weight-logs");
-      console.log('responsedata', response.data.data)
+      const response = await api.get<ApiResponse<WeightLogGetDto[]>>(`/api/weight-logs/${userId}`);
+      console.log('responsedata', response.data.data);
       setWeightLogs(response.data.data);
+      if (response.data.data === null || response.data.data === undefined) {
+        setWeightLogs([]);
+      } else {
+        setWeightLogs(response.data.data);
+      }
       setError(null);
-    } catch (err) {
+    } catch (err:unknown) {
       console.error("Error fetching weight logs:", err);
-      setError("Failed to load weight data");
-      
+      setError("Failed to load weight data: " );
     } finally {
       setLoading(false);
     }
   };
  
-  
   useEffect(() => {
-    fetchWeightLogs();
+    if (userId) {
+      fetchWeightLogs();
+    }else{ setLoading (false);} 
   }, [userId]); 
   
   const handleSubmit = async (values: { weight: string }) => {
@@ -74,9 +81,9 @@ export const WeightMeasure = () => {
         value: parseFloat(values.weight),
         logDate: new Date().toISOString(),
       };
-      console.log('Weight Log', weightLogs)
+      console.log('Weight Log', weightLogs);
       
-      await axios.post("/api/weight-logs", payload);
+      await api.post<ApiResponse<WeightLogGetDto>>("/api/weight-logs", payload);
       setSuccess(true);
       form.reset();
       fetchWeightLogs();
@@ -125,25 +132,33 @@ export const WeightMeasure = () => {
       {weightLogs.length === 0 ? (
         <Text color="dimmed">No weight records found</Text>
       ) : (
+        <div className={classes.table}>
         <Table striped highlightOnHover>
-          <thead>
-            <tr>
+          <Table.Thead>
+            <Table.Tr>
               <th>Date</th>
               <th>Weight (kg)</th>
-            </tr>
-          </thead>
-          <tbody>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
             {weightLogs.map((log) => (
-              <tr key={log.id}>
-                <td>{new Date(log.logDate).toLocaleDateString()}</td>
-                <td>{log.value.toFixed(1)}</td>
-              </tr>
+              <Table.Tr key={log.id}>
+                <Table.Td>{new Date(log.logDate).toLocaleDateString()}</Table.Td>
+                <Table.Td>{log.value.toFixed(1)}</Table.Td>
+              </Table.Tr>
             ))}
-          </tbody>
+          </Table.Tbody>
         </Table>
+        </div>
       )}
     </div>
   );
 }; 
 
-
+const useStyles = createStyles(() => {
+  return {
+    table: {
+      margin: "20px",
+    }
+  }
+});

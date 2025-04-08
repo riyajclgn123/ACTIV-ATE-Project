@@ -6,6 +6,7 @@ import { WeightMeasure } from "./WeightMeasure";
 
 
 
+
 //This is a basic Component, and since it is used inside of
 //'../../routes/config.tsx' line 31, that also makes it a page
 export const Profile = () => {
@@ -40,9 +41,9 @@ export const Profile = () => {
         Setting tab content
       </Tabs.Panel>
 
-      <Tabs.Panel value="weightMeasure">
-        <WeightMeasure/>
-      </Tabs.Panel>
+       <Tabs.Panel value="weightMeasure">
+        <WeightMeasure/>   
+      </Tabs.Panel> 
     </Tabs>
 
 
