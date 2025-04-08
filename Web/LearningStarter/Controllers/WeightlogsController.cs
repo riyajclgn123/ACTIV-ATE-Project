@@ -16,14 +16,16 @@ public class WeightLogController : ControllerBase
     public WeightLogController(DataContext context)
     {
         _context = context;
+        
     }
-    [HttpGet]
-    public IActionResult GetAll()
+    [HttpGet("{userId}")]
+    public IActionResult GetAllByUserId(int userId)
     {
         var response = new Response();
 
         var data = _context
             .Set<WeightLog>()
+            .Where(weightlog => weightlog.UserId == userId)
             .Select(weightlog => new WeightLogGetDto
             {
                 Id = weightlog.Id,
@@ -32,15 +34,15 @@ public class WeightLogController : ControllerBase
                 LogDate = weightlog.LogDate,
             })
             .ToList();
+
         if (!data.Any())
         {
             return NoContent();
-
         }
+
         response.Data = data;
         return Ok(response);
-        
-   }
+    }
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] WeightLogUpdateDto updateDto)
     {
