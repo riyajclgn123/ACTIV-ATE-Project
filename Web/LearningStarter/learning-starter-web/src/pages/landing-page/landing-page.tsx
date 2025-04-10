@@ -5,6 +5,7 @@ import { RingProgress } from "@mantine/core";
 import { useState } from "react";
 import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
 import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
+import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
 
 
 
@@ -100,11 +101,11 @@ export const LandingPage = () => {
       </Card>
     </Container>
 
-    <section>
-    
-
-    </section>
-
+    <Container className={classes.macronutrient}>
+    <Card withBorder shadow="sm" p="lg"  >
+      <MacroNutrient/>
+      </Card>
+    </Container>
     </>
   );
 };
@@ -265,6 +266,11 @@ const useStyles = createStyles(() => {
 
     },
 
+    macronutrient:{
+        marginTop: "30px",
+        marginBottom: "30px",
+    },
+
     box: {
 
     },
@@ -294,12 +300,14 @@ const useStyles = createStyles(() => {
         gap: "10px", // Space between items
       },
     },
+
     text: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
     },
+
     afterBackground: {
       marginTop: "50px",
     },
