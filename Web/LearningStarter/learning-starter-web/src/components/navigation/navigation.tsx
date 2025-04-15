@@ -21,7 +21,12 @@ import {
   NAVBAR_HEIGHT,
   NAVBAR_HEIGHT_NUMBER,
 } from "../../constants/theme-constants";
-import { NavLink, NavLinkProps, useLocation, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  NavLinkProps,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import logo from "../../assets/Activ-Ate.png";
 import { UserDto } from "../../constants/types";
 import { useAuth } from "../../authentication/use-auth";
@@ -212,12 +217,20 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                   <Menu.Item onClick={() => toggleColorScheme()}>
                     {dark ? "Light mode" : "Dark mode"}
                   </Menu.Item>
-                 <Menu.Item onClick={() => navigate(routes.profile)}>Profile</Menu.Item>
-                 
-                  <Menu.Item onClick={() => navigate(routes.profile)}>Weekly Report</Menu.Item>
-                  <Menu.Item onClick={() => navigate(routes.profile)}>Weight Measure</Menu.Item>
+                  <Menu.Item onClick={() => navigate(routes.profile)}>
+                    Profile
+                  </Menu.Item>
+
+                  <Menu.Item onClick={() => navigate(routes.profile)}>
+                    Weekly Report
+                  </Menu.Item>
+                  <Menu.Item onClick={() => navigate(routes.profile)}>
+                    Weight Measure
+                  </Menu.Item>
                   <Divider my={5} />
-                  <Menu.Item onClick={() => logout()} color="red">Sign Out</Menu.Item>
+                  <Menu.Item onClick={() => logout()} color="red">
+                    Sign Out
+                  </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
             )}
@@ -241,21 +254,27 @@ const useStyles = createStyles((theme) => {
     },
     paddedMenuItem: {
       margin: "0px 5px 0px 5px",
-      color:"black"
+      color: "black",
     },
     linkActive: {
       "&, &:hover": {
-        backgroundColor: theme.variantColorResolver({theme: theme, color: theme.primaryColor, variant: 'light'}).background,
-        color: theme.variantColorResolver({theme: theme, color: theme.primaryColor, variant: 'light'}).color,
+        backgroundColor: theme.variantColorResolver({
+          theme: theme,
+          color: theme.primaryColor,
+          variant: "light",
+        }).background,
+        color: theme.variantColorResolver({
+          theme: theme,
+          color: theme.primaryColor,
+          variant: "light",
+        }).color,
       },
     },
     desktopNav: {
       height: NAVBAR_HEIGHT,
-       
     },
     fullHeight: {
       height: "100%",
-     
     },
     container: {
       backgroundColor: "#1c7ed6",
