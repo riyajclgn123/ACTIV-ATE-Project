@@ -1,4 +1,5 @@
 import { BMIIndicator } from "../pages/BMI-Indicator/bmiIndicator";
+import { MacroNutrient } from "../pages/MacroNutrient-pages/MacroNutrient";
 
 
 //This is where you will declare all of your routes (the ones that show up in the search bar)
@@ -21,5 +22,6 @@ export const routes = {
   bmi: `/bmi`,
   mealplanner: `/mealplanner`,
   profile: `/profile`,
+  macroNutrient: `/macroNutrient`,
   
 };
