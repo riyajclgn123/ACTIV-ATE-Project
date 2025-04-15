@@ -98,7 +98,7 @@ export const WeightMeasure = () => {
   if (loading) return <Loader />;
   
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ maxWidth: 800, marginLeft: "20px" }}>
       <Text size="xl" mb="md" fw={500}>Weight Tracking</Text>
       
       {error && (

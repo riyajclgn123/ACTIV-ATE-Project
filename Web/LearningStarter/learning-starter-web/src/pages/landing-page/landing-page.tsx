@@ -276,7 +276,6 @@ const useStyles = createStyles(() => {
     },
 
     coursel: {
-      backgroundColor: "white",
       gap: "100px",
       flexDirection: "row",
       display: "flex",

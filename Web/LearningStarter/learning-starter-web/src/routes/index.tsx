@@ -23,5 +23,6 @@ export const routes = {
   mealplanner: `/mealplanner`,
   profile: `/profile`,
   macroNutrient: `/macroNutrient`,
+  weeklyReport: `/weeklyReport`,
   
 };

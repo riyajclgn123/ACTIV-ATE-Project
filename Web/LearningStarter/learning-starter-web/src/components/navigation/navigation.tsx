@@ -188,9 +188,9 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
               <NavLink to={routes.root}>
                 <Image
                   className={classes.logo}
-                  w={60}
-                  h={40}
-                  radius="sm"
+                  w={45}
+                  h={45}
+                  radius="xl"
                   fallbackSrc="https://placehold.co/600x400?text=Placeholder"
                   src={logo}
                   alt="logo"
@@ -214,7 +214,7 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                   </Menu.Item>
                  <Menu.Item onClick={() => navigate(routes.profile)}>Profile</Menu.Item>
                  
-                  <Menu.Item onClick={() => navigate(routes.profile)}>Weekly Report</Menu.Item>
+                  <Menu.Item onClick={() => navigate(routes.weeklyReport)}>Weekly Report</Menu.Item>
                   <Menu.Item onClick={() => navigate(routes.profile)}>Weight Measure</Menu.Item>
                   <Divider my={5} />
                   <Menu.Item onClick={() => logout()} color="red">Sign Out</Menu.Item>
@@ -258,7 +258,8 @@ const useStyles = createStyles((theme) => {
      
     },
     container: {
-      backgroundColor: "#1c7ed6",
+      backgroundColor: "purple",
+      
     },
   };
 });
