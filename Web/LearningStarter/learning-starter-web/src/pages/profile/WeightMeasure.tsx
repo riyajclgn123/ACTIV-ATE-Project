@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Text, Button, TextInput, Loader, Table, Notification } from "@mantine/core";
+import {
+  Text,
+  Button,
+  TextInput,
+  Loader,
+  Table,
+  Notification,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useAuth } from "../../authentication/use-auth";
 import { createStyles } from "@mantine/emotion";
@@ -25,7 +32,7 @@ export const WeightMeasure = () => {
 
   const form = useForm({
     initialValues: {
-      weight: '',
+      weight: "",
     },
     validate: {
       weight: (value) => {
@@ -76,22 +83,19 @@ export const WeightMeasure = () => {
       return;
     }
 
-    const payload = {
-      userId: userId,
-      value: parseFloat(values.weight),
-      logDate: new Date().toISOString(),
-    };
-
     try {
-      if (editingLog) {
-        await api.put<ApiResponse<WeightLogGetDto>>(`/api/weight-logs/${editingLog.id}`, payload);
-        setEditingLog(null);
-      } else {
-        await api.post<ApiResponse<WeightLogGetDto>>("/api/weight-logs", payload);
-      }
+      const payload = {
+        userId: userId,
+        value: parseFloat(values.weight),
+        logDate: new Date().toISOString(),
+      };
+      console.log("Weight Log", weightLogs);
+
+      await api.post<ApiResponse<WeightLogGetDto>>("/api/weight-logs", payload);
       setSuccess(true);
       form.reset();
       fetchWeightLogs();
+
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       console.error("Error saving weight log:", err);
@@ -121,7 +125,12 @@ export const WeightMeasure = () => {
       <Text size="xl" mb="md" fw={500}>Weight Tracking</Text>
 
       {error && (
-        <Notification color="red" title="Error" onClose={() => setError(null)} mb="md">
+        <Notification
+          color="red"
+          title="Error"
+          onClose={() => setError(null)}
+          mb="md"
+        >
           {error}
         </Notification>
       )}
@@ -139,7 +148,7 @@ export const WeightMeasure = () => {
           type="number"
           step="0.1"
           mb="md"
-          {...form.getInputProps('weight')}
+          {...form.getInputProps("weight")}
         />
         <Button type="submit" color="indigo">
           {editingLog ? "Update Weight" : "Record Weight"}
