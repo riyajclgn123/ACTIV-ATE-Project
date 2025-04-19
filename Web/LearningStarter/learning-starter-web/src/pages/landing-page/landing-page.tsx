@@ -2,7 +2,7 @@ import { Box, Card, Container, Space, Text } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import bgImage from "../../assets/bg.jpeg";
 import { RingProgress } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
 import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
 import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
@@ -19,6 +19,14 @@ export interface CalorieConsumedResponse {
   calorieDifference: number;
   calorieStatus: string;
   foodLogs: FoodLogGetDto[];
+}
+
+export interface MealTimeTotals {
+  breakfast: number;
+  lunch: number;
+  snack: number;
+  dinner: number;
+  total: number;
 }
 
 export const LandingPage = () => {
@@ -92,6 +100,7 @@ useEffect(() => {
       }
   
       setCalorieGoal(response.data.data);
+
     } catch (error) {
       const axiosError = error as AxiosError;
       showNotification({ 
@@ -139,6 +148,66 @@ useEffect(() => {
     fetchCalorieConsumed();
   }, [user?.id]);
 
+  const [totals, setTotals] = useState<MealTimeTotals | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchMealTimeTotals = async () => {
+    try {
+      setLoading(true);
+      if (!user?.id) return;
+
+      const today = new Date().toISOString().split('T')[0];
+    
+      const response = await api.get<ApiResponse<MealTimeTotals>>(
+        `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${today}`
+      );
+
+      if (response.data.hasErrors || !response.data.data) {
+        throw new Error(response.data.errors?.join(', ') || 'Failed to fetch data');
+      }
+
+      setTotals(response.data.data );
+    
+
+    } catch (error) {
+      showNotification({
+        title: 'Error',
+        message: error instanceof Error ? error.message : 'Failed to fetch meal time data',
+        color: 'red'
+      });
+      setTotals({
+        breakfast: 0,
+        lunch: 0,
+        dinner: 0,
+        snack: 0,
+        total: 0
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMealTimeTotals();
+  }, [user?.id]);
+
+  const calculatePercentage = (value: number, total: number) => {
+    if (!total || total === 0) return 0;
+    return Math.round((value / total) * 100);
+  };
+  
+  const getPercentages = () => {
+    if (!totals) return { breakfast: 0, lunch: 0, dinner: 0, snack: 0 };
+    
+    return {
+      breakfast: calculatePercentage(totals.breakfast, totals.total),
+      lunch: calculatePercentage(totals.lunch, totals.total),
+      dinner: calculatePercentage(totals.dinner, totals.total),
+      snack: calculatePercentage(totals.snack, totals.total)
+    };
+  };
+  
+  const percentages = useMemo(() => getPercentages(), [totals]);
   return (
     <>
       <section id="backgrounddesign">
@@ -160,9 +229,11 @@ useEffect(() => {
               Calories Goal
             </Text>
             <div className={classes.coursel}>
-              <RingProgress
-                label={
-                  <div>
+              
+
+            <RingProgress
+  label={
+    <div>
       <Text size="lg" ta="center" style={{ fontWeight: "bold" }}>
         {foodConsumed?.totalCalories || 0} / {foodConsumed?.dailyCalorieGoal || 0} kcal
       </Text>
@@ -173,39 +244,39 @@ useEffect(() => {
       </Text>
     </div>
   }
-                size={300}
-                thickness={20}
-                sections={[
-                  {
-                    value: 40,
-                    color: "cyan",
-                    tooltip: "Breakfast",
-                    onMouseEnter: () => setHovered("Breakfast"),
-                    onMouseLeave: reset,
-                  },
-                  {
-                    value: 20,
-                    color: "blue",
-                    tooltip: "Snack",
-                    onMouseEnter: () => setHovered("Snack"),
-                    onMouseLeave: reset,
-                  },
-                  {
-                    value: 15,
-                    color: "indigo",
-                    tooltip: "Lunch",
-                    onMouseEnter: () => setHovered("Lunch"),
-                    onMouseLeave: reset,
-                  },
-                  {
-                    value: 12,
-                    color: "red",
-                    tooltip: "Dinner",
-                    onMouseEnter: () => setHovered("Dinner"),
-                    onMouseLeave: reset,
-                  },
-                ]}
-              />
+  size={300}
+  thickness={20}
+  sections={[
+    {
+      value: percentages.breakfast,
+      color: "cyan",
+      tooltip: `Breakfast: ${totals?.breakfast || 0} kcal (${percentages.breakfast}%)`,
+      onMouseEnter: () => setHovered("Breakfast"),
+      onMouseLeave: reset,
+    },
+    {
+      value: percentages.lunch,
+      color: "indigo",
+      tooltip: `Lunch: ${totals?.lunch || 0} kcal (${percentages.lunch}%)`,
+      onMouseEnter: () => setHovered("Lunch"),
+      onMouseLeave: reset,
+    },
+    {
+      value: percentages.dinner,
+      color: "blue",
+      tooltip: `Dinner: ${totals?.dinner || 0} kcal (${percentages.dinner}%)`,
+      onMouseEnter: () => setHovered("Dinner"),
+      onMouseLeave: reset,
+    },
+    {
+      value: percentages.snack,
+      color: "red",
+      tooltip: `Snack: ${totals?.snack || 0} kcal (${percentages.snack}%)`,
+      onMouseEnter: () => setHovered("Snack"),
+      onMouseLeave: reset,
+    },
+  ]}
+/>
 
               <div className={classes.text}>
                 <Space h="sm" />

@@ -40,6 +40,7 @@ import { useEffect, useState } from "react";
      const location = useLocation();
      const navigate = useNavigate();
      const [servings, setServings] = useState<number>(1);
+     const [mealTime, setMealTime] = useState<string>("Breakfast");
      const [unit, setUnit] = useState<string>("Servings");
      const [isLoading, setIsLoading] = useState(false);
      const [foodDetails, setFoodDetails] = useState<any>(null);
@@ -53,6 +54,13 @@ import { useEffect, useState } from "react";
          { value: "Grams", label: "Grams" },
          { value: "Ounces", label: "Ounces" },
      ];
+
+     const mealTimes = [
+        { value: "BreakFast", label:"BreakFast" },
+        { value: "Lunch", label: "Lunch" },
+        { value: "Snack", label: "Snack" },
+        { value: "Dinner", label: "Dinner" },
+    ];
  
      const { food, userId } =
          (location.state as {
@@ -119,6 +127,7 @@ import { useEffect, useState } from "react";
                  userId: userId,
                  servingSize: servings,
                  calories: calories,
+                 mealTime: mealTime,
                  createDate: new Date().toISOString(),
              });
 
@@ -238,6 +247,19 @@ import { useEffect, useState } from "react";
                              required
                          />
                      </Group>
+                     
+                     <Group align="flex-end" grow>
+                     <Select
+                             label="Meal Time"
+                             value={mealTime}
+                             onChange={(val) => {
+                                const newMealTime = val || "Breakfast";
+                                setMealTime(newMealTime);;
+                             }}
+                             data={mealTimes}
+                             required
+                         />
+                        </Group>
  
                      {/* Nutrition Facts */}
                      <Title order={5} mb="md">

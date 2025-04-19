@@ -145,6 +145,7 @@ export const FoodLogListing = () => {
                         <Table.Tr>
                             <Table.Th>Food</Table.Th>
                             <Table.Th>Calories</Table.Th>
+                            <Table.Th>Meal Time</Table.Th>
                             <Table.Th>Protein</Table.Th>
                             <Table.Th>Carbohydrate</Table.Th>
                             <Table.Th>Fat</Table.Th>
@@ -159,6 +160,7 @@ export const FoodLogListing = () => {
                             <Table.Tr key={log.id}>
                                 <Table.Td>{log.foodName}</Table.Td>
                                 <Table.Td>{log.calories}</Table.Td>
+                                <Table.Td>{log.mealTime}</Table.Td>
                                 <Table.Td>{log.nutrients.protein.toFixed(1)}</Table.Td>
                                 <Table.Td>{log.nutrients.carbs.toFixed(1)}</Table.Td>
                                 <Table.Td>{log.nutrients.fat.toFixed(1)}</Table.Td>
