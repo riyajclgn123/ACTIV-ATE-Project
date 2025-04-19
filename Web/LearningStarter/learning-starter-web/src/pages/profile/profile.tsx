@@ -12,6 +12,7 @@ import { Tabs } from "@mantine/core";
 import { UserPage } from "../user-page/user-page";
 import { WeightMeasure } from "./WeightMeasure";
 import { useUser } from "../../authentication/use-auth";
+import { Goals } from "./goals";
 
 //This is a basic Component, and since it is used inside of
 //'../../routes/config.tsx' line 31, that also makes it a page
@@ -30,7 +31,6 @@ export const Profile = () => {
   return (
     <>
       <Container>
-        <Text> Profile Page </Text>
 
         <Tabs
           color="green"
@@ -42,9 +42,13 @@ export const Profile = () => {
           <Tabs.List>
             <Tabs.Tab value="profile">Profile</Tabs.Tab>
             <Tabs.Tab value="weightMeasure">Weight Log</Tabs.Tab>
+            <Tabs.Tab value="setting">Settings</Tabs.Tab>
+            <Tabs.Tab value="goals">Goals</Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="profile">
+          <Space h={30} />
+
             <Text fw={700} size="xlg" mb="xlg">
               User Information
             </Text>
@@ -55,6 +59,7 @@ export const Profile = () => {
                 marginBottom: 20,
               }}
             >
+             
               <ProfilePicture />
             </Box>
             <UserPage />
@@ -65,6 +70,11 @@ export const Profile = () => {
           <Tabs.Panel value="weightMeasure">
             <WeightMeasure />
           </Tabs.Panel>
+
+          <Tabs.Panel value="goals">
+            <Goals />
+          </Tabs.Panel>
+
         </Tabs>
       </Container>
     </>

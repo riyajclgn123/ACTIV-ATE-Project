@@ -25,7 +25,7 @@ import { useEffect, useState } from "react";
  } from "@fortawesome/free-solid-svg-icons";
  import { showNotification } from "@mantine/notifications";
  import { createStyles } from "@mantine/emotion";
- import { ApiResponse, FoodLogGetDto, NutrientGetDto } from "../../constants/types";
+ import { ApiResponse, NutrientGetDto } from "../../constants/types";
  
  interface FoodLogResponse {
     data: {

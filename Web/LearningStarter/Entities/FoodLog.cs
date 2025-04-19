@@ -50,6 +50,11 @@ public class FoodLogUpdateDto
 
    
 }
+
+public class DailyCalorieResponse
+{
+    public double DailyCalorieGoal { get; set; }
+}
 public class FoodLogEntityConfiguration : IEntityTypeConfiguration<FoodLog>
 {
     public void Configure(EntityTypeBuilder<FoodLog> builder)

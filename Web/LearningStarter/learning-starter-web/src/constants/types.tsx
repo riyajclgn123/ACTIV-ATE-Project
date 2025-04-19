@@ -164,3 +164,16 @@ export type WeightLogCreateDto={
   value: number;
   logDate: string;
 }
+
+export type GoalGetDto={
+  id: number; 
+  userId: number;
+  value: number;
+  timePeriod: number;
+  type: string;
+  activityLevel: string;
+  createDate: string;
+  updatedDate: string;
+  dailyCalorieGoal : number;
+}
+
