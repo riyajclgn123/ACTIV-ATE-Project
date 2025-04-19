@@ -8,9 +8,18 @@ import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
 import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
 import { useAuth } from "../../authentication/use-auth";
 import { showNotification } from '@mantine/notifications';
-import { ApiResponse, GoalGetDto } from "../../constants/types";
+import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
 import api from "../../config/axios";
 import { AxiosError } from "axios";
+
+export interface CalorieConsumedResponse {
+  date: string;
+  dailyCalorieGoal: number;
+  totalCalories: number;
+  calorieDifference: number;
+  calorieStatus: string;
+  foodLogs: FoodLogGetDto[];
+}
 
 export const LandingPage = () => {
   const { classes } = useStyles();
@@ -19,6 +28,53 @@ export const LandingPage = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   const reset = () => setHovered(null);
+const [exerciseCount, setExerciseCount] = useState<number>(0);
+
+useEffect(() => {
+  async function fetchExerciseCount() {
+    try {
+      if (!user) return;
+      
+      const response = await api.get<ApiResponse<number>>(
+        `/api/exercise-logs/count/user/${user.id}`
+      );
+      
+      if (!response.data.hasErrors && response.data.data !== undefined) {
+        setExerciseCount(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching exercise count:", error);
+    }
+  }
+
+  fetchExerciseCount();
+}, [user?.id]);
+
+
+
+const [foodCount, setFoodCount] = useState<number>(0);
+
+useEffect(() => {
+  async function fetchFoodCount() {
+    try {
+      if (!user) return;
+      
+      const response = await api.get<ApiResponse<number>>(
+        `/api/food-logs/count/user/${user.id}`
+      );
+      
+      if (!response.data.hasErrors && response.data.data !== undefined) {
+        setFoodCount(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching exercise count:", error);
+    }
+  }
+
+  fetchFoodCount();
+}, [user?.id]);
+
+
 
   const fetchCalorieGoal = async () => {
     try {
@@ -49,6 +105,40 @@ export const LandingPage = () => {
     fetchCalorieGoal();
   }, [user?.id]);
 
+
+  const [foodConsumed, setFoodConsumed] = useState<CalorieConsumedResponse | null>(null);
+  const fetchCalorieConsumed = async () => {
+    try {
+      if (!user) {
+        showNotification({ message: "User not authenticated", color: "red" });
+        return;
+      }
+      
+    const today = new Date().toISOString().split('T')[0];
+    
+    const response = await api.get<ApiResponse<CalorieConsumedResponse>>(
+      `/api/food-logs/user/${user.id}/calories-consumed-per-day?date=${today}`
+    );
+      
+      if (response.data.hasErrors) {
+        showNotification({ message: "Error fetching fodd consumped", color: "red" });
+        return;
+      }
+  
+      setFoodConsumed(response.data.data);
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      showNotification({ 
+        message: `Error fetching calorie goal: ${axiosError.message}`, 
+        color: "red" 
+      });
+    }
+  };
+  
+  useEffect(() => {
+    fetchCalorieConsumed();
+  }, [user?.id]);
+
   return (
     <>
       <section id="backgrounddesign">
@@ -72,10 +162,17 @@ export const LandingPage = () => {
             <div className={classes.coursel}>
               <RingProgress
                 label={
-                  <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                    {calorieGoal?.dailyCalorieGoal ? Math.round(Number(calorieGoal.dailyCalorieGoal)) : 'No goal set'} kcal
-                </Text>
-                }
+                  <div>
+      <Text size="lg" ta="center" style={{ fontWeight: "bold" }}>
+        {foodConsumed?.totalCalories || 0} / {foodConsumed?.dailyCalorieGoal || 0} kcal
+      </Text>
+      <Text size="sm" ta="center" style={{ 
+        color: foodConsumed?.calorieDifference && foodConsumed.calorieDifference >= 0 ? 'red' : 'green' 
+      }}>
+        {foodConsumed?.calorieDifference || 0} kcal {foodConsumed?.calorieDifference && foodConsumed.calorieDifference >= 0 ? 'over' : 'under'}
+      </Text>
+    </div>
+  }
                 size={300}
                 thickness={20}
                 sections={[
@@ -133,7 +230,7 @@ export const LandingPage = () => {
                   Food Count
                 </Text>
                 <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                  {/* {foodCount} */}
+                  {foodCount} 
                 </Text>
                 <Space h="sm" />
                 <Text
@@ -145,7 +242,7 @@ export const LandingPage = () => {
                   Exercise Count
                 </Text>
                 <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                  {/* {exerciseCount} */}
+                  {exerciseCount}
                 </Text>
                 <Space h="sm" />
               </div>

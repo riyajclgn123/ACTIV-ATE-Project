@@ -128,6 +128,7 @@ export type FoodLogGetDto = {
   calories: number;
   createDate: string;
   updatedDate: string;
+  calorieConsumed: number;
 };
 
 export type FoodLogCreateDto = {
