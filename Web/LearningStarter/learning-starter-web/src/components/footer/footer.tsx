@@ -1,18 +1,18 @@
-import { Anchor, Container, Group } from '@mantine/core';
+import { Anchor, Container, Group } from "@mantine/core";
 import Logo from "../../assets/Activ-Ate.png";
-import { createStyles } from '@mantine/emotion';
+import { createStyles } from "@mantine/emotion";
 
 const links = [
-  { link: '#', label: 'Contact' },
-  { link: '#', label: 'Privacy' },
-  { link: '#', label: 'Blog' },
-  { link: '#', label: 'Careers' },
+  { link: "#", label: "Contact" },
+  { link: "#", label: "Privacy" },
+  { link: "#", label: "Blog" },
+  { link: "#", label: "Careers" },
 ];
 
 export function FooterSimple() {
-    const {classes} = useStyles();
+  const { classes } = useStyles();
   const items = links.map((link) => (
-    <Anchor<'a'>
+    <Anchor<"a">
       c="dimmed"
       key={link.label}
       href={link.link}
@@ -25,10 +25,10 @@ export function FooterSimple() {
 
   return (
     <footer className={classes.container}>
-    <p>&copy; {new Date().getFullYear()} ACTIV-ATE || All rights reserved.</p>
-  </footer>
+      <p>&copy; {new Date().getFullYear()} ACTIV-ATE || All rights reserved.</p>
+    </footer>
   );
-};
+}
 
 const useStyles = createStyles(() => {
   return {
@@ -36,7 +36,7 @@ const useStyles = createStyles(() => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#1c7ed6", // Dark theme background
+        backgroundColor: "purple", // Dark theme background
         fontSize: "15px",
         width: "100%",  // Ensures the footer takes full width of the screen
         marginTop: "10px",
@@ -55,6 +55,6 @@ const useStyles = createStyles(() => {
           padding: "10px",   // Less padding on mobile for space efficiency
           textAlign: "center",  // Ensure text is centered on small screens
         },
-      },
+    },
   };
 });

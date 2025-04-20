@@ -312,6 +312,20 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         response.Data = "Exercise log deleted successfully.";
         return Ok(response);
     }
+    
+    [HttpGet("count/user/{userId}")]
+    public IActionResult GetCountByUserId([FromRoute] int userId)
+    {
+        var response = new Response();
+    
+        var count = _context
+            .Set<ExerciseLog>()
+            .Where(x => x.UserId == userId)
+            .Count();
+
+        response.Data = count;
+        return Ok(response);
+    }
 
 
 }

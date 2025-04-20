@@ -128,6 +128,8 @@ export type FoodLogGetDto = {
   calories: number;
   createDate: string;
   updatedDate: string;
+  calorieConsumed: number;
+  mealTime: string;
 };
 
 export type FoodLogCreateDto = {
@@ -135,6 +137,7 @@ export type FoodLogCreateDto = {
   userId: number;
   servingSize: number;
   createDate: string;
+  mealTime: string;
 };
 
 export type FoodLogUpdateDto = {
@@ -142,6 +145,7 @@ export type FoodLogUpdateDto = {
   foodId: number;
   servingSize: number;
   updateDate: string;
+  mealTime: string;
 };
 export type NutrientGetDto = {
   id: number;
@@ -163,4 +167,24 @@ export type WeightLogCreateDto={
   userId: number;
   value: number;
   logDate: string;
+}
+
+export type GoalGetDto={
+  id: number; 
+  userId: number;
+  value: number;
+  timePeriod: number;
+  type: string;
+  activityLevel: string;
+  createDate: string;
+  updatedDate: string;
+  dailyCalorieGoal : number;
+}
+
+export type DailyReportGetDto={
+  id: number;
+  userId: number;
+  date: string;
+  mealTime: string;
+  calories: number;
 }

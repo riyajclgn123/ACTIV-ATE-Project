@@ -15,6 +15,7 @@ public class Goal
     public DateTimeOffset UpdateDate { get; set; }
     public string Type { get; set; }
     public string ActivityLevel { get; set; }
+    public decimal DailyCalorieGoal { get; set; }
 }
 
 public class GoalGetDto
@@ -27,6 +28,9 @@ public class GoalGetDto
     public DateTimeOffset UpdateDate { get; set; }
     public string Type { get; set; }
     public string ActivityLevel { get; set; }
+    public decimal DailyCalorieGoal { get; set; }
+    
+    
 }
 
 public class GoalCreateDto
@@ -38,6 +42,7 @@ public class GoalCreateDto
     public DateTimeOffset UpdateDate { get; set; }
     public string Type { get; set; } 
     public string ActivityLevel { get; set; }
+    
 }
 
 public class GoalUpdateDto
@@ -50,6 +55,7 @@ public class GoalUpdateDto
     public string Type { get; set; } 
     public string ActivityLevel { get; set; }
 }
+
 
 public class GoalEntityTypeConfiguration : IEntityTypeConfiguration<Goal>
 {

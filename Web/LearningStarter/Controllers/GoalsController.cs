@@ -69,59 +69,108 @@ public class GoalsController : ControllerBase
         
         return Ok(response);
     }
-
-    [HttpPost]
-    public IActionResult Create([FromBody] GoalCreateDto createDto)
+    
+    [HttpGet("user/{userId}")]
+    public IActionResult GetByUserId([FromRoute] int userId)
     {
         var response = new Response();
-        
-        if (createDto.TimePeriod ==0)
-        {
-            response.AddError(nameof(createDto.TimePeriod), "TimePeriod is required"); 
-        }
 
-        if (string.IsNullOrEmpty(createDto.Type))
-        {
-            response.AddError(nameof(createDto.Type), "Type is required");
-        }
-        if (createDto == null || createDto.UserId == 0)
-        {
-            response.AddError("validation", " UserId are required.");
-        }
+        var latestGoal = _dataContext.Set<Goal>()
+            .Where(x => x.UserId == userId)
+            .OrderByDescending(x => x.CreateDate) // Get the most recent goal
+            .Select(x => new GoalGetDto
+            {
+                Id = x.Id,
+                UserId = x.UserId,
+                Value = x.Value,
+                TimePeriod = x.TimePeriod,
+                CreateDate = x.CreateDate,
+                UpdateDate = x.UpdateDate,
+                Type = x.Type,
+                ActivityLevel = x.ActivityLevel,
+                DailyCalorieGoal = x.DailyCalorieGoal,
+            })
+            .FirstOrDefault(); // Get single record or null
 
-        if (response.HasErrors)
-        {
-            return BadRequest(response);
-        }
-
-
-        var goalToCreate = new Goal
-        {
-            UserId = createDto.UserId,
-            Value = createDto.Value,
-            TimePeriod = createDto.TimePeriod,
-            CreateDate = createDto.CreateDate,
-            UpdateDate = createDto.UpdateDate,
-            Type = createDto.Type,
-            ActivityLevel = createDto.ActivityLevel,
-        };
-        _dataContext.Add(goalToCreate);
-        _dataContext.SaveChanges();
-
-        var goalToReturn = new GoalGetDto
-        {
-            Id = goalToCreate.Id,
-            UserId = goalToCreate.UserId,
-            Value = goalToCreate.Value,
-            TimePeriod = goalToCreate.TimePeriod,
-            CreateDate = goalToCreate.CreateDate,
-            UpdateDate = goalToCreate.UpdateDate,
-            Type = goalToCreate.Type,
-            ActivityLevel = goalToCreate.ActivityLevel,
-        };
-        response.Data = goalToReturn;
-        return Created("", response);
+        response.Data = latestGoal; // Return single object instead of list
+        return Ok(response);
     }
+    
+   [HttpPost]
+public IActionResult Create([FromBody] GoalCreateDto createDto)
+{
+    var response = new Response();
+
+    if (createDto.TimePeriod == 0)
+    {
+        response.AddError(nameof(createDto.TimePeriod), "TimePeriod is required");
+    }
+
+    if (string.IsNullOrEmpty(createDto.Type))
+    {
+        response.AddError(nameof(createDto.Type), "Type is required");
+    }
+
+    if (createDto == null || createDto.UserId == 0)
+    {
+        response.AddError("validation", "UserId is required.");
+    }
+
+    var user = _dataContext.Set<User>().FirstOrDefault(u => u.Id == createDto.UserId);
+    if (user == null)
+    {
+        response.AddError("UserId", "User not found.");
+    }
+
+    if (response.HasErrors)
+    {
+        return BadRequest(response);
+    }
+
+    // Calculate calorie goal
+    var dailyCalorieGoal = FoodCalorieCalculator.CalculateDailyCalorieGoal(
+        user.Weight,
+        user.Height,
+        user.DateofBirth,
+        user.Gender,
+        createDto.ActivityLevel,
+        createDto.Value, // Value is the Target Weight
+        createDto.TimePeriod
+    );
+
+    var goalToCreate = new Goal
+    {
+        UserId = createDto.UserId,
+        Value = createDto.Value, // Store target weight here
+        TimePeriod = createDto.TimePeriod,
+        CreateDate = createDto.CreateDate,
+        UpdateDate = createDto.UpdateDate,
+        Type = createDto.Type,
+        ActivityLevel = createDto.ActivityLevel,
+        DailyCalorieGoal = dailyCalorieGoal,
+
+    };
+
+    _dataContext.Add(goalToCreate);
+    _dataContext.SaveChanges();
+
+    var goalToReturn = new GoalGetDto
+    {
+        Id = goalToCreate.Id,
+        UserId = goalToCreate.UserId,
+        Value = goalToCreate.Value,
+        TimePeriod = goalToCreate.TimePeriod,
+        CreateDate = goalToCreate.CreateDate,
+        UpdateDate = goalToCreate.UpdateDate,
+        Type = goalToCreate.Type,
+        ActivityLevel = goalToCreate.ActivityLevel,
+        DailyCalorieGoal = dailyCalorieGoal // Just returned to frontend
+    };
+
+    response.Data = goalToReturn;
+    return Created("", response);
+}
+
 
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] GoalUpdateDto updateDto)
@@ -198,6 +247,7 @@ public class GoalsController : ControllerBase
         return Ok(response);
     }
 }
+
 
 
     

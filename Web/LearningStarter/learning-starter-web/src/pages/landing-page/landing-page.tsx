@@ -1,111 +1,382 @@
-import { Box, Card, Container, Space, Text } from "@mantine/core";
+import { Box, Card, Container, Select, Space, Text } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
-import bgImage from '../../assets/bg.jpeg';
+import bgImage from "../../assets/bg.jpeg";
 import { RingProgress } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
 import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
 import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
+import { useAuth } from "../../authentication/use-auth";
+import { showNotification } from '@mantine/notifications';
+import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
+import api from "../../config/axios";
+import { AxiosError } from "axios";
+import { Slider } from '@mantine/core';
+import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates";
+import dayjs from 'dayjs'; 
 
+export interface CalorieConsumedResponse {
+  date: string;
+  dailyCalorieGoal: number;
+  totalCalories: number;
+  calorieDifference: number;
+  calorieStatus: string;
+  foodLogs: FoodLogGetDto[];
+}
 
+export interface MealTimeTotals {
+  breakfast: number;
+  lunch: number;
+  snack: number;
+  dinner: number;
+  total: number;
+}
 
-//This is a basic Component, and since it is used inside of
-//'../../routes/config.tsx' line 31, that also makes it a page
 export const LandingPage = () => {
   const { classes } = useStyles();
+  const { user } = useAuth();
+  const [calorieGoal, setCalorieGoal] = useState<GoalGetDto | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
+
   const reset = () => setHovered(null);
+const [exerciseCount, setExerciseCount] = useState<number>(0);
+
+const [unit, setUnit] = useState<Date | null>(new Date());
+
+const getStartOfDay = (date: Date | null) => {
+  const d = date ? new Date(date) : new Date();
+  return dayjs(d).startOf('day').format("MM/DD/YYYY"); // Sets to 00:00:00.000
+};
+
+// Get end of day (11:59 PM)
+const getEndOfDay = (date: Date | null) => {
+  const d = date ? new Date(date) : new Date();
+  return dayjs(d).endOf('day').format("MM/DD/YYYY"); // Sets to 23:59:59.999
+};
+
+// Calculate the date range
+const startDate = getStartOfDay(unit);
+const endDate = getEndOfDay(unit);
+
+
+useEffect(() => {
+  async function fetchExerciseCount() {
+    try {
+      if (!user) return;
+      
+      const response = await api.get<ApiResponse<number>>(
+        `/api/exercise-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
+      );
+      
+      if (!response.data.hasErrors && response.data.data !== undefined) {
+        setExerciseCount(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching exercise count:", error);
+    }
+  }
+
+  fetchExerciseCount();
+}, [user?.id, startDate, endDate]);
 
 
 
+const [foodCount, setFoodCount] = useState<number>(0);
+
+useEffect(() => {
+  async function fetchFoodCount() {
+    try {
+      if (!user) return;
+      const response = await api.get<ApiResponse<number>>(
+        `/api/food-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
+      );
+      
+      if (!response.data.hasErrors && response.data.data !== undefined) {
+        setFoodCount(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching exercise count:", error);
+    }
+  }
+
+  fetchFoodCount();
+}, [user?.id, startDate, endDate]);
+
+
+
+  const fetchCalorieGoal = async () => {
+    try {
+      if (!user) {
+        showNotification({ message: "User not authenticated", color: "red" });
+        return;
+      }
+      const response = await api.get<ApiResponse<GoalGetDto>>(
+        `/api/goals/user/${user.id}`
+      );
+      
+      if (response.data.hasErrors) {
+        showNotification({ message: "Error fetching calorie goal", color: "red" });
+        return;
+      }
+  
+      setCalorieGoal(response.data.data);
+
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      showNotification({ 
+        message: `Error fetching calorie goal: ${axiosError.message}`, 
+        color: "red" 
+      });
+    }
+  };
+  
+  useEffect(() => {
+    fetchCalorieGoal();
+  }, [user?.id]);
+
+
+  const [foodConsumed, setFoodConsumed] = useState<CalorieConsumedResponse | null>(null);
+  const fetchCalorieConsumed = async () => {
+    try {
+      if (!user) {
+        showNotification({ message: "User not authenticated", color: "red" });
+        return;
+      }
+      
+    const today = new Date().toLocaleDateString();
+    console.log({today,unit})
+    
+    const response = await api.get<ApiResponse<CalorieConsumedResponse>>(
+      `/api/food-logs/user/${user.id}/calories-consumed-per-day?date=${unit?.toISOString().split('T')[0]}`
+    );
+      
+      if (response.data.hasErrors) {
+        showNotification({ message: "Error fetching fodd consumped", color: "red" });
+        return;
+      }
+  
+      setFoodConsumed(response.data.data);
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      showNotification({ 
+        message: `Error fetching calorie goal: ${axiosError.message}`, 
+        color: "red" 
+      });
+    }
+  };
+  
+  useEffect(() => {
+    fetchCalorieConsumed();
+  }, [user?.id, unit]);
+
+  const [totals, setTotals] = useState<MealTimeTotals | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchMealTimeTotals = async () => {
+    try {
+      setLoading(true);
+      if (!user?.id) return;
+
+      const today = new Date().toISOString().split('T')[0];
+    
+      const response = await api.get<ApiResponse<MealTimeTotals>>(
+        `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${unit?.toISOString().split('T')[0]}`
+      );
+
+    console.log("API Response:", response.data); // Add this line 
+
+      if (response.data.hasErrors || !response.data.data) {
+        throw new Error(response.data.errors?.join(', ') || 'Failed to fetch data');
+      }
+
+      setTotals(response.data.data);
+      console.log("Meal Time Totals Set:", response.data.data); // Add this line
+
+    } catch (error) {
+      showNotification({
+        title: 'Error',
+        message: error instanceof Error ? error.message : 'Failed to fetch meal time data',
+        color: 'red'
+      });
+      setTotals({
+        breakfast: 0,
+        lunch: 0,
+        dinner: 0,
+        snack: 0,
+        total: 0
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMealTimeTotals();
+  }, [user?.id, unit]);
+
+  const calculatePercentage = (value: number, total: number) => {
+    if (!total || total === 0) return 0;
+    return Math.round((value / total) * 100);
+  };
+  
+  // Use this instead of your current percentages calculation
+  const getPercentages = () => {
+    if (!totals) return { breakfast: 0, lunch: 0, dinner: 0, snack: 0 };
+    
+    return {
+      breakfast: calculatePercentage(totals.breakfast, totals.total),
+      lunch: calculatePercentage(totals.lunch, totals.total),
+      dinner: calculatePercentage(totals.dinner, totals.total),
+      snack: calculatePercentage(totals.snack, totals.total)
+    };
+  };
+  
+  const percentages = useMemo(() => getPercentages(), [totals]);
+
+  console.log("Percentages:", percentages, totals); // Add this line
   return (
     <>
-    <section id="backgrounddesign">
-    <div className={classes.container1}>
-      {/* Text overlay on background */}
-      <div className={classes.overlayText}>
-        <p className={classes.quote}>
-          "Your Journey to a Healthier You Starts Here!"
-        </p>
-        <p>
-          Welcome to your personalized fitness companion!
-        </p>
-        <p className={classes.threeword}>
-          Track. Plan. Achieve.
-        </p>
-      </div>
-    </div>
-    </section>
+      <section id="backgrounddesign">
+        <div className={classes.container1}>
+          <div className={classes.overlayText}>
+            <p className={classes.quote}>
+              "Your Journey to a Healthier You Starts Here!"
+            </p>
+            <p>Welcome to your personalized fitness companion!</p>
+            <p className={classes.threeword}>Track. Plan. Achieve.</p>
+          </div>
+        </div>
+      </section>
 
-    <section id="after background design" className={classes.afterBackground}>
-
-
-        {/* <div className={classes.container2}>Start your Journey with adding your Exercise and Food to track our health </div>
-        <div className={classes.photocontainer}>
-          <div className={classes.box}><img src={exercise} style={{width:"400px", height:"400px"}} /><p>Explain photo</p></div>
-          <div className={classes.box}><img src={food} style={{width:"400px", height:"400px"}} /><p>Explain photo</p></div>
-        </div> */}
-
+      <section id="after-background-design" className={classes.afterBackground}>
         <Container>
+          <Card withBorder shadow="sm" p="lg">
+            <Text size="25px" style={{ fontWeight: "bold", textAlign: "center" }}>
+              Calories Goal
+            </Text>
 
-        <Card withBorder shadow="sm" p="lg"  >
-         <Text size="25px" style={{ fontWeight: 'bold' }}> Calories Consumed  </Text>
-          <div className={classes.coursel}>
-        <RingProgress
-      label={
-        <Text size="lg" ta="center" style={{ fontWeight: 'bold' }}>
-          {hovered || '1,273 Remaining'}
-        </Text>
-      }
-      size = {300}
-      thickness={20}
-      sections={[
-        { value: 40, color: 'cyan', onMouseEnter: () => setHovered('Breakfast'), onMouseLeave: reset },
-        { value: 20, color: 'blue', onMouseEnter: () => setHovered('Snack'), onMouseLeave: reset },
-        { value: 15, color: 'indigo', onMouseEnter: () => setHovered('Lunch'), onMouseLeave: reset },
-        { value: 12, color: 'red', onMouseEnter: () => setHovered('Dinner'), onMouseLeave: reset },
-      ]}
-    />
-       
-    <div className={classes.text}>
-    <Space h="sm"/>
-    <Text size="18px" ta="center" mt="lg" style={{ fontWeight: 'bold' }}> Base Goal </Text>
-    <Text size="16px" ta="center" mt="md" style={{ color:"gray" }}> 1500 kcal </Text>
-      <Space h="sm"/>
-      <Text size="18px" ta="center" mt="lg" style={{ fontWeight: 'bold' }}> Food Count </Text>
-      <Text size="16px" ta="center" mt="md" style={{ color:"gray"  }}> 2 </Text>
-      <Space h="sm"/>
-      <Text size="18px" ta="center" mt="lg" style={{ fontWeight: 'bold' }}> Exercise Count </Text>
-      <Text size="16px" ta="center" mt="md" style={{color:"gray" }}> 3 </Text>
-      <Space h="sm"/>
+                                         <DateInput
+                                           value={unit} // Controlled value
+                                           onChange={setUnit} // Updates state on change
+                                           valueFormat="MM/DD/YYYY"
+                                           label="Pick date and time"
+                                           placeholder="Pick date and time"
+                                         />
+            <div className={classes.coursel}>
 
-      
+              
+              
+
+            <RingProgress
+  label={
+    <div>
+      <Text size="lg" ta="center" style={{ fontWeight: "bold" }}>
+        {foodConsumed?.totalCalories || 0} / {calorieGoal?.dailyCalorieGoal || 0} kcal
+      </Text>
+      <Text size="sm" ta="center" style={{ 
+        color: foodConsumed?.calorieDifference && foodConsumed.calorieDifference >= 0 ? 'red' : 'green' 
+      }}>
+        {foodConsumed?.calorieDifference || 0} kcal {foodConsumed?.calorieDifference && foodConsumed.calorieDifference >= 0 ? 'over' : 'under'}
+      </Text>
     </div>
-    </div>
-    </Card>
-    </Container>
+  }
+  size={300}
+  thickness={20}
+  sections={[
+    {
+      value: percentages.breakfast,
+      color: "cyan",
+      tooltip: `Breakfast: ${totals?.breakfast || 0} kcal (${percentages.breakfast}%)`,
+      onMouseEnter: () => setHovered("Breakfast"),
+      onMouseLeave: reset,
+    },
+    {
+      value: percentages.lunch,
+      color: "indigo",
+      tooltip: `Lunch: ${totals?.lunch || 0} kcal (${percentages.lunch}%)`,
+      onMouseEnter: () => setHovered("Lunch"),
+      onMouseLeave: reset,
+    },
+    {
+      value: percentages.dinner,
+      color: "blue",
+      tooltip: `Dinner: ${totals?.dinner || 0} kcal (${percentages.dinner}%)`,
+      onMouseEnter: () => setHovered("Dinner"),
+      onMouseLeave: reset,
+    },
+    {
+      value: percentages.snack,
+      color: "red",
+      tooltip: `Snack: ${totals?.snack || 0} kcal (${percentages.snack}%)`,
+      onMouseEnter: () => setHovered("Snack"),
+      onMouseLeave: reset,
+    },
+  ]}
+/>
 
+              <div className={classes.text}>
+                <Space h="sm" />
+                <Text
+                  size="18px"
+                  ta="center"
+                  mt="lg"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Base Goal
+                </Text>
+                <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
+                {calorieGoal?.dailyCalorieGoal ? Math.round(Number(calorieGoal.dailyCalorieGoal)) : 'No goal set'} kcal
+</Text>
+                <Space h="sm" />
+                <Text
+                  size="18px"
+                  ta="center"
+                  mt="lg"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Food Count
+                </Text>
+                <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
+                  {foodCount} 
+                </Text>
+                <Space h="sm" />
+                <Text
+                  size="18px"
+                  ta="center"
+                  mt="lg"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Exercise Count
+                </Text>
+                <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
+                  {exerciseCount}
+                </Text>
+                <Space h="sm" />
+              </div>
+            </div>
+          </Card>
+        </Container>
+      </section>
 
-    </section>
+      <section>
+        <Container className={classes.exerciselog}>
+          <Card withBorder shadow="sm" p="lg">
+            <ExerciseLogListing />
+          </Card>
+        </Container>
 
+        <Container className={classes.foodlog}>
+          <Card withBorder shadow="sm" p="lg">
+            <FoodLogListing />
+          </Card>
+        </Container>
 
-    <Container className={classes.exerciselog}>
-    <Card withBorder shadow="sm" p="lg"  >
-      <ExerciseLogListing/>
-      </Card>
-    </Container>
-
-    <Container className={classes.foodlog}>
-    <Card withBorder shadow="sm" p="lg"  >
-      <FoodLogListing/>
-      </Card>
-    </Container>
-
-    <Container className={classes.macronutrient}>
-    <Card withBorder shadow="sm" p="lg"  >
-      <MacroNutrient/>
-      </Card>
-    </Container>
+        <Container className={classes.macronutrient}>
+          <Card withBorder shadow="sm" p="lg">
+            <MacroNutrient />
+          </Card>
+        </Container>
+      </section>
     </>
   );
 };
@@ -121,94 +392,97 @@ const useStyles = createStyles(() => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      position: "relative", // Ensure text is positioned over the background image
-      color: "white", // Make text white so it stands out against the image
+      position: "relative",
+      color: "white",
       fontSize: "25px",
-      height: "600px", // Make sure the container takes full height of the screen
-      width: "100%", // Full width of the container
-      backgroundImage: `url(${bgImage})`, // Set the background image
-      backgroundSize: "cover", // Ensure the image covers the full container
-      backgroundPosition: "center", // Center the image in the container
-      backgroundRepeat: "no-repeat", // Prevent repeating the background image
-      overflow: "hidden", // Prevent text overflow
-  
-      [`@media (maxWidth: 1024px)`]: {
-        height: "500px", // Reduce height for smaller screens like tablets
+      height: "600px",
+      width: "100%",
+      backgroundImage: `linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),url(${bgImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      overflow: "hidden",
+
+      "@media (max-width: 1024px)": {
+        height: "500px",
       },
-  
-      [`@media (maxWidth: 768px)`]: {
-        height: "400px", // Further reduce height for mobile screens
+
+      "@media (max-width: 768px)": {
+        height: "400px",
       },
-  
-      [`@media (maxWidth: 480px)`]: {
-        height: "300px", // Keep height smaller for mobile
+
+      "@media (max-width: 480px)": {
+        height: "300px",
       },
     },
-  
+
     overlayText: {
-      position: "absolute", // To position the text above the background
-      color: "white", // White text color for better contrast
-      textAlign: "center", // Center the text horizontally
-      fontSize: "30px", // Default font size for text
-      fontWeight: "bold", // Bold the text
-      maxWidth: "60%", // Limit the text width for better readability
-      zIndex: 1, // Make sure text is above the background image
-      wordWrap: "break-word", // Ensure text wraps within the container
-  
-      [`@media (maxWidth: 768px)`]: {
-        fontSize: "20px", // Adjust font size for smaller screens
-        maxWidth: "80%", // Increase text width for mobile
-      },
-  
-      [`@media (maxWidth: 480px)`]: {
-        fontSize: "18px", // Further adjust font size for mobile
-        maxWidth: "90%", // Make the text width even larger for mobile
-      },
-    },
-  
-    quote: {
-      fontSize: "35px", // Larger font size for the quote
-      marginBottom: "10px", // Add space below the quote
-  
-      [`@media (maxWidth: 768px)`]: {
-        fontSize: "2rem", // Smaller font size for mobile
-      },
-  
-      [`@media (maxWidth: 480px)`]: {
-        fontSize: "1.5rem", // Further reduce font size for smaller devices
-      },
-    },
-  
-    threeword: {
-      fontSize: "35px", // Font size for the "Track. Plan. Achieve." text
+      position: "absolute",
+      color: "white",
+      alignSelf: "center",
+      textAlign: "center",
+      fontSize: "30px",
       fontWeight: "bold",
-      marginTop: "20px", // Add space above the "Track. Plan. Achieve." text
-  
-      [`@media (maxWidth: 768px)`]: {
-        fontSize: "25px", // Adjust font size for tablets
+      zIndex: 1,
+      wordWrap: "break-word",
+      whiteSpace: "nowrap",
+      textShadow: "2px 2px 4px #fa5252",
+      "@media (max-width: 768px)": {
+        fontSize: "20px",
+        maxWidth: "80%",
       },
-  
-      [`@media (maxWidth: 480px)`]: {
-        fontSize: "18px", // Reduce font size further for small screens
+
+      "@media (max-width: 480px)": {
+        fontSize: "18px",
+        maxWidth: "90%",
       },
     },
-  
+
+    quote: {
+      fontSize: "35px",
+      marginBottom: "10px",
+
+      "@media (max-width: 768px)": {
+        fontSize: "2rem",
+      },
+
+      "@media (max-width: 480px)": {
+        fontSize: "1.5rem",
+      },
+    },
+
+    threeword: {
+      fontSize: "35px",
+      fontWeight: "bold",
+      marginTop: "20px",
+
+      "@media (max-width: 768px)": {
+        fontSize: "25px",
+      },
+
+      "@media (max-width: 480px)": {
+        fontSize: "18px",
+      },
+    },
+
     button: {
-      backgroundColor: "#4263eb", // Button color
-      border: "none", // Remove border
-      color: "white", // Button text color
-      padding: "10px 20px", // Ensure buttons are comfortably clickable
-  
-      [`@media (maxWidth: 768px)`]: {
-        padding: "8px 15px", // Adjust button padding for tablets
+      backgroundColor: "#4263eb",
+      border: "none",
+      color: "white",
+      padding: "10px 20px",
+
+      "@media (max-width: 768px)": {
+        padding: "8px 15px",
       },
-  
-      [`@media (maxWidth: 480px)`]: {
-        padding: "6px 10px", // Further reduce button padding for small devices
+
+      "@media (max-width: 480px)": {
+        padding: "6px 10px",
       },
     },
-  
-    // Section 2 id="after background design"
+
     container2: {
       margin: "50px 20px",
       fontSize: "2rem",
@@ -218,86 +492,84 @@ const useStyles = createStyles(() => {
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
-  
-      [`@media (maxWidth: 768px)`]: {
-        fontSize: "1.5rem", // Adjust font size for smaller screens like tablets
+
+      "@media (max-width: 768px)": {
+        fontSize: "1.5rem",
       },
-  
-      [`@media (maxWidth: 480px)`]: {
-        fontSize: "1.2rem", // Smaller font size for mobile screens
+
+      "@media (max-width: 480px)": {
+        fontSize: "1.2rem",
       },
     },
-  
+
     photocontainer: {
       display: "flex",
-      justifyContent: "center", // Space out the items (photos)
-      alignItems: "center", // Vertically align the photos
+      justifyContent: "center",
+      alignItems: "center",
       flexWrap: "wrap",
       gap: "10px",
-      
-    
-  
-      [`@media (maxWidth: 1024px)`]: {
-        gap: "15px", // Slightly reduce gap for medium screens (tablets)
-        padding: "15px", // Adjust padding for tablets
+
+      "@media (max-width: 1024px)": {
+        gap: "15px",
+        padding: "15px",
       },
-  
-      [`@media (maxWidth: 768px)`]: {
-        gap: "10px", // Reduce gap further for smaller screens
-        padding: "10px", // Further adjust padding
+
+      "@media (max-width: 768px)": {
+        gap: "10px",
+        padding: "10px",
       },
-  
-      [`@media (maxWidth: 480px)`]: {
-        flexDirection: "column", // Stack the photos vertically for mobile devices
-        gap: "15px", // Add space between vertically stacked photos
-        padding: "10px", // Adjust padding for mobile screens
+
+      "@media (max-width: 480px)": {
+        flexDirection: "column",
+        gap: "15px",
+        padding: "10px",
       },
     },
-  
+    
+    calorieGoal: {
+      marginTop: "30px",
+      marginBottom: "30px",
+    },
+
     exerciselog: {
       marginTop: "30px",
       marginBottom: "30px",
-
     },
 
     foodlog: {
       marginTop: "30px",
       marginBottom: "30px",
-
     },
 
-    macronutrient:{
-        marginTop: "30px",
-        marginBottom: "30px",
+    macronutrient: {
+      marginTop: "30px",
+      marginBottom: "30px",
     },
 
-    box: {
-
-    },
+    box: {},
 
     coursel: {
-      backgroundColor: "white",
       gap: "100px",
       flexDirection: "row",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-  
-      [`@media (maxWidth: 768px)`]: {
-        flexDirection: "column", // Stack carousel items for smaller screens
+
+      "@media (max-width: 768px)": {
+        flexDirection: "column",
       },
     },
-  
+
     authentication: {
       margin: "20px 0px 20px 0px",
       fontFamily: "Roboto",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-  
-      [`@media (maxWidth: 768px)`]: {
-        flexDirection: "column", // Stack authentication elements on smaller screens
-        gap: "10px", // Space between items
+
+      "@media (max-width: 768px)": {
+        flexDirection: "column",
+        gap: "10px",
       },
     },
 
@@ -311,6 +583,5 @@ const useStyles = createStyles(() => {
     afterBackground: {
       marginTop: "50px",
     },
-
   };
 });

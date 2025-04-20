@@ -14,7 +14,6 @@ import {
 import { showNotification } from "@mantine/notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { SemiCircleProgress } from "@mantine/core";
 
 export const BMIIndicator = () => {
   const [weight, setWeight] = useState<string>("");

@@ -21,6 +21,8 @@ import { FoodLogCreate } from "../pages/FoodLogs-page/food-logs-create";
 {/* import { FoodLogUpdate } from "../pages/food-logs-page/food-logs-update"; */}
 import { FoodLogListing } from "../pages/FoodLogs-page/food-logs-listing";
 import { MacroNutrient } from "../pages/MacroNutrient-pages/MacroNutrient";
+import { WeeklyReport } from "../pages/profile/weeklyReport";
+import { Goals } from "../pages/profile/goals";
 
 
 //This is where you will tell React Router what to render when the path matches the route specified.
@@ -36,17 +38,19 @@ export const Routes = () => {
           <Route path={routes.home} element={<LandingPage />} />
           {/* When path === /iser render UserPage */}
           <Route path={routes.user} element={<UserPage />} />
-
           <Route path={routes.exercises} element={<ExerciseListing />} />
           <Route path={routes.exerciseCreate} element={<ExerciseCreate />} />
           <Route path={routes.exerciseUpdate} element={<ExerciseUpdate />} />
-
-          <Route path={routes.exerciseLogCreate} element={<ExerciseLogCreate />} />
-          <Route path={routes.exerciseLogUpdate} element={<ExerciseLogUpdate />} />
+          <Route
+            path={routes.exerciseLogCreate}
+            element={<ExerciseLogCreate />}
+          />
+          <Route
+            path={routes.exerciseLogUpdate}
+            element={<ExerciseLogUpdate />}
+          />
           <Route path={routes.exerciseLog} element={<ExerciseLogListing />} />
-
           {/* When path === /foods render FoodListing */}`
-
           <Route path={routes.foods} element={<FoodListing />} />
           <Route path={routes.foodCreate} element={<FoodCreate />} />
           <Route path={routes.foodUpdate} element={<FoodUpdate />} />
@@ -59,15 +63,14 @@ export const Routes = () => {
           {/*}
           <Route path={routes.foodLogUpdate} element={<FoodLogUpdate />} /> 
           */}
-
           <Route path={routes.mealplanner} element={<MealPlanner />} />
-          <Route path={routes.bmi} element={<BMIIndicator />}/>
+          <Route path={routes.bmi} element={<BMIIndicator />} />
           <Route path={routes.profile} element={<Profile />} />
+          <Route path={routes.weeklyReport} element={<WeeklyReport />} />
+          <Route path={routes.goals} element={<Goals />} />
 
           {/* Going to route "localhost:5001/" will go to homepage */}
           <Route path={routes.root} element={<Navigate to={routes.home} />} />
-          
-
           {/* This should always come last.  
             If the path has no match, show page not found */}
           <Route path="*" element={<NotFoundPage />} />
