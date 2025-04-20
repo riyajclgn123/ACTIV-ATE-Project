@@ -18,6 +18,8 @@ import api from "../../config/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faHistory } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from "@mantine/notifications";
+import { DateTimePicker } from "@mantine/dates";
+
 
 interface ExerciseLogResponse {
   data: {
@@ -59,6 +61,8 @@ export const ExerciseLogCreate = () => {
   const [reps, setReps] = useState<number>(10);
   const [caloriesBurned, setCaloriesBurned] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
 
   const durationUnits = [
     { value: "seconds", label: "Seconds" },
@@ -94,7 +98,7 @@ export const ExerciseLogCreate = () => {
         userId: userId,
         duration: formattedDuration,
         rep: reps,
-        createDate: new Date().toISOString()
+        createDate: selectedDate
     });
       
       if (response.data?.data?.caloriesBurned) {
@@ -171,6 +175,14 @@ export const ExerciseLogCreate = () => {
             min={0}
             required
           />
+
+          <DateTimePicker
+                value={selectedDate} // Controlled value
+                onChange={setSelectedDate} // Updates state on change
+                valueFormat="DD MMM YYYY hh:mm A"
+                label="Pick date and time"
+                placeholder="Pick date and time"
+              />
 
           {/* Submit Button */}
           <Group mt="xl">

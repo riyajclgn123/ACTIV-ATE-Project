@@ -1,4 +1,4 @@
-import { Box, Card, Container, Space, Text } from "@mantine/core";
+import { Box, Card, Container, Select, Space, Text } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import bgImage from "../../assets/bg.jpeg";
 import { RingProgress } from "@mantine/core";
@@ -11,6 +11,9 @@ import { showNotification } from '@mantine/notifications';
 import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
 import api from "../../config/axios";
 import { AxiosError } from "axios";
+import { Slider } from '@mantine/core';
+import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates";
+import dayjs from 'dayjs'; 
 
 export interface CalorieConsumedResponse {
   date: string;
@@ -36,8 +39,25 @@ export const LandingPage = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   const reset = () => setHovered(null);
-
 const [exerciseCount, setExerciseCount] = useState<number>(0);
+
+const [unit, setUnit] = useState<Date | null>(new Date());
+
+const getStartOfDay = (date: Date | null) => {
+  const d = date ? new Date(date) : new Date();
+  return dayjs(d).startOf('day').format("MM/DD/YYYY"); // Sets to 00:00:00.000
+};
+
+// Get end of day (11:59 PM)
+const getEndOfDay = (date: Date | null) => {
+  const d = date ? new Date(date) : new Date();
+  return dayjs(d).endOf('day').format("MM/DD/YYYY"); // Sets to 23:59:59.999
+};
+
+// Calculate the date range
+const startDate = getStartOfDay(unit);
+const endDate = getEndOfDay(unit);
+
 
 useEffect(() => {
   async function fetchExerciseCount() {
@@ -45,7 +65,7 @@ useEffect(() => {
       if (!user) return;
       
       const response = await api.get<ApiResponse<number>>(
-        `/api/exercise-logs/count/user/${user.id}`
+        `/api/exercise-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
       );
       
       if (!response.data.hasErrors && response.data.data !== undefined) {
@@ -57,7 +77,7 @@ useEffect(() => {
   }
 
   fetchExerciseCount();
-}, [user?.id]);
+}, [user?.id, startDate, endDate]);
 
 
 
@@ -67,9 +87,8 @@ useEffect(() => {
   async function fetchFoodCount() {
     try {
       if (!user) return;
-      
       const response = await api.get<ApiResponse<number>>(
-        `/api/food-logs/count/user/${user.id}`
+        `/api/food-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
       );
       
       if (!response.data.hasErrors && response.data.data !== undefined) {
@@ -81,7 +100,7 @@ useEffect(() => {
   }
 
   fetchFoodCount();
-}, [user?.id]);
+}, [user?.id, startDate, endDate]);
 
 
 
@@ -124,10 +143,11 @@ useEffect(() => {
         return;
       }
       
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString();
+    console.log({today,unit})
     
     const response = await api.get<ApiResponse<CalorieConsumedResponse>>(
-      `/api/food-logs/user/${user.id}/calories-consumed-per-day?date=${today}`
+      `/api/food-logs/user/${user.id}/calories-consumed-per-day?date=${unit?.toISOString().split('T')[0]}`
     );
       
       if (response.data.hasErrors) {
@@ -147,7 +167,7 @@ useEffect(() => {
   
   useEffect(() => {
     fetchCalorieConsumed();
-  }, [user?.id]);
+  }, [user?.id, unit]);
 
   const [totals, setTotals] = useState<MealTimeTotals | null>(null);
   const [loading, setLoading] = useState(true);
@@ -158,10 +178,9 @@ useEffect(() => {
       if (!user?.id) return;
 
       const today = new Date().toISOString().split('T')[0];
-      console.log(`Fetching meal time totals for user ${user.id} on ${today}`);
     
       const response = await api.get<ApiResponse<MealTimeTotals>>(
-        `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${today}`
+        `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${unit?.toISOString().split('T')[0]}`
       );
 
     console.log("API Response:", response.data); // Add this line 
@@ -193,7 +212,7 @@ useEffect(() => {
 
   useEffect(() => {
     fetchMealTimeTotals();
-  }, [user?.id]);
+  }, [user?.id, unit]);
 
   const calculatePercentage = (value: number, total: number) => {
     if (!total || total === 0) return 0;
@@ -232,17 +251,27 @@ useEffect(() => {
       <section id="after-background-design" className={classes.afterBackground}>
         <Container>
           <Card withBorder shadow="sm" p="lg">
-            <Text size="25px" style={{ fontWeight: "bold" }}>
+            <Text size="25px" style={{ fontWeight: "bold", textAlign: "center" }}>
               Calories Goal
             </Text>
+
+                                         <DateInput
+                                           value={unit} // Controlled value
+                                           onChange={setUnit} // Updates state on change
+                                           valueFormat="MM/DD/YYYY"
+                                           label="Pick date and time"
+                                           placeholder="Pick date and time"
+                                         />
             <div className={classes.coursel}>
+
+              
               
 
             <RingProgress
   label={
     <div>
       <Text size="lg" ta="center" style={{ fontWeight: "bold" }}>
-        {foodConsumed?.totalCalories || 0} / {foodConsumed?.dailyCalorieGoal || 0} kcal
+        {foodConsumed?.totalCalories || 0} / {calorieGoal?.dailyCalorieGoal || 0} kcal
       </Text>
       <Text size="sm" ta="center" style={{ 
         color: foodConsumed?.calorieDifference && foodConsumed.calorieDifference >= 0 ? 'red' : 'green' 
@@ -368,7 +397,10 @@ const useStyles = createStyles(() => {
       fontSize: "25px",
       height: "600px",
       width: "100%",
-      backgroundImage: `url(${bgImage})`,
+      backgroundImage: `linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),url(${bgImage})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
@@ -390,13 +422,14 @@ const useStyles = createStyles(() => {
     overlayText: {
       position: "absolute",
       color: "white",
+      alignSelf: "center",
       textAlign: "center",
       fontSize: "30px",
       fontWeight: "bold",
-      maxWidth: "60%",
       zIndex: 1,
       wordWrap: "break-word",
-
+      whiteSpace: "nowrap",
+      textShadow: "2px 2px 4px #fa5252",
       "@media (max-width: 768px)": {
         fontSize: "20px",
         maxWidth: "80%",

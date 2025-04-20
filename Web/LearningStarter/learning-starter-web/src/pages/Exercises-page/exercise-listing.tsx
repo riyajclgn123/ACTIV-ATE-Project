@@ -201,38 +201,35 @@ const useStyles = createStyles(() => {
       fontSize: "20px",
       margin: "0px",
       height: "600px", // Make sure the container takes full height of the screen
-      width: "100%", // Full width of the container
-      backgroundImage: `url(${exercisebgImage})`, // Set the background image
+      width: "100vw", // Full width of the container
+      
+      backgroundImage: `linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),url(${exercisebgImage})`, // Set the background image
       backgroundSize: "cover", // Ensure the image covers the full container
       backgroundPosition: "center", // Center the image in the container
       backgroundRepeat: "no-repeat", // Prevent repeating the background image
       padding: "10px",
-      [`@media (max-width: 1024px)`]: {
-        maxWidth: "500px", // Reduce width for medium screens
-      },
-
-      [`@media (max-width: 768px)`]: {
-        maxWidth: "450px", // Further reduce for tablets
-      },
-
-      [`@media (max-width: 480px)`]: {
-        height: "400px",
-        padding: "5px",
-      },
     },
 
     overlayText: {
+      position: "absolute",
+      color: "white",
+      alignSelf: "center",
+      textAlign: "center",
+      fontSize: "30px",
+      fontWeight: "bold",
+      zIndex: 1,
+      wordWrap: "break-word",
+      whiteSpace: "nowrap",
+      textShadow: "2px 2px 4px #fa5252",
+
       display: "flex",
       flexDirection: "column",
       justifyContent: "center", // Aligns content at the top
       alignItems: "center",
-      position: "absolute", // To position the text above the background
-      color: "white", // White text color for better contrast
-      textAlign: "center", // Center the text horizontally
-      fontSize: "30px", // Default font size for text
-      fontWeight: "bold", // Bold the text
       maxWidth: "80%", // Limit the text width for better readability
-      zIndex: 1, // Make sure text is above the background image
       [`@media (max-width: 768px)`]: {
         fontSize: "24px",
       },

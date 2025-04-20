@@ -1,10 +1,23 @@
 import { useState, useEffect } from "react";
 import { Text, Loader, Container, Title, Space, Button } from "@mantine/core";
-import { LineChart } from '@mantine/charts';
+import { LineChart } from "@mantine/charts";
 import { useAuth } from "../../authentication/use-auth";
+import "@mantine/charts/styles.css";
 
 // Define the exact shape of our chart data
-interface ChartData {
+
+interface ExerciseChartData {
+  date: string;
+  Exercise: number;
+}
+
+interface ExerciseLog {
+  userId: number;
+  date: string;
+  caloriesBurned: number;
+}
+
+interface MealChartData {
   date: string;
   Breakfast: number;
   Lunch: number;
@@ -16,19 +29,20 @@ interface ChartData {
 interface DailyReport {
   userId: number;
   date: string;
-  mealTime: 'Breakfast' | 'Lunch' | 'Snack' | 'Dinner';
+  mealTime: "Breakfast" | "Lunch" | "Snack" | "Dinner";
   totalCalories: number;
 }
 
 export const WeeklyReport = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [daysOffset, setDaysOffset] = useState(0);
+  const [mealData, setMealData] = useState<MealChartData[]>([]);
+  const [exerciseData, setExerciseData] = useState<ExerciseChartData[]>([]);
 
   const getDateRange = (offset: number) => {
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() - (offset * 7));
+    endDate.setDate(endDate.getDate() - offset * 7);
     const startDate = new Date(endDate);
     startDate.setDate(endDate.getDate() - 6);
     return { startDate, endDate };
@@ -36,18 +50,64 @@ export const WeeklyReport = () => {
 
   const fetchData = async () => {
     if (!user) return;
-    
+
     setLoading(true);
     try {
       const { startDate, endDate } = getDateRange(daysOffset);
-      
-      const response = await fetch(
-        `/api/dailyReports/user/${user.id}/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
-      );
-      const { data } = await response.json() as { data: DailyReport[] };
-      
-      const transformedData = transformData(data || [], startDate, endDate);
-      setChartData(transformedData);
+
+      // Fetch both meal and exercise data in parallel
+      Promise.allSettled([
+        fetch(
+          `/api/dailyReports/user/${
+            user.id
+          }/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+        ),
+        fetch(
+          `/api/exercise-logs/user/${
+            user.id
+          }/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+        ),
+      ]).then((results) => {
+        const [mealsResult, exerciseResult] = results;
+
+        // Handle meals data independently
+        if (mealsResult.status === "fulfilled") {
+          mealsResult.value
+            .json()
+            .then((mealsData: { data?: DailyReport[] }) => {
+              setMealData(
+                transformMealData(mealsData.data || [], startDate, endDate)
+              );
+            })
+            .catch((error: Error) => {
+              console.error("Meals data parsing failed:", error);
+            });
+        } else {
+          console.error("Meals request failed:", mealsResult.reason);
+        }
+
+        // Handle exercise data independently
+        if (exerciseResult.status === "fulfilled") {
+          exerciseResult.value
+            .json()
+            .then((exerciseData: { data?: ExerciseLog[] }) => {
+              setExerciseData(
+                transformExerciseData(
+                  exerciseData.data || [],
+                  startDate,
+                  endDate
+                )
+              );
+            })
+            .catch((error: Error) => {
+              console.error("Exercise data parsing failed:", error);
+            });
+        } else {
+          console.error("Exercise request failed:", exerciseResult.reason);
+        }
+      });
+
+      // Transform data separately
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -55,37 +115,73 @@ export const WeeklyReport = () => {
     }
   };
 
-  const transformData = (apiData: DailyReport[], startDate: Date, endDate: Date): ChartData[] => {
-    const result: ChartData[] = [];
+  const transformMealData = (
+    apiData: DailyReport[],
+    startDate: Date,
+    endDate: Date
+  ): MealChartData[] => {
+    const result: MealChartData[] = [];
     const currentDate = new Date(startDate);
-    
     while (currentDate <= endDate) {
-      const dateStr = currentDate.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
+      const dateStr = currentDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
       });
-      
+
       // Initialize with all meal types set to 0
-      const dayData: ChartData = {
+      const dayData: MealChartData = {
         date: dateStr,
         Breakfast: 0,
         Lunch: 0,
         Snack: 0,
-        Dinner: 0
+        Dinner: 0,
       };
-      
-      // Filter and process data for this specific date
+
       apiData
-        .filter(item => new Date(item.date).toDateString() === currentDate.toDateString())
-        .forEach(item => {
-          // TypeScript now knows item.mealTime can only be one of these values
+        .filter(
+          (item) =>
+            new Date(item.date).toDateString() === currentDate.toDateString()
+        )
+        .forEach((item) => {
           dayData[item.mealTime] = item.totalCalories;
         });
-      
+
       result.push(dayData);
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    
+
+    return result;
+  };
+
+  const transformExerciseData = (
+    apiData: ExerciseLog[],
+    startDate: Date,
+    endDate: Date
+  ): ExerciseChartData[] => {
+    const result: ExerciseChartData[] = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dateStr = currentDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+
+      const dailyExercise = apiData
+        .filter(
+          (item) =>
+            new Date(item.date).toDateString() === currentDate.toDateString()
+        )
+        .reduce((sum, item: any) => sum + item.totalCaloriesBurned, 0);
+
+      result.push({
+        date: dateStr,
+        Exercise: dailyExercise,
+      });
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
     return result;
   };
 
@@ -99,15 +195,15 @@ export const WeeklyReport = () => {
     <Container>
       <Title>Weekly Report</Title>
       <Space h="md" />
-      
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <Button 
+
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+        <Button
           onClick={() => setDaysOffset(daysOffset + 1)}
           disabled={daysOffset >= 4}
         >
           Previous Week
         </Button>
-        <Button 
+        <Button
           onClick={() => setDaysOffset(Math.max(0, daysOffset - 1))}
           disabled={daysOffset === 0}
         >
@@ -115,24 +211,50 @@ export const WeeklyReport = () => {
         </Button>
       </div>
 
-      {chartData.length > 0 ? (
+      {mealData.length > 0 && (
         <>
-          <Text size="lg" fw={500}>Calories Consumed</Text>
+          <Text size="lg" fw={500}>
+            Calories Consumed
+          </Text>
           <Space h="md" />
           <LineChart
             h={300}
-            data={chartData}
+            data={mealData}
             dataKey="date"
             unit=" calories"
+            withLegend
+            legendProps={{ verticalAlign: "bottom", height: 50 }}
+            curveType="monotone"
             series={[
-              { name: 'Breakfast', color: 'pink' },
-              { name: 'Lunch', color: 'blue.6' },
-              { name: 'Snack', color: 'teal.6' },
-              { name: 'Dinner', color: 'red' },
+              { name: "Breakfast", color: "pink" },
+              { name: "Lunch", color: "blue.6" },
+              { name: "Snack", color: "teal.6" },
+              { name: "Dinner", color: "red" },
             ]}
           />
         </>
-      ) : (
+      )}
+
+      {exerciseData.length > 0 && (
+        <>
+          <Text size="lg" fw={500} mt="xl">
+            Calories Burned (Exercise)
+          </Text>
+          <Space h="md" />
+          <LineChart
+            h={300}
+            data={exerciseData}
+            dataKey="date"
+            unit=" calories"
+            withLegend
+            legendProps={{ verticalAlign: "bottom" }}
+            curveType="monotone"
+            series={[{ name: "Exercise", color: "green" }]}
+          />
+        </>
+      )}
+
+      {mealData.length === 0 && exerciseData.length === 0 && (
         <Text>No data available for this week</Text>
       )}
     </Container>
