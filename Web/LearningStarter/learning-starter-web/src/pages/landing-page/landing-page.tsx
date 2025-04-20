@@ -36,6 +36,7 @@ export const LandingPage = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   const reset = () => setHovered(null);
+
 const [exerciseCount, setExerciseCount] = useState<number>(0);
 
 useEffect(() => {
@@ -157,17 +158,20 @@ useEffect(() => {
       if (!user?.id) return;
 
       const today = new Date().toISOString().split('T')[0];
+      console.log(`Fetching meal time totals for user ${user.id} on ${today}`);
     
       const response = await api.get<ApiResponse<MealTimeTotals>>(
         `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${today}`
       );
 
+    console.log("API Response:", response.data); // Add this line 
+
       if (response.data.hasErrors || !response.data.data) {
         throw new Error(response.data.errors?.join(', ') || 'Failed to fetch data');
       }
 
-      setTotals(response.data.data );
-    
+      setTotals(response.data.data);
+      console.log("Meal Time Totals Set:", response.data.data); // Add this line
 
     } catch (error) {
       showNotification({
@@ -196,6 +200,7 @@ useEffect(() => {
     return Math.round((value / total) * 100);
   };
   
+  // Use this instead of your current percentages calculation
   const getPercentages = () => {
     if (!totals) return { breakfast: 0, lunch: 0, dinner: 0, snack: 0 };
     
@@ -208,6 +213,8 @@ useEffect(() => {
   };
   
   const percentages = useMemo(() => getPercentages(), [totals]);
+
+  console.log("Percentages:", percentages, totals); // Add this line
   return (
     <>
       <section id="backgrounddesign">

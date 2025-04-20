@@ -10,7 +10,8 @@ public class FoodLog
     public int UserId { get; set; }
     public int FoodId { get; set; }
     public decimal ServingSize { get; set; }
-    public decimal Calories { get; set; } //storing calories
+    public decimal Calories { get; set; } 
+    public string MealTime {get; set;}
     public DateTimeOffset CreateDate { get; set; }
     public DateTimeOffset UpdatedDate { get; set; }
 
@@ -27,6 +28,7 @@ public class FoodLogGetDto
     public decimal CaloriesPerServing { get; set; }
     public decimal ServingSize { get; set; }
     public decimal Calories { get; set; }
+    public string MealTime {get; set;}
     public DateTimeOffset CreateDate { get; set; }
     public DateTimeOffset UpdatedDate { get; set; }
 }
@@ -38,6 +40,7 @@ public class FoodLogCreateDto
     public int FoodId { get; set; }
     public decimal ServingSize { get; set; }
     public DateTimeOffset CreateDate { get; set; }
+    public string MealTime {get; set;}
 
 }
 
@@ -46,15 +49,12 @@ public class FoodLogUpdateDto
     public int UserId { get; set; }
     public int FoodId { get; set; }
     public decimal ServingSize { get; set; }
+    public string MealTime {get; set;}
     public DateTimeOffset UpdatedDate { get; set; }
 
    
 }
 
-public class DailyCalorieResponse
-{
-    public double DailyCalorieGoal { get; set; }
-}
 public class FoodLogEntityConfiguration : IEntityTypeConfiguration<FoodLog>
 {
     public void Configure(EntityTypeBuilder<FoodLog> builder)

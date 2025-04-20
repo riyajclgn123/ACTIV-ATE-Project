@@ -181,3 +181,10 @@ export type GoalGetDto={
   dailyCalorieGoal : number;
 }
 
+export type DailyReportGetDto={
+  id: number;
+  userId: number;
+  date: string;
+  mealTime: string;
+  calories: number;
+}
