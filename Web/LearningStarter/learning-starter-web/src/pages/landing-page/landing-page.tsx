@@ -192,7 +192,6 @@ export const LandingPage = () => {
         }`
       );
 
-      console.log("API Response:", response.data); // Add this line
 
       if (response.data.hasErrors || !response.data.data) {
         throw new Error(
@@ -201,7 +200,6 @@ export const LandingPage = () => {
       }
 
       setTotals(response.data.data);
-      console.log("Meal Time Totals Set:", response.data.data); // Add this line
     } catch (error) {
       showNotification({
         title: "Error",
@@ -246,7 +244,6 @@ export const LandingPage = () => {
 
   const percentages = useMemo(() => getPercentages(), [totals]);
 
-  console.log("Percentages:", percentages, totals); // Add this line
   return (
     <>
       <section id="backgrounddesign">

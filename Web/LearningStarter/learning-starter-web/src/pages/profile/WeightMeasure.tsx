@@ -89,7 +89,6 @@ export const WeightMeasure = () => {
         value: parseFloat(values.weight),
         logDate: new Date().toISOString(),
       };
-      console.log("Weight Log", weightLogs);
 
       await api.post<ApiResponse<WeightLogGetDto>>("/api/weight-logs", payload);
       setSuccess(true);

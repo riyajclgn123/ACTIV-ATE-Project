@@ -65,13 +65,10 @@ export const ExerciseLogUpdate = () => {
             throw new Error("Invalid exercise log ID");
           }
 
-          console.log(`Fetching exercise log with ID: ${id}`);
 
       const response = await api.get<ApiResponse<ExerciseLogGetDto>>(`/api/exercise-logs/${id}`);
       
-         // Check if response is valid
 
-         console.log("API Response:", response);
     if (!response.data) {
         throw new Error("No response data received");
       }

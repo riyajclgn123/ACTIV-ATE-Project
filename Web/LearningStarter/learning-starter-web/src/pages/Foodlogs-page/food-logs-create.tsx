@@ -117,7 +117,6 @@ export const FoodLogCreate = () => {
       if (!food?.id || !userId) {
         throw new Error("Missing food or user information");
       }
-      console.log("servings, unit:", servings, unit);
 
       if (isNaN(servings) || servings <= 0) {
         throw new Error("Serving size must be greater than zero");
@@ -132,7 +131,6 @@ export const FoodLogCreate = () => {
         createDate: selectedDate,
       });
 
-      console.log("Food log post API response:", response.data);
 
       if (response.data) {
         showNotification({
@@ -165,7 +163,6 @@ export const FoodLogCreate = () => {
       const nutrients = await api.get<ApiResponse<NutrientGetDto[]>>(
         `/api/nutrients/by-food/${food.id}`
       );
-      console.log("Nutrient API response:", nutrients.data);
 
       let baseCalories = 0;
       let baseProtein = 0;
