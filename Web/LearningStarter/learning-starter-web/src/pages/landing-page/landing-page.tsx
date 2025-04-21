@@ -1,4 +1,13 @@
-import { Box, Card, Container, Select, Space, Text } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Select,
+  Space,
+  Tabs,
+  Text,
+} from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import bgImage from "../../assets/bg.jpeg";
 import { RingProgress } from "@mantine/core";
@@ -14,7 +23,15 @@ import { AxiosError } from "axios";
 import { Slider } from "@mantine/core";
 import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChartLine,
+  faDumbbell,
+  faUtensils,
+  faHandHoldingHeart,
+  faList,
+  faTable,
+} from "@fortawesome/free-solid-svg-icons";
 export interface CalorieConsumedResponse {
   date: string;
   dailyCalorieGoal: number;
@@ -151,7 +168,9 @@ export const LandingPage = () => {
         return;
       }
       const response = await api.get<ApiResponse<CalorieConsumedResponse>>(
-        `/api/food-logs/user/${user.id}/calories-consumed-per-day?date=${getDatestring(unit)}`
+        `/api/food-logs/user/${
+          user.id
+        }/calories-consumed-per-day?date=${getDatestring(unit)}`
       );
 
       if (response.data.hasErrors) {
@@ -187,11 +206,10 @@ export const LandingPage = () => {
       const today = new Date().toISOString().split("T")[0];
 
       const response = await api.get<ApiResponse<MealTimeTotals>>(
-        `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${
-          getDatestring(unit)
-        }`
+        `/api/food-logs/user/${
+          user.id
+        }/user-meal-time-totals?date=${getDatestring(unit)}`
       );
-
 
       if (response.data.hasErrors || !response.data.data) {
         throw new Error(
@@ -243,7 +261,7 @@ export const LandingPage = () => {
   };
 
   const percentages = useMemo(() => getPercentages(), [totals]);
-
+  const [viewMode, setViewMode] = useState("tabs");
   return (
     <>
       <section id="backgrounddesign">
@@ -261,13 +279,29 @@ export const LandingPage = () => {
       <section id="after-background-design" className={classes.afterBackground}>
         <Container>
           <Card withBorder shadow="sm" p="lg">
-            <Text
-              size="25px"
-              style={{ fontWeight: "bold", textAlign: "center" }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
             >
-              Calories Goal
-            </Text>
-
+              <Text
+                size="25px"
+                style={{ fontWeight: "bold", textAlign: "center" }}
+              >
+                Calories Goal
+              </Text>
+              <Button
+                variant="outline"
+                leftSection={<FontAwesomeIcon icon={viewMode === "tabs" ? faList: faTable} />}
+                onClick={() =>
+                  setViewMode(viewMode === "tabs" ? "list" : "tabs")
+                }
+              >
+                {viewMode === "tabs" ? "List View" : "Tab View"}
+              </Button>
+            </div>
             <DateInput
               value={unit} // Controlled value
               onChange={setUnit} // Updates state on change
@@ -275,138 +309,353 @@ export const LandingPage = () => {
               label="Pick date and time"
               placeholder="Pick date and time"
             />
-            <div className={classes.coursel}>
-              <RingProgress
-                label={
-                  <div>
-                    <Text size="lg" ta="center" style={{ fontWeight: "bold" }}>
-                      {foodConsumed?.totalCalories || 0} /{" "}
-                      {calorieGoal?.dailyCalorieGoal || 0} kcal
-                    </Text>
-                    <Text
-                      size="sm"
-                      ta="center"
-                      style={{
-                        color:
-                          foodConsumed?.calorieDifference &&
-                          foodConsumed.calorieDifference >= 0
-                            ? "red"
-                            : "green",
-                      }}
-                    >
-                      {foodConsumed?.calorieDifference || 0} kcal{" "}
-                      {foodConsumed?.calorieDifference &&
-                      foodConsumed.calorieDifference >= 0
-                        ? "over"
-                        : "under"}
-                    </Text>
+            {viewMode === "tabs" ? (
+              <Tabs defaultValue="Chart">
+                <Tabs.List>
+                  <Tabs.Tab
+                    value="Chart"
+                    leftSection={<FontAwesomeIcon icon={faChartLine} />}
+                  >
+                    Chart
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    value="Excercise Logs"
+                    leftSection={<FontAwesomeIcon icon={faDumbbell} />}
+                  >
+                    Excercise Logs
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    value="Food Logs"
+                    leftSection={<FontAwesomeIcon icon={faUtensils} />}
+                  >
+                    Food Logs
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    value="Macro Counts"
+                    leftSection={<FontAwesomeIcon icon={faHandHoldingHeart} />}
+                  >
+                    Macro Counts
+                  </Tabs.Tab>
+                </Tabs.List>
+
+                <Tabs.Panel value="Chart">
+                  <div className={classes.coursel}>
+                    <RingProgress
+                      label={
+                        <div>
+                          <Text
+                            size="lg"
+                            ta="center"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            {foodConsumed?.totalCalories || 0} /{" "}
+                            {calorieGoal?.dailyCalorieGoal || 0} kcal
+                          </Text>
+                          <Text
+                            size="sm"
+                            ta="center"
+                            style={{
+                              color:
+                                foodConsumed?.calorieDifference &&
+                                foodConsumed.calorieDifference >= 0
+                                  ? "red"
+                                  : "green",
+                            }}
+                          >
+                            {foodConsumed?.calorieDifference || 0} kcal{" "}
+                            {foodConsumed?.calorieDifference &&
+                            foodConsumed.calorieDifference >= 0
+                              ? "over"
+                              : "under"}
+                          </Text>
+                        </div>
+                      }
+                      size={300}
+                      thickness={20}
+                      sections={[
+                        {
+                          value: percentages.breakfast,
+                          color: "cyan",
+                          tooltip: `Breakfast: ${
+                            totals?.breakfast || 0
+                          } kcal (${percentages.breakfast}%)`,
+                          onMouseEnter: () => setHovered("Breakfast"),
+                          onMouseLeave: reset,
+                        },
+                        {
+                          value: percentages.lunch,
+                          color: "indigo",
+                          tooltip: `Lunch: ${totals?.lunch || 0} kcal (${
+                            percentages.lunch
+                          }%)`,
+                          onMouseEnter: () => setHovered("Lunch"),
+                          onMouseLeave: reset,
+                        },
+                        {
+                          value: percentages.dinner,
+                          color: "blue",
+                          tooltip: `Dinner: ${totals?.dinner || 0} kcal (${
+                            percentages.dinner
+                          }%)`,
+                          onMouseEnter: () => setHovered("Dinner"),
+                          onMouseLeave: reset,
+                        },
+                        {
+                          value: percentages.snack,
+                          color: "red",
+                          tooltip: `Snack: ${totals?.snack || 0} kcal (${
+                            percentages.snack
+                          }%)`,
+                          onMouseEnter: () => setHovered("Snack"),
+                          onMouseLeave: reset,
+                        },
+                      ]}
+                    />
+                    <div className={classes.text}>
+                      <Space h="sm" />
+                      <Text
+                        size="18px"
+                        ta="center"
+                        mt="lg"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Base Goal
+                      </Text>
+                      <Text
+                        size="16px"
+                        ta="center"
+                        mt="md"
+                        style={{ color: "gray" }}
+                      >
+                        {calorieGoal?.dailyCalorieGoal
+                          ? Math.round(Number(calorieGoal.dailyCalorieGoal))
+                          : "No goal set"}{" "}
+                        kcal
+                      </Text>
+                      <Space h="sm" />
+                      <Text
+                        size="18px"
+                        ta="center"
+                        mt="lg"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Food Count
+                      </Text>
+                      <Text
+                        size="16px"
+                        ta="center"
+                        mt="md"
+                        style={{ color: "gray" }}
+                      >
+                        {foodCount}
+                      </Text>
+                      <Space h="sm" />
+                      <Text
+                        size="18px"
+                        ta="center"
+                        mt="lg"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Exercise Count
+                      </Text>
+                      <Text
+                        size="16px"
+                        ta="center"
+                        mt="md"
+                        style={{ color: "gray" }}
+                      >
+                        {exerciseCount}
+                      </Text>
+                      <Space h="sm" />
+                    </div>
                   </div>
-                }
-                size={300}
-                thickness={20}
-                sections={[
-                  {
-                    value: percentages.breakfast,
-                    color: "cyan",
-                    tooltip: `Breakfast: ${totals?.breakfast || 0} kcal (${
-                      percentages.breakfast
-                    }%)`,
-                    onMouseEnter: () => setHovered("Breakfast"),
-                    onMouseLeave: reset,
-                  },
-                  {
-                    value: percentages.lunch,
-                    color: "indigo",
-                    tooltip: `Lunch: ${totals?.lunch || 0} kcal (${
-                      percentages.lunch
-                    }%)`,
-                    onMouseEnter: () => setHovered("Lunch"),
-                    onMouseLeave: reset,
-                  },
-                  {
-                    value: percentages.dinner,
-                    color: "blue",
-                    tooltip: `Dinner: ${totals?.dinner || 0} kcal (${
-                      percentages.dinner
-                    }%)`,
-                    onMouseEnter: () => setHovered("Dinner"),
-                    onMouseLeave: reset,
-                  },
-                  {
-                    value: percentages.snack,
-                    color: "red",
-                    tooltip: `Snack: ${totals?.snack || 0} kcal (${
-                      percentages.snack
-                    }%)`,
-                    onMouseEnter: () => setHovered("Snack"),
-                    onMouseLeave: reset,
-                  },
-                ]}
-              />
+                </Tabs.Panel>
 
-              <div className={classes.text}>
-                <Space h="sm" />
-                <Text
-                  size="18px"
-                  ta="center"
-                  mt="lg"
-                  style={{ fontWeight: "bold" }}
-                >
-                  Base Goal
-                </Text>
-                <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                  {calorieGoal?.dailyCalorieGoal
-                    ? Math.round(Number(calorieGoal.dailyCalorieGoal))
-                    : "No goal set"}{" "}
-                  kcal
-                </Text>
-                <Space h="sm" />
-                <Text
-                  size="18px"
-                  ta="center"
-                  mt="lg"
-                  style={{ fontWeight: "bold" }}
-                >
-                  Food Count
-                </Text>
-                <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                  {foodCount}
-                </Text>
-                <Space h="sm" />
-                <Text
-                  size="18px"
-                  ta="center"
-                  mt="lg"
-                  style={{ fontWeight: "bold" }}
-                >
-                  Exercise Count
-                </Text>
-                <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                  {exerciseCount}
-                </Text>
-                <Space h="sm" />
+                <Tabs.Panel value="Excercise Logs">
+                  <Container className={classes.exerciselog}>
+                    <Card withBorder shadow="sm" p="lg">
+                      <ExerciseLogListing />
+                    </Card>
+                  </Container>
+                </Tabs.Panel>
+
+                <Tabs.Panel value="Food Logs">
+                  <Container className={classes.foodlog}>
+                    <Card withBorder shadow="sm" p="lg">
+                      <FoodLogListing />
+                    </Card>
+                  </Container>
+                </Tabs.Panel>
+
+                <Tabs.Panel value="Macro Counts">
+                  <Container className={classes.macronutrient}>
+                    <Card withBorder shadow="sm" p="lg">
+                      <MacroNutrient />
+                    </Card>
+                  </Container>
+                </Tabs.Panel>
+              </Tabs>
+            ) : (
+              <div>
+                <Card withBorder shadow="sm" p="lg" mb="md">
+                  <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
+                    <FontAwesomeIcon icon={faChartLine} /> Chart
+                  </Text>
+                  <div className={classes.coursel}>
+                    <RingProgress
+                      label={
+                        <div>
+                          <Text
+                            size="lg"
+                            ta="center"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            {foodConsumed?.totalCalories || 0} /{" "}
+                            {calorieGoal?.dailyCalorieGoal || 0} kcal
+                          </Text>
+                          <Text
+                            size="sm"
+                            ta="center"
+                            style={{
+                              color:
+                                foodConsumed?.calorieDifference &&
+                                foodConsumed.calorieDifference >= 0
+                                  ? "red"
+                                  : "green",
+                            }}
+                          >
+                            {foodConsumed?.calorieDifference || 0} kcal{" "}
+                            {foodConsumed?.calorieDifference &&
+                            foodConsumed.calorieDifference >= 0
+                              ? "over"
+                              : "under"}
+                          </Text>
+                        </div>
+                      }
+                      size={300}
+                      thickness={20}
+                      sections={[
+                        {
+                          value: percentages.breakfast,
+                          color: "cyan",
+                          tooltip: `Breakfast: ${
+                            totals?.breakfast || 0
+                          } kcal (${percentages.breakfast}%)`,
+                          onMouseEnter: () => setHovered("Breakfast"),
+                          onMouseLeave: reset,
+                        },
+                        {
+                          value: percentages.lunch,
+                          color: "indigo",
+                          tooltip: `Lunch: ${totals?.lunch || 0} kcal (${
+                            percentages.lunch
+                          }%)`,
+                          onMouseEnter: () => setHovered("Lunch"),
+                          onMouseLeave: reset,
+                        },
+                        {
+                          value: percentages.dinner,
+                          color: "blue",
+                          tooltip: `Dinner: ${totals?.dinner || 0} kcal (${
+                            percentages.dinner
+                          }%)`,
+                          onMouseEnter: () => setHovered("Dinner"),
+                          onMouseLeave: reset,
+                        },
+                        {
+                          value: percentages.snack,
+                          color: "red",
+                          tooltip: `Snack: ${totals?.snack || 0} kcal (${
+                            percentages.snack
+                          }%)`,
+                          onMouseEnter: () => setHovered("Snack"),
+                          onMouseLeave: reset,
+                        },
+                      ]}
+                    />
+                    <div className={classes.text}>
+                      <Space h="sm" />
+                      <Text
+                        size="18px"
+                        ta="center"
+                        mt="lg"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Base Goal
+                      </Text>
+                      <Text
+                        size="16px"
+                        ta="center"
+                        mt="md"
+                        style={{ color: "gray" }}
+                      >
+                        {calorieGoal?.dailyCalorieGoal
+                          ? Math.round(Number(calorieGoal.dailyCalorieGoal))
+                          : "No goal set"}{" "}
+                        kcal
+                      </Text>
+                      <Space h="sm" />
+                      <Text
+                        size="18px"
+                        ta="center"
+                        mt="lg"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Food Count
+                      </Text>
+                      <Text
+                        size="16px"
+                        ta="center"
+                        mt="md"
+                        style={{ color: "gray" }}
+                      >
+                        {foodCount}
+                      </Text>
+                      <Space h="sm" />
+                      <Text
+                        size="18px"
+                        ta="center"
+                        mt="lg"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Exercise Count
+                      </Text>
+                      <Text
+                        size="16px"
+                        ta="center"
+                        mt="md"
+                        style={{ color: "gray" }}
+                      >
+                        {exerciseCount}
+                      </Text>
+                      <Space h="sm" />
+                    </div>
+                  </div>
+                  {/* Chart content here */}
+                </Card>
+
+                <Card withBorder shadow="sm" p="lg" mb="md">
+                  <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
+                    <FontAwesomeIcon icon={faDumbbell} /> Exercise Logs
+                  </Text>
+                  <ExerciseLogListing />
+                </Card>
+
+                <Card withBorder shadow="sm" p="lg" mb="md">
+                  <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
+                    <FontAwesomeIcon icon={faUtensils} /> Food Logs
+                  </Text>
+                  <FoodLogListing />
+                </Card>
+
+                <Card withBorder shadow="sm" p="lg">
+                  <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
+                    <FontAwesomeIcon icon={faHandHoldingHeart} /> Macro Counts
+                  </Text>
+                  <MacroNutrient />
+                </Card>
               </div>
-            </div>
-          </Card>
-        </Container>
-      </section>
-
-      <section>
-        <Container className={classes.exerciselog}>
-          <Card withBorder shadow="sm" p="lg">
-            <ExerciseLogListing />
-          </Card>
-        </Container>
-
-        <Container className={classes.foodlog}>
-          <Card withBorder shadow="sm" p="lg">
-            <FoodLogListing />
-          </Card>
-        </Container>
-
-        <Container className={classes.macronutrient}>
-          <Card withBorder shadow="sm" p="lg">
-            <MacroNutrient />
+            )}
           </Card>
         </Container>
       </section>
