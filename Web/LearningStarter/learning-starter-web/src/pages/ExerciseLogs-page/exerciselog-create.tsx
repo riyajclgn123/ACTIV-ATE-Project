@@ -98,7 +98,7 @@ export const ExerciseLogCreate = () => {
         userId: userId,
         duration: formattedDuration,
         rep: reps,
-        createDate: selectedDate
+        createDate: selectedDate,
     });
       
       if (response.data?.data?.caloriesBurned) {
