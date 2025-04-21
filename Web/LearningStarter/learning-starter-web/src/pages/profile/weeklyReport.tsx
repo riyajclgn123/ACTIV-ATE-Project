@@ -3,6 +3,7 @@ import { Text, Loader, Container, Title, Space, Button } from "@mantine/core";
 import { LineChart } from "@mantine/charts";
 import { useAuth } from "../../authentication/use-auth";
 import "@mantine/charts/styles.css";
+import { getDatestring } from "../landing-page/landing-page";
 
 // Define the exact shape of our chart data
 
@@ -60,12 +61,12 @@ export const WeeklyReport = () => {
         fetch(
           `/api/dailyReports/user/${
             user.id
-          }/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+          }/range?startDate=${getDatestring(startDate)}&endDate=${getDatestring(endDate)}`
         ),
         fetch(
           `/api/exercise-logs/user/${
             user.id
-          }/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+          }/range?startDate=${getDatestring(startDate)}&endDate=${getDatestring(endDate)}`
         ),
       ]).then((results) => {
         const [mealsResult, exerciseResult] = results;

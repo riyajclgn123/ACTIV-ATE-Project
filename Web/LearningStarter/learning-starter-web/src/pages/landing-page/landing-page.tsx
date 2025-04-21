@@ -7,13 +7,13 @@ import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
 import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
 import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
 import { useAuth } from "../../authentication/use-auth";
-import { showNotification } from '@mantine/notifications';
+import { showNotification } from "@mantine/notifications";
 import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
 import api from "../../config/axios";
 import { AxiosError } from "axios";
-import { Slider } from '@mantine/core';
+import { Slider } from "@mantine/core";
 import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates";
-import dayjs from 'dayjs'; 
+import dayjs from "dayjs";
 
 export interface CalorieConsumedResponse {
   date: string;
@@ -32,6 +32,17 @@ export interface MealTimeTotals {
   total: number;
 }
 
+export const getDatestring = (unit: any) => {
+  let localDate = new Date(unit ?? new Date());
+  let formatted =
+    localDate.getFullYear() +
+    "-" +
+    String(localDate.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(localDate.getDate()).padStart(2, "0");
+  return formatted;
+};
+
 export const LandingPage = () => {
   const { classes } = useStyles();
   const { user } = useAuth();
@@ -39,70 +50,65 @@ export const LandingPage = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   const reset = () => setHovered(null);
-const [exerciseCount, setExerciseCount] = useState<number>(0);
+  const [exerciseCount, setExerciseCount] = useState<number>(0);
 
-const [unit, setUnit] = useState<Date | null>(new Date());
+  const [unit, setUnit] = useState<Date | null>(new Date());
 
-const getStartOfDay = (date: Date | null) => {
-  const d = date ? new Date(date) : new Date();
-  return dayjs(d).startOf('day').format("MM/DD/YYYY"); // Sets to 00:00:00.000
-};
+  const getStartOfDay = (date: Date | null) => {
+    const d = date ? new Date(date) : new Date();
+    return dayjs(d).startOf("day").format("MM/DD/YYYY"); // Sets to 00:00:00.000
+  };
 
-// Get end of day (11:59 PM)
-const getEndOfDay = (date: Date | null) => {
-  const d = date ? new Date(date) : new Date();
-  return dayjs(d).endOf('day').format("MM/DD/YYYY"); // Sets to 23:59:59.999
-};
+  // Get end of day (11:59 PM)
+  const getEndOfDay = (date: Date | null) => {
+    const d = date ? new Date(date) : new Date();
+    return dayjs(d).endOf("day").format("MM/DD/YYYY"); // Sets to 23:59:59.999
+  };
 
-// Calculate the date range
-const startDate = getStartOfDay(unit);
-const endDate = getEndOfDay(unit);
+  // Calculate the date range
+  const startDate = getStartOfDay(unit);
+  const endDate = getEndOfDay(unit);
 
+  useEffect(() => {
+    async function fetchExerciseCount() {
+      try {
+        if (!user) return;
 
-useEffect(() => {
-  async function fetchExerciseCount() {
-    try {
-      if (!user) return;
-      
-      const response = await api.get<ApiResponse<number>>(
-        `/api/exercise-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
-      );
-      
-      if (!response.data.hasErrors && response.data.data !== undefined) {
-        setExerciseCount(response.data.data);
+        const response = await api.get<ApiResponse<number>>(
+          `/api/exercise-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
+        );
+
+        if (!response.data.hasErrors && response.data.data !== undefined) {
+          setExerciseCount(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching exercise count:", error);
       }
-    } catch (error) {
-      console.error("Error fetching exercise count:", error);
     }
-  }
 
-  fetchExerciseCount();
-}, [user?.id, startDate, endDate]);
+    fetchExerciseCount();
+  }, [user?.id, startDate, endDate]);
 
+  const [foodCount, setFoodCount] = useState<number>(0);
 
+  useEffect(() => {
+    async function fetchFoodCount() {
+      try {
+        if (!user) return;
+        const response = await api.get<ApiResponse<number>>(
+          `/api/food-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
+        );
 
-const [foodCount, setFoodCount] = useState<number>(0);
-
-useEffect(() => {
-  async function fetchFoodCount() {
-    try {
-      if (!user) return;
-      const response = await api.get<ApiResponse<number>>(
-        `/api/food-logs/count/user/${user.id}/range?startDate=${startDate}&endDate=${endDate}`
-      );
-      
-      if (!response.data.hasErrors && response.data.data !== undefined) {
-        setFoodCount(response.data.data);
+        if (!response.data.hasErrors && response.data.data !== undefined) {
+          setFoodCount(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching exercise count:", error);
       }
-    } catch (error) {
-      console.error("Error fetching exercise count:", error);
     }
-  }
 
-  fetchFoodCount();
-}, [user?.id, startDate, endDate]);
-
-
+    fetchFoodCount();
+  }, [user?.id, startDate, endDate]);
 
   const fetchCalorieGoal = async () => {
     try {
@@ -113,58 +119,59 @@ useEffect(() => {
       const response = await api.get<ApiResponse<GoalGetDto>>(
         `/api/goals/user/${user.id}`
       );
-      
+
       if (response.data.hasErrors) {
-        showNotification({ message: "Error fetching calorie goal", color: "red" });
+        showNotification({
+          message: "Error fetching calorie goal",
+          color: "red",
+        });
         return;
       }
-  
-      setCalorieGoal(response.data.data);
 
+      setCalorieGoal(response.data.data);
     } catch (error) {
       const axiosError = error as AxiosError;
-      showNotification({ 
-        message: `Error fetching calorie goal: ${axiosError.message}`, 
-        color: "red" 
+      showNotification({
+        message: `Error fetching calorie goal: ${axiosError.message}`,
+        color: "red",
       });
     }
   };
-  
+
   useEffect(() => {
     fetchCalorieGoal();
   }, [user?.id]);
 
-
-  const [foodConsumed, setFoodConsumed] = useState<CalorieConsumedResponse | null>(null);
+  const [foodConsumed, setFoodConsumed] =
+    useState<CalorieConsumedResponse | null>(null);
   const fetchCalorieConsumed = async () => {
     try {
       if (!user) {
         showNotification({ message: "User not authenticated", color: "red" });
         return;
       }
-      
-    const today = new Date().toLocaleDateString();
-    console.log({today,unit})
-    
-    const response = await api.get<ApiResponse<CalorieConsumedResponse>>(
-      `/api/food-logs/user/${user.id}/calories-consumed-per-day?date=${unit?.toISOString().split('T')[0]}`
-    );
-      
+      const response = await api.get<ApiResponse<CalorieConsumedResponse>>(
+        `/api/food-logs/user/${user.id}/calories-consumed-per-day?date=${getDatestring(unit)}`
+      );
+
       if (response.data.hasErrors) {
-        showNotification({ message: "Error fetching fodd consumped", color: "red" });
+        showNotification({
+          message: "Error fetching fodd consumped",
+          color: "red",
+        });
         return;
       }
-  
+
       setFoodConsumed(response.data.data);
     } catch (error) {
       const axiosError = error as AxiosError;
-      showNotification({ 
-        message: `Error fetching calorie goal: ${axiosError.message}`, 
-        color: "red" 
+      showNotification({
+        message: `Error fetching calorie goal: ${axiosError.message}`,
+        color: "red",
       });
     }
   };
-  
+
   useEffect(() => {
     fetchCalorieConsumed();
   }, [user?.id, unit]);
@@ -177,33 +184,39 @@ useEffect(() => {
       setLoading(true);
       if (!user?.id) return;
 
-      const today = new Date().toISOString().split('T')[0];
-    
+      const today = new Date().toISOString().split("T")[0];
+
       const response = await api.get<ApiResponse<MealTimeTotals>>(
-        `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${unit?.toISOString().split('T')[0]}`
+        `/api/food-logs/user/${user.id}/user-meal-time-totals?date=${
+          getDatestring(unit)
+        }`
       );
 
-    console.log("API Response:", response.data); // Add this line 
+      console.log("API Response:", response.data); // Add this line
 
       if (response.data.hasErrors || !response.data.data) {
-        throw new Error(response.data.errors?.join(', ') || 'Failed to fetch data');
+        throw new Error(
+          response.data.errors?.join(", ") || "Failed to fetch data"
+        );
       }
 
       setTotals(response.data.data);
       console.log("Meal Time Totals Set:", response.data.data); // Add this line
-
     } catch (error) {
       showNotification({
-        title: 'Error',
-        message: error instanceof Error ? error.message : 'Failed to fetch meal time data',
-        color: 'red'
+        title: "Error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch meal time data",
+        color: "red",
       });
       setTotals({
         breakfast: 0,
         lunch: 0,
         dinner: 0,
         snack: 0,
-        total: 0
+        total: 0,
       });
     } finally {
       setLoading(false);
@@ -218,19 +231,19 @@ useEffect(() => {
     if (!total || total === 0) return 0;
     return Math.round((value / total) * 100);
   };
-  
+
   // Use this instead of your current percentages calculation
   const getPercentages = () => {
     if (!totals) return { breakfast: 0, lunch: 0, dinner: 0, snack: 0 };
-    
+
     return {
       breakfast: calculatePercentage(totals.breakfast, totals.total),
       lunch: calculatePercentage(totals.lunch, totals.total),
       dinner: calculatePercentage(totals.dinner, totals.total),
-      snack: calculatePercentage(totals.snack, totals.total)
+      snack: calculatePercentage(totals.snack, totals.total),
     };
   };
-  
+
   const percentages = useMemo(() => getPercentages(), [totals]);
 
   console.log("Percentages:", percentages, totals); // Add this line
@@ -251,68 +264,88 @@ useEffect(() => {
       <section id="after-background-design" className={classes.afterBackground}>
         <Container>
           <Card withBorder shadow="sm" p="lg">
-            <Text size="25px" style={{ fontWeight: "bold", textAlign: "center" }}>
+            <Text
+              size="25px"
+              style={{ fontWeight: "bold", textAlign: "center" }}
+            >
               Calories Goal
             </Text>
 
-                                         <DateInput
-                                           value={unit} // Controlled value
-                                           onChange={setUnit} // Updates state on change
-                                           valueFormat="MM/DD/YYYY"
-                                           label="Pick date and time"
-                                           placeholder="Pick date and time"
-                                         />
+            <DateInput
+              value={unit} // Controlled value
+              onChange={setUnit} // Updates state on change
+              valueFormat="MM/DD/YYYY"
+              label="Pick date and time"
+              placeholder="Pick date and time"
+            />
             <div className={classes.coursel}>
-
-              
-              
-
-            <RingProgress
-  label={
-    <div>
-      <Text size="lg" ta="center" style={{ fontWeight: "bold" }}>
-        {foodConsumed?.totalCalories || 0} / {calorieGoal?.dailyCalorieGoal || 0} kcal
-      </Text>
-      <Text size="sm" ta="center" style={{ 
-        color: foodConsumed?.calorieDifference && foodConsumed.calorieDifference >= 0 ? 'red' : 'green' 
-      }}>
-        {foodConsumed?.calorieDifference || 0} kcal {foodConsumed?.calorieDifference && foodConsumed.calorieDifference >= 0 ? 'over' : 'under'}
-      </Text>
-    </div>
-  }
-  size={300}
-  thickness={20}
-  sections={[
-    {
-      value: percentages.breakfast,
-      color: "cyan",
-      tooltip: `Breakfast: ${totals?.breakfast || 0} kcal (${percentages.breakfast}%)`,
-      onMouseEnter: () => setHovered("Breakfast"),
-      onMouseLeave: reset,
-    },
-    {
-      value: percentages.lunch,
-      color: "indigo",
-      tooltip: `Lunch: ${totals?.lunch || 0} kcal (${percentages.lunch}%)`,
-      onMouseEnter: () => setHovered("Lunch"),
-      onMouseLeave: reset,
-    },
-    {
-      value: percentages.dinner,
-      color: "blue",
-      tooltip: `Dinner: ${totals?.dinner || 0} kcal (${percentages.dinner}%)`,
-      onMouseEnter: () => setHovered("Dinner"),
-      onMouseLeave: reset,
-    },
-    {
-      value: percentages.snack,
-      color: "red",
-      tooltip: `Snack: ${totals?.snack || 0} kcal (${percentages.snack}%)`,
-      onMouseEnter: () => setHovered("Snack"),
-      onMouseLeave: reset,
-    },
-  ]}
-/>
+              <RingProgress
+                label={
+                  <div>
+                    <Text size="lg" ta="center" style={{ fontWeight: "bold" }}>
+                      {foodConsumed?.totalCalories || 0} /{" "}
+                      {calorieGoal?.dailyCalorieGoal || 0} kcal
+                    </Text>
+                    <Text
+                      size="sm"
+                      ta="center"
+                      style={{
+                        color:
+                          foodConsumed?.calorieDifference &&
+                          foodConsumed.calorieDifference >= 0
+                            ? "red"
+                            : "green",
+                      }}
+                    >
+                      {foodConsumed?.calorieDifference || 0} kcal{" "}
+                      {foodConsumed?.calorieDifference &&
+                      foodConsumed.calorieDifference >= 0
+                        ? "over"
+                        : "under"}
+                    </Text>
+                  </div>
+                }
+                size={300}
+                thickness={20}
+                sections={[
+                  {
+                    value: percentages.breakfast,
+                    color: "cyan",
+                    tooltip: `Breakfast: ${totals?.breakfast || 0} kcal (${
+                      percentages.breakfast
+                    }%)`,
+                    onMouseEnter: () => setHovered("Breakfast"),
+                    onMouseLeave: reset,
+                  },
+                  {
+                    value: percentages.lunch,
+                    color: "indigo",
+                    tooltip: `Lunch: ${totals?.lunch || 0} kcal (${
+                      percentages.lunch
+                    }%)`,
+                    onMouseEnter: () => setHovered("Lunch"),
+                    onMouseLeave: reset,
+                  },
+                  {
+                    value: percentages.dinner,
+                    color: "blue",
+                    tooltip: `Dinner: ${totals?.dinner || 0} kcal (${
+                      percentages.dinner
+                    }%)`,
+                    onMouseEnter: () => setHovered("Dinner"),
+                    onMouseLeave: reset,
+                  },
+                  {
+                    value: percentages.snack,
+                    color: "red",
+                    tooltip: `Snack: ${totals?.snack || 0} kcal (${
+                      percentages.snack
+                    }%)`,
+                    onMouseEnter: () => setHovered("Snack"),
+                    onMouseLeave: reset,
+                  },
+                ]}
+              />
 
               <div className={classes.text}>
                 <Space h="sm" />
@@ -325,8 +358,11 @@ useEffect(() => {
                   Base Goal
                 </Text>
                 <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                {calorieGoal?.dailyCalorieGoal ? Math.round(Number(calorieGoal.dailyCalorieGoal)) : 'No goal set'} kcal
-</Text>
+                  {calorieGoal?.dailyCalorieGoal
+                    ? Math.round(Number(calorieGoal.dailyCalorieGoal))
+                    : "No goal set"}{" "}
+                  kcal
+                </Text>
                 <Space h="sm" />
                 <Text
                   size="18px"
@@ -337,7 +373,7 @@ useEffect(() => {
                   Food Count
                 </Text>
                 <Text size="16px" ta="center" mt="md" style={{ color: "gray" }}>
-                  {foodCount} 
+                  {foodCount}
                 </Text>
                 <Space h="sm" />
                 <Text
@@ -525,7 +561,7 @@ const useStyles = createStyles(() => {
         padding: "10px",
       },
     },
-    
+
     calorieGoal: {
       marginTop: "30px",
       marginBottom: "30px",
