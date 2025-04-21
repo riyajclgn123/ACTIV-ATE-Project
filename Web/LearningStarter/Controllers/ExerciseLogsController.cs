@@ -185,7 +185,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         Duration = duration,
         CaloriesBurned = caloriesBurned,
         Rep = createDto.Rep,
-        CreateDate = DateTime.UtcNow,
+        CreateDate = createDto.CreateDate != default ? createDto.CreateDate : DateTimeOffset.UtcNow,
     };
 
     _context.ExerciseLogs.Add(exerciselogToCreate);
@@ -313,19 +313,59 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         return Ok(response);
     }
     
-    [HttpGet("count/user/{userId}")]
-    public IActionResult GetCountByUserId([FromRoute] int userId)
+    [HttpGet("count/user/{userId}/range")]
+    public IActionResult GetCountByUserId([FromRoute] int userId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
     {
         var response = new Response();
     
         var count = _context
             .Set<ExerciseLog>()
-            .Where(x => x.UserId == userId)
+            .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate <= endDate)
             .Count();
 
         response.Data = count;
         return Ok(response);
     }
+    
+    
+    [HttpGet("user/{userId}/range")]
+    public IActionResult GetExerciseReportByDateRange(
+        [FromRoute] int userId,
+        [FromQuery] DateTime startDate,
+        [FromQuery] DateTime endDate)
+    {
+        var response = new Response();
+
+        // Get all exercise logs for the user within the date range (from 12:00 AM to 11:59 PM each day)
+        var exerciseLogs = _context.Set<ExerciseLog>()
+            .Where(el => el.UserId == userId && 
+                         el.CreateDate >= startDate.Date && 
+                         el.CreateDate <= endDate.Date.AddDays(1).AddTicks(-1))
+            .ToList();
+
+        if (!exerciseLogs.Any())
+        {
+            response.AddError("date", "No exercise logs found for the specified date range");
+            return BadRequest(response);
+        }
+
+        // Group by date and calculate total calories burned each day
+        var reports = exerciseLogs
+            .GroupBy(el => el.CreateDate.Date)
+            .Select(g => new ExerciseDailySummaryDto
+            {
+                UserId = userId,
+                Date = g.Key,
+                TotalCaloriesBurned = g.Sum(el => el.CaloriesBurned)
+            })
+            .OrderBy(r => r.Date)
+            .ToList();
+
+        response.Data = reports;
+        return Ok(response);
+    }
+    
+    
 
 
 }

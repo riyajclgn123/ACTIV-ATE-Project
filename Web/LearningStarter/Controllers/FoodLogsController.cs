@@ -488,16 +488,17 @@ public IActionResult GetDailyCalories(
     }
     
      
-    [HttpGet("count/user/{userId}")]
-    public IActionResult GetCountByUserId([FromRoute] int userId)
+    [HttpGet("count/user/{userId}/range")]
+    public IActionResult GetCountByUserId([FromRoute] int userId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate )
     {
         var response = new Response();
-    
+
         var count = _context
             .Set<FoodLog>()
-            .Where(x => x.UserId == userId)
+            .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate <= endDate )
             .Count();
-
+        
+        
         response.Data = count;
         return Ok(response);
     }
@@ -519,7 +520,7 @@ public IActionResult GetDailyCalories(
 
             var totals = new
             {
-                Breakfast = logs.Where(l => l.MealTime == "BreakFast").Sum(l => l.Calories), 
+                Breakfast = logs.Where(l => l.MealTime == "Breakfast").Sum(l => l.Calories), 
                 Lunch = logs.Where(l => l.MealTime == "Lunch").Sum(l => l.Calories),
                 Dinner = logs.Where(l => l.MealTime == "Dinner").Sum(l => l.Calories),
                 Snack = logs.Where(l => l.MealTime == "Snack").Sum(l => l.Calories),
