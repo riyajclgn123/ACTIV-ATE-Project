@@ -223,7 +223,7 @@ const useStyles = createStyles(() => {
       zIndex: 1,
       wordWrap: "break-word",
       whiteSpace: "nowrap",
-      textShadow: "2px 2px 4px #fa5252",
+     // textShadow: "2px 2px 4px #fa5252",
 
       display: "flex",
       flexDirection: "column",

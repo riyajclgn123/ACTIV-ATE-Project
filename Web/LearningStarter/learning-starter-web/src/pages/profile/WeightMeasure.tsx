@@ -6,6 +6,8 @@ import {
   Loader,
   Table,
   Notification,
+  Group,
+  Box,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useAuth } from "../../authentication/use-auth";
@@ -120,7 +122,7 @@ export const WeightMeasure = () => {
   if (loading) return <Loader />;
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto', padding: '1rem' }}>
+    <Box style={{ maxWidth: 800, margin: '0', padding: '1rem' }}>
       <Text size="xl" mb="md" fw={500}>Weight Tracking</Text>
 
       {error && (
@@ -163,9 +165,9 @@ export const WeightMeasure = () => {
           <Table striped highlightOnHover>
             <Table.Thead>
               <Table.Tr>
-                <th>Date</th>
-                <th>Weight (kg)</th>
-                <th>Actions</th>
+                <Table.Th>Date</Table.Th>
+                <Table.Th>Weight (kg)</Table.Th>
+                <Table.Th>Actions</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -174,10 +176,10 @@ export const WeightMeasure = () => {
                   <Table.Td>{new Date(log.logDate).toLocaleDateString()}</Table.Td>
                   <Table.Td>{log.value.toFixed(1)}</Table.Td>
                   <Table.Td>
-                    <div style={{ display: "flex", gap: "6px" }}>
+                    <Group style={{ display: "flex", gap: "6px" }}>
                       <Button size="xs" color="blue" onClick={() => handleEdit(log)}>Edit</Button>
                       <Button size="xs" color="red" variant="outline" onClick={() => handleDelete(log.id)}>Delete</Button>
-                    </div>
+                    </Group>
                   </Table.Td>
                 </Table.Tr>
               ))}
@@ -185,7 +187,7 @@ export const WeightMeasure = () => {
           </Table>
         </div>
       )}
-    </div>
+    </Box>
   );
 };
 

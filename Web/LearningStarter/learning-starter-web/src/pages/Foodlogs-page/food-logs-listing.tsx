@@ -165,7 +165,7 @@ export const FoodLogListing = () => {
                                 <Table.Td>{log.nutrients.carbs.toFixed(1)}</Table.Td>
                                 <Table.Td>{log.nutrients.fat.toFixed(1)}</Table.Td>
                                 <Table.Td>{log.servingSize}</Table.Td>
-                                <Table.Td>{new Date(log.createDate).toLocaleDateString()}</Table.Td>
+                                <Table.Td>{new Date(log.updatedDate).toLocaleDateString()}</Table.Td>
                                 <Table.Td>
                                     <Group>
                                         <ActionIcon

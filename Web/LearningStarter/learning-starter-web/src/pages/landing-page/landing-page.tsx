@@ -309,9 +309,10 @@ export const LandingPage = () => {
               label="Pick date and time"
               placeholder="Pick date and time"
             />
+            <Space h={30}/>
             {viewMode === "tabs" ? (
               <Tabs defaultValue="Chart">
-                <Tabs.List>
+                <Tabs.List grow>
                   <Tabs.Tab
                     value="Chart"
                     leftSection={<FontAwesomeIcon icon={faChartLine} />}
@@ -681,7 +682,7 @@ const useStyles = createStyles(() => {
       width: "100%",
       backgroundImage: `linear-gradient(
       rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.5)
+      rgba(14, 14, 14, 0.5)
     ),url(${bgImage})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
@@ -711,7 +712,7 @@ const useStyles = createStyles(() => {
       zIndex: 1,
       wordWrap: "break-word",
       whiteSpace: "nowrap",
-      textShadow: "2px 2px 4px #fa5252",
+      textShadow: "2px 2px 4px rgb(31, 101, 239)",
       "@media (max-width: 768px)": {
         fontSize: "20px",
         maxWidth: "80%",

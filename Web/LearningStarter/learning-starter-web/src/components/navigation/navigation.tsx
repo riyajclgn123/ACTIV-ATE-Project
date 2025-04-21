@@ -193,12 +193,11 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
               <NavLink to={routes.root}>
                 <Image
                   className={classes.logo}
-                  w={45}
-                  h={45}
-                  radius="xl"
                   fallbackSrc="https://placehold.co/600x400?text=Placeholder"
                   src={logo}
                   alt="logo"
+                  width={120} // Should match your CSS width
+                  height={120} // Should match your CSS height
                 />
               </NavLink>
               {user && <DesktopNavigation />}
@@ -217,10 +216,16 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                   <Menu.Item onClick={() => toggleColorScheme()}>
                     {dark ? "Light mode" : "Dark mode"}
                   </Menu.Item>
-                 <Menu.Item onClick={() => navigate(routes.profile)}>Profile</Menu.Item>
-                 
-                  <Menu.Item onClick={() => navigate(routes.weeklyReport)}>Weekly Report</Menu.Item>
-                  <Menu.Item onClick={() => navigate(routes.profile)}>Weight Measure</Menu.Item>
+                  <Menu.Item onClick={() => navigate(routes.profile)}>
+                    Profile
+                  </Menu.Item>
+
+                  <Menu.Item onClick={() => navigate(routes.achievements)}>
+                    Achievements
+                  </Menu.Item>
+                  <Menu.Item onClick={() => navigate(routes.weeklyReport)}>
+                    Weekly Report
+                  </Menu.Item>
                   <Divider my={5} />
                   <Menu.Item onClick={() => logout()} color="red">
                     Sign Out
@@ -240,12 +245,28 @@ const useStyles = createStyles((theme) => {
     pointer: {
       cursor: "pointer",
     },
+    // logo: {
+    //   cursor: "pointer",
+    //   marginRight: "5px",
+    //   paddingTop: "5px",
+    //   paddingBottom: "5px",
+    //   height: NAVBAR_HEIGHT,
+    // },
+
     logo: {
-      cursor: "pointer",
-      marginRight: "5px",
-      paddingTop: "5px",
+     margin: "3px", 
+      borderRadius: '50%', // Makes it perfectly round
       height: NAVBAR_HEIGHT,
+      width: NAVBAR_HEIGHT, // Ensures the image is a circle
+      objectFit: 'cover', // Ensures the image fills the circle without distortion
+      border: `1px solid ${theme.colors.blue[5]}`, // Optional decorative border
+      boxShadow: theme.shadows.md, // Optional shadow for depth
+      transition: 'transform 0.3s ease', // Optional hover effect
+      '&:hover': {
+        transform: 'scale(1.05)', // Optional hover effect
+      },
     },
+
     paddedMenuItem: {
       margin: "0px 5px 0px 5px",
       color: "black",
@@ -259,7 +280,7 @@ const useStyles = createStyles((theme) => {
         }).background,
         color: theme.variantColorResolver({
           theme: theme,
-          color: theme.primaryColor,
+          color: "white",  //changed over here
           variant: "light",
         }).color,
       },
@@ -271,8 +292,7 @@ const useStyles = createStyles((theme) => {
       height: "100%",
     },
     container: {
-      backgroundColor: "purple",
-      
+      backgroundColor: "#1c7ed6",
     },
   };
 });

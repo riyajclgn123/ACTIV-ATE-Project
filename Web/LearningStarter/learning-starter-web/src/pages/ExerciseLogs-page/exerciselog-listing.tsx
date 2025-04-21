@@ -38,6 +38,7 @@ export const ExerciseLogListing = () => {
     };
 
     const handleEdit = (log: ExerciseLogGetDto) => {
+
         navigate(
             routes.exerciseLogUpdate.replace(":id", log.id.toString()),
             {
@@ -84,8 +85,12 @@ export const ExerciseLogListing = () => {
                             <Table.Td>{log.caloriesBurned.toFixed(2)}</Table.Td>
                             <Table.Td>{log.duration}</Table.Td>
                             <Table.Td>{log.rep}</Table.Td>
+                            <Table.Td>
+                                {new Date(log.updatedDate).toLocaleDateString()}
+                               
+                            </Table.Td>
+
                             
-                            <Table.Td>{new Date(log.createDate).toLocaleDateString()}</Table.Td>
                             <Table.Td>
                                 <Group>
                                     <ActionIcon 

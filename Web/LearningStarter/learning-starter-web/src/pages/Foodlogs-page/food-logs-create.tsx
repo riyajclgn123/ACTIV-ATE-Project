@@ -296,13 +296,7 @@ export const FoodLogCreate = () => {
               </Text>
             </Group>
 
-            <div
-              style={{
-                height: "1px",
-                background: "#ddd",
-                margin: "10px 0",
-              }}
-            ></div>
+            
             <Group justify="space-between" my="xs">
               <Text size="sm">Total Fat</Text>
               <Text size="sm">{Math.round(fat)} g</Text>
@@ -315,13 +309,7 @@ export const FoodLogCreate = () => {
               <Text size="sm">Protein</Text>
               <Text size="sm">{Math.round(protein)} g</Text>
             </Group>
-            <div
-              style={{
-                height: "1px",
-                background: "#ddd",
-                margin: "10px 0",
-              }}
-            ></div>
+            
             <Group justify="space-between" mt="md">
               <Text size="xs" c="dimmed">
                 g: grams
