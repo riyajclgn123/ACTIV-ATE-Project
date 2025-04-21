@@ -161,20 +161,6 @@ export const ExerciseListing = () => {
             </div>
           </div>
         </div>
-        <div>
-          {exercises && (
-            <div>
-              <div className={classes.calorieburnestimator}> </div>
-            </div>
-          )}
-        </div>
-      </section>
-      <section>
-        <Group gap={50} className={classes.donutchart}>
-          <div>
-            <div>Calories Burned</div>
-          </div>
-        </Group>
       </section>
     </>
   );

@@ -196,8 +196,8 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                   fallbackSrc="https://placehold.co/600x400?text=Placeholder"
                   src={logo}
                   alt="logo"
-                  width={120} // Should match your CSS width
-                  height={120} // Should match your CSS height
+                  width={10} // Should match your CSS width
+                  height={50} // Should match your CSS height
                 />
               </NavLink>
               {user && <DesktopNavigation />}
@@ -254,10 +254,7 @@ const useStyles = createStyles((theme) => {
     // },
 
     logo: {
-     margin: "3px", 
       borderRadius: '50%', // Makes it perfectly round
-      height: NAVBAR_HEIGHT,
-      width: NAVBAR_HEIGHT, // Ensures the image is a circle
       objectFit: 'cover', // Ensures the image fills the circle without distortion
       border: `1px solid ${theme.colors.blue[5]}`, // Optional decorative border
       boxShadow: theme.shadows.md, // Optional shadow for depth

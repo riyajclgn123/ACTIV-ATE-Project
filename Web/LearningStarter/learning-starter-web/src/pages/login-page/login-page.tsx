@@ -6,6 +6,7 @@ import {
   Alert,
   Anchor,
   Button,
+  Card,
   Container,
   Group,
   Input,
@@ -18,7 +19,8 @@ import api from "../../config/axios";
 import { showNotification } from "@mantine/notifications";
 import { createStyles } from "@mantine/emotion";
 import { useState } from "react";
-
+import bgImage from "../../assets/login.jpg";
+import bgImage1 from "../../assets/signup.jpg";
 
 type LoginRequest = {
   userName: string;
@@ -40,7 +42,6 @@ type SignUpRequest = {
 
 type LoginResponse = ApiResponse<boolean>;
 
-
 //This is a *fairly* basic form
 //The css used in here is a good example of how flexbox works in css
 //For more info on flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
@@ -50,7 +51,7 @@ export const LoginPage = ({
   fetchCurrentUser: () => void;
 }) => {
   const styles = useStyles();
-  const {classes} = styles;
+  const { classes } = styles;
   const [isSignUp, setIsSignUp] = useState(false);
 
   const loginForm = useForm<LoginRequest>({
@@ -74,13 +75,14 @@ export const LoginPage = ({
       email: "",
       dateofBirth: "",
       gender: "",
-      height:0,
-      weight:0,
+      height: 0,
+      weight: 0,
       password: "",
       confirmPassword: "",
     },
     validate: {
-      firstName: (value) => (value.length <= 0 ? "First name is required" : null),
+      firstName: (value) =>
+        value.length <= 0 ? "First name is required" : null,
       lastName: (value) => (value.length <= 0 ? "Last name is required" : null),
       userName: (value) => (value.length <= 0 ? "Username is required" : null),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
@@ -88,14 +90,14 @@ export const LoginPage = ({
       gender: (value) => (value ? null : "Gender is required"),
       height: (value) => (value ? null : "Height is required"),
       weight: (value) => (value ? null : "Weight is required"),
-      password: (value) => (value.length >= 8 ? null : "Password must be at least 8 characters"),
-      confirmPassword: (value, values) => 
+      password: (value) =>
+        value.length >= 8 ? null : "Password must be at least 8 characters",
+      confirmPassword: (value, values) =>
         value === values.password ? null : "Passwords do not match",
     },
   });
 
   const [, submitLogin] = useAsyncFn(async (values: LoginRequest) => {
-
     const response = await api.post<LoginResponse>(`/api/authenticate`, values);
     if (response.data.hasErrors) {
       const formErrors: FormErrors = response.data.errors.reduce(
@@ -129,8 +131,11 @@ export const LoginPage = ({
     };
 
     try {
-      const response = await api.post<ApiResponse<UserCreateDto>>("/api/users", signUpData);
-      
+      const response = await api.post<ApiResponse<UserCreateDto>>(
+        "/api/users",
+        signUpData
+      );
+
       if (response.data.hasErrors) {
         const formErrors: FormErrors = response.data.errors.reduce(
           (prev, curr) => {
@@ -144,72 +149,118 @@ export const LoginPage = ({
       }
 
       if (response.data.data) {
-        showNotification({ message: "User created successfully!", color: "green" });
-        
+        showNotification({
+          message: "User created successfully!",
+          color: "green",
+        });
+
         signUpForm.reset();
-      
-      // Switch back to login view
-      setIsSignUp(false);
-      
-      // Pre-fill the username in login form
-      loginForm.setFieldValue("userName", values.userName);
+
+        // Switch back to login view
+        setIsSignUp(false);
+
+        // Pre-fill the username in login form
+        loginForm.setFieldValue("userName", values.userName);
       }
     } catch (error) {
-      showNotification({ 
-        message: "Network error while creating user", 
-        color: "red" 
+      showNotification({
+        message: "Network error while creating user",
+        color: "red",
       });
     }
   }, []);
 
   return (
-    <PageWrapper >
+    <PageWrapper>
       <Container>
         <Container px={0}>
           {!isSignUp ? (
             <>
-          {loginForm.errors[""] && (
-            <Alert className={classes.generalErrors} color="red">
-              <Text>{loginForm.errors[""]}</Text>
-            </Alert>
-          )}
-          <form onSubmit={loginForm.onSubmit(submitLogin)}>
-            <Container px={0}>
-              <Container className={classes.formField} px={0}>
-                <Container px={0}>
-                  <label htmlFor="userName">Username</label>
-                </Container>
-                <Input {...loginForm.getInputProps("userName")} />
-                <Text c="red">{loginForm.errors["userName"]}</Text>
-              </Container>
-              <Container className={classes.formField} px={0}>
-                <Container px={0}>
-                  <label htmlFor="password">Password</label>
-                </Container>
-                <Input type="password" {...loginForm.getInputProps("password")} />
-                <Text c="red">{loginForm.errors["password"]}</Text>
-              </Container>
+              {loginForm.errors[""] && (
+                <Alert className={classes.generalErrors} color="red">
+                  <Text>{loginForm.errors[""]}</Text>
+                </Alert>
+              )}
 
-              <Container px={0} style={{ display: "flex", flexDirection: "row",  gap: "8px" }}>
-                <Button className={classes.loginButton} type="submit">
-                  Login
-                </Button>
-                <Button 
-                className={classes.loginButton} 
-                type="button" 
-                variant="outline"  
-                onClick={(e) => {
-                        e.preventDefault();
-                        setIsSignUp(true);
-                      }}>
+              <Space h="lg" />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop:"80px"
+                }}
+              >
+                <Card withBorder shadow="sm" style={{ width: "600px", padding: "20px" }} className={classes.container1}>
+                  <form onSubmit={loginForm.onSubmit(submitLogin)}>
+                    <Text
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        fontFamily: "serif",
+                        fontSize: "30px",
+                        fontWeight: "bold",
+                        textUnderlineOffset: "5px",
+                        textDecoration: "underline",
+                        textDecorationThickness: "2px",
+                        color: "white",
+                        marginBottom: "20px",
+                      }}
+                    >
+                      Log In Your Account
+                    </Text>
+                    <Container px={0}>
+                      <Container className={classes.formField} px={0}>
+                        <Container px={0}>
+                          <label htmlFor="userName">Username</label>
+                        </Container>
+                        <Input
+                          placeholder="Enter your Username"
+                          {...loginForm.getInputProps("userName")}
+                        />
+                        <Text c="red">{loginForm.errors["userName"]}</Text>
+                      </Container>
+                      <Container className={classes.formField} px={0}>
+                        <Container px={0}>
+                          <label htmlFor="password">Password</label>
+                        </Container>
+                        <Input
+                          type="password"
+                          placeholder="Enter your Password"
+                          {...loginForm.getInputProps("password")}
+                        />
+                        <Text c="red">{loginForm.errors["password"]}</Text>
+                      </Container>
 
-                  Sign Up
-                </Button>
-              </Container>
-            </Container>
-          </form>
-
-          </>
+                      <Container
+                        px={0}
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "25px",
+                          marginTop: "40px",
+                        }}
+                      >
+                        <Button className={classes.loginButton} type="submit">
+                          Login
+                        </Button>
+                        <Button
+                          className={classes.loginButton}
+                          type="button"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsSignUp(true);
+                          }}
+                        >
+                          Sign Up
+                        </Button>
+                      </Container>
+                    </Container>
+                  </form>
+                </Card>
+              </div>
+            </>
           ) : (
             <>
               {signUpForm.errors[""] && (
@@ -217,46 +268,85 @@ export const LoginPage = ({
                   <Text>{signUpForm.errors[""]}</Text>
                 </Alert>
               )}
+                <Space h="lg" />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+              <Card withBorder shadow="sm" style={{ width: "600px", padding: "20px" }} className={classes.container2}>
               <form onSubmit={signUpForm.onSubmit(submitSignUp)}>
+                <Space h="lg" />
+                <Text
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    fontFamily: "serif",
+                    fontSize: "30px",
+                    fontWeight: "bold",
+                    textUnderlineOffset: "5px",
+                    textDecoration: "underline",
+                    textDecorationThickness: "2px",
+                    color: "white",
+                    marginBottom: "20px",
+                  }}
+                >
+                  Create A New Account
+                </Text>
                 <Container px={0}>
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="firstName">First Name</label>
-                    <Input {...signUpForm.getInputProps("firstName")} />
+                    <Input
+                      placeholder="Enter your First Name"
+                      {...signUpForm.getInputProps("firstName")}
+                    />
                     <Text c="red">{signUpForm.errors["firstName"]}</Text>
                   </Container>
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="lastName">Last Name</label>
-                    <Input {...signUpForm.getInputProps("lastName")} />
+                    <Input
+                      placeholder="Enter your Last Name"
+                      {...signUpForm.getInputProps("lastName")}
+                    />
                     <Text c="red">{signUpForm.errors["lastName"]}</Text>
                   </Container>
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="userName">Username</label>
-                    <Input {...signUpForm.getInputProps("userName")} />
+                    <Input
+                      placeholder="Enter your Username"
+                      {...signUpForm.getInputProps("userName")}
+                    />
                     <Text c="red">{signUpForm.errors["userName"]}</Text>
                   </Container>
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="email">Email</label>
-                    <Input type="email" {...signUpForm.getInputProps("email")} />
+                    <Input
+                      type="email"
+                      placeholder="Ente your Email"
+                      {...signUpForm.getInputProps("email")}
+                    />
                     <Text c="red">{signUpForm.errors["email"]}</Text>
                   </Container>
 
                   <Container className={classes.formField} px={0}>
-                    <label htmlFor="dateofBirth">Date of Birth (YYYY-MM-DD)</label>
-                    <Input 
+                    <label htmlFor="dateofBirth">
+                      Date of Birth (YYYY-MM-DD)
+                    </label>
+                    <Input
                       placeholder="YYYY-MM-DD"
-                      {...signUpForm.getInputProps("dateofBirth")} 
+                      {...signUpForm.getInputProps("dateofBirth")}
                     />
                     <Text c="red">{signUpForm.errors["dateofBirth"]}</Text>
                   </Container>
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="gender">Gender</label>
-                    <Radio.Group
-                      {...signUpForm.getInputProps("gender")}
-                    >
+                    <Radio.Group {...signUpForm.getInputProps("gender")}>
                       <Group mt="xs">
                         <Radio value="male" label="Male" />
                         <Radio value="female" label="Female" />
@@ -268,18 +358,18 @@ export const LoginPage = ({
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="height">Height (cm)</label>
-                    <NumberInput 
-                      {...signUpForm.getInputProps("height")} 
+                    <NumberInput
+                      {...signUpForm.getInputProps("height")}
                       min={0}
-                     step={1}
+                      step={1}
                     />
                     <Text c="red">{signUpForm.errors["height"]}</Text>
                   </Container>
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="weight">Weight (kg)</label>
-                    <NumberInput 
-                      {...signUpForm.getInputProps("weight")} 
+                    <NumberInput
+                      {...signUpForm.getInputProps("weight")}
                       min={0}
                       step={0.1}
                     />
@@ -288,29 +378,39 @@ export const LoginPage = ({
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="password">Password</label>
-                    <Input 
-                      type="password" 
-                      {...signUpForm.getInputProps("password")} 
+                    <Input
+                      type="password"
+                      placeholder="Enter your Password"
+                      {...signUpForm.getInputProps("password")}
                     />
                     <Text c="red">{signUpForm.errors["password"]}</Text>
                   </Container>
 
                   <Container className={classes.formField} px={0}>
                     <label htmlFor="confirmPassword">Confirm Password</label>
-                    <Input 
-                      type="password" 
-                      {...signUpForm.getInputProps("confirmPassword")} 
+                    <Input
+                      type="password"
+                      placeholder="Confirm your Password"
+                      {...signUpForm.getInputProps("confirmPassword")}
                     />
                     <Text c="red">{signUpForm.errors["confirmPassword"]}</Text>
                   </Container>
 
-                  <Container px={0} style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+                  <Container
+                    px={0}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "25px",
+                      marginTop: "40px",
+                    }}
+                  >
                     <Button className={classes.loginButton} type="submit">
                       Sign Up
                     </Button>
-                    <Button 
-                      className={classes.loginButton} 
-                      variant="outline" 
+                    <Button
+                      className={classes.loginButton}
+                      variant="outline"
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();
@@ -323,23 +423,23 @@ export const LoginPage = ({
 
                   <Space h="md" />
                   <Text ta="center">
-                    Already have an account?{' '}
-                    <Anchor 
-                    href="#"
-                     onClick={(e) => {
-                      e.preventDefault();
-                      setIsSignUp(false);
-                    }}
-                  >
+                    Already have an account?{" "}
+                    <Anchor
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsSignUp(false);
+                      }}
+                    >
                       Login
                     </Anchor>
                   </Text>
                 </Container>
               </form>
+              </Card>
+              </div>
             </>
           )}
-
-
         </Container>
       </Container>
     </PageWrapper>
@@ -358,6 +458,43 @@ const useStyles = createStyles(() => {
 
     formField: {
       marginBottom: "8px",
+    },
+
+    container1: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "relative",
+      color: "white",
+      width: "100%",
+      height:"100%",
+      backgroundImage: `linear-gradient(
+      rgba(93, 93, 93, 0.5),
+      rgba(14, 14, 14, 0.5)
+    ),url(${bgImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      overflow: "hidden",
+    },
+
+    
+    container2: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "relative",
+      color: "white",
+      width: "100%",
+      height:"100%",
+      backgroundImage: `linear-gradient(
+      rgba(93, 93, 93, 0.5),
+      rgba(14, 14, 14, 0.5)
+    ),url(${bgImage1})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      overflow: "hidden",
     },
   };
 });

@@ -98,9 +98,11 @@ export const BMIIndicator = () => {
         Back
       </Button>
 
-      <Title order={2} mb="xl">BMI Calculator</Title>
+   
       
       <Card withBorder shadow="sm" p="lg">
+
+      <Title order={2} mb="xl">BMI Calculator</Title>
         <Stack>
           {/* Weight Input */}
           <Group align="flex-end" grow>
