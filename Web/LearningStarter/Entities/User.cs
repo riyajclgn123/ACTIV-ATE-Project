@@ -78,6 +78,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.UserName)
             .IsRequired();
+        
  
     }
 }

@@ -177,6 +177,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
     // Calculate calories burned
     decimal caloriesBurned = ExerciseCalorieCalculator.CalculateCaloriesBurned(duration, user.Weight, metValue);
 
+    DateTimeOffset recordDate = createDto.CreateDate != default ? createDto.CreateDate : DateTimeOffset.UtcNow;
     var exerciselogToCreate = new ExerciseLog
     {
         UserId = createDto.UserId,
@@ -185,7 +186,8 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         Duration = duration,
         CaloriesBurned = caloriesBurned,
         Rep = createDto.Rep,
-        CreateDate = createDto.CreateDate != default ? createDto.CreateDate : DateTimeOffset.UtcNow,
+        CreateDate = recordDate,
+        UpdatedDate = recordDate
     };
 
     _context.ExerciseLogs.Add(exerciselogToCreate);
@@ -200,7 +202,8 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         Duration = exerciselogToCreate.Duration,
         Rep = exerciselogToCreate.Rep,
         CaloriesBurned = exerciselogToCreate.CaloriesBurned,
-        CreateDate = exerciselogToCreate.CreateDate
+        CreateDate = exerciselogToCreate.CreateDate,
+        UpdatedDate = exerciselogToCreate.UpdatedDate,
     };
 
     response.Data = exerciselogToReturn;
@@ -270,7 +273,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         exerciselog.Duration = duration;
         exerciselog.CaloriesBurned = caloriesBurned;
         exerciselog.ExerciseName = exercise.Name;
-        exerciselog.UpdatedDate = DateTime.UtcNow;
+        exerciselog.UpdatedDate = updateDto.UpdatedDate != default ? updateDto.UpdatedDate : DateTimeOffset.UtcNow;
 
         _context.SaveChanges();
 
@@ -320,7 +323,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
     
         var count = _context
             .Set<ExerciseLog>()
-            .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate <= endDate)
+            .Where(x => x.UserId == userId && x.UpdatedDate >= startDate && x.UpdatedDate <= endDate)
             .Count();
 
         response.Data = count;
@@ -339,8 +342,8 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
         // Get all exercise logs for the user within the date range (from 12:00 AM to 11:59 PM each day)
         var exerciseLogs = _context.Set<ExerciseLog>()
             .Where(el => el.UserId == userId && 
-                         el.CreateDate >= startDate.Date && 
-                         el.CreateDate <= endDate.Date.AddDays(1).AddTicks(-1))
+                         el.UpdatedDate >= startDate.Date && 
+                         el.UpdatedDate <= endDate.Date.AddDays(1).AddTicks(-1))
             .ToList();
 
         if (!exerciseLogs.Any())

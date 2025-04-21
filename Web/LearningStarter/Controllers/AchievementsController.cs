@@ -1,5 +1,6 @@
 
 
+using System;
 using System.Linq;
 using LearningStarter.Common;
 using LearningStarter.Data;
@@ -176,6 +177,94 @@ public class AchievementsController : ControllerBase
 
 
     }
+    
+    [HttpGet("check-weight-goal/{userId}")]
+public IActionResult CheckWeightGoalAchievement(int userId)
+{
+    var response = new Response();
+    
+    // Get user's latest goal
+    var latestGoal = _dataContext.Set<Goal>()
+        .Where(g => g.UserId == userId && g.Type == "weight")
+        .OrderByDescending(g => g.CreateDate)
+        .FirstOrDefault();
+
+    if (latestGoal == null)
+    {
+        response.AddError("goal", "No weight goal found for this user");
+        return NotFound(response);
+    }
+
+    // Get user's latest weight log
+    var latestWeightLog = _dataContext.Set<WeightLog>()
+        .Where(w => w.UserId == userId)
+        .OrderByDescending(w => w.LogDate)
+        .FirstOrDefault();
+
+    if (latestWeightLog == null)
+    {
+        response.AddError("weight", "No weight data found for this user");
+        return NotFound(response);
+    }
+
+    // Use decimal consistently
+    decimal goalValue = latestGoal.Value;
+    decimal currentValue = latestWeightLog.Value;
+    decimal tolerance = 0.1m; // Note the 'm' suffix for decimal
+    
+    // Check if goal is achieved (with a small tolerance for floating point comparison)
+    bool isGoalAchieved = Math.Abs(currentValue - goalValue) < tolerance;
+    
+    // Check if achievement already exists to avoid duplicates
+    var existingAchievement = _dataContext.Set<Achievement>()
+        .FirstOrDefault(a => a.UserId == userId && 
+                           a.Type == "weight_goal" && 
+                           a.Description.Contains($"Target: {latestGoal.Value}kg"));
+
+    var achievementDto = new AchievementCheckDto
+    {
+        GoalWeight = goalValue,
+        CurrentWeight = currentValue,
+        IsAchieved = isGoalAchieved,
+        HasExistingAchievement = existingAchievement != null,
+        Achievement = existingAchievement != null ? new AchievementGetDto
+        {
+            Id = existingAchievement.Id,
+            UserId = existingAchievement.UserId,
+            Type = existingAchievement.Type,
+            Description = existingAchievement.Description,
+            CreateDate = existingAchievement.CreateDate
+        } : null
+    };
+
+    // If goal is achieved and no existing achievement, create one
+    if (isGoalAchieved && existingAchievement == null)
+    {
+        var newAchievement = new Achievement
+        {
+            UserId = userId,
+            Type = "weight_goal",
+            Description = $"Reached target weight of {latestGoal.Value}kg!",
+            CreateDate = DateTime.Now
+        };
+        
+        _dataContext.Set<Achievement>().Add(newAchievement);
+        _dataContext.SaveChanges();
+        
+        achievementDto.Achievement = new AchievementGetDto
+        {
+            Id = newAchievement.Id,
+            UserId = newAchievement.UserId,
+            Type = newAchievement.Type,
+            Description = newAchievement.Description,
+            CreateDate = newAchievement.CreateDate
+        };
+    }
+
+    response.Data = achievementDto;
+    return Ok(response);
+}
+    
 }
 
 

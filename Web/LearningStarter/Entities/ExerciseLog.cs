@@ -59,3 +59,4 @@ public class ExerciseDailySummaryDto
     public DateTime Date { get; set; }
     public decimal TotalCaloriesBurned { get; set; }
 }
+

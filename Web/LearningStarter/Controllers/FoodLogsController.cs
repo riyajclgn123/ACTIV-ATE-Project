@@ -337,6 +337,8 @@ public IActionResult GetDailyCalories(
         }
         
         var totalCalories = calorieNutrient.Value * foodLogCreateDto.ServingSize;
+        
+        DateTimeOffset recordDate = foodLogCreateDto.CreateDate != default ? foodLogCreateDto.CreateDate : DateTimeOffset.UtcNow;
 
         // Create the new food log
         var foodLogToCreate = new FoodLog
@@ -346,8 +348,8 @@ public IActionResult GetDailyCalories(
             ServingSize = foodLogCreateDto.ServingSize,
             MealTime = foodLogCreateDto.MealTime,
             Calories = totalCalories,
-            CreateDate = foodLogCreateDto.CreateDate != default ? foodLogCreateDto.CreateDate : DateTimeOffset.UtcNow,
-            UpdatedDate = DateTimeOffset.UtcNow
+            CreateDate = recordDate,
+            UpdatedDate = recordDate,
         };
 
         _context.FoodLogs.Add(foodLogToCreate);
@@ -495,7 +497,7 @@ public IActionResult GetDailyCalories(
 
         var count = _context
             .Set<FoodLog>()
-            .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate <= endDate )
+            .Where(x => x.UserId == userId && x.UpdatedDate >= startDate && x.UpdatedDate <= endDate )
             .Count();
         
         
@@ -515,7 +517,7 @@ public IActionResult GetDailyCalories(
             // Get all food logs for the specified user on the given date
             var logs = _context.FoodLogs
                 .Where(log => log.UserId == userId && 
-                              log.CreateDate.Date == queryDate.Date)
+                              log.UpdatedDate.Date == queryDate.Date)
                 .ToList();
 
             var totals = new
