@@ -9,6 +9,7 @@ import { Notifications } from "@mantine/notifications";
 import '@mantine/core/styles.css';
 import { MantineEmotionProvider } from "@mantine/emotion";
 import { FooterSimple } from "./components/footer/footer";
+import { FoodProvider } from "./food/foodcontext"; 
 
 const theme = createTheme({
 });
@@ -16,18 +17,20 @@ const theme = createTheme({
 //This is almost the base level of your app.  You can also put global things here.
 function App() {
   return (
-      <MantineProvider theme={theme} defaultColorScheme="dark">
-        <MantineEmotionProvider>
-        <Notifications  position="top-right" autoClose={3000} limit={5} />
-          <Container fluid px={0} className="App">
-            <AuthProvider>
+    <MantineProvider theme={theme} defaultColorScheme="dark">
+      <MantineEmotionProvider>
+        <Notifications position="top-right" autoClose={3000} limit={5} />
+        <Container fluid px={0} className="App">
+          <AuthProvider>
+            <FoodProvider>
               <Routes />
               <FooterSimple />
-            </AuthProvider>
-          </Container>
-          </MantineEmotionProvider>
-      </MantineProvider>
+            </FoodProvider>
+          </AuthProvider>
+        </Container>
+      </MantineEmotionProvider>
+    </MantineProvider>
   );
 }
 
-export default App;
+export default App; 
