@@ -11,6 +11,7 @@ import { MantineEmotionProvider } from "@mantine/emotion";
 import { FooterSimple } from "./components/footer/footer";
 import { FoodProvider } from "./food/foodcontext"; 
 
+
 const theme = createTheme({
 });
 

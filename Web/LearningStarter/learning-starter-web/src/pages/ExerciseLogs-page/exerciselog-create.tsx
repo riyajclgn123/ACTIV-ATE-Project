@@ -1,23 +1,26 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { 
-  NumberInput, 
-  Button, 
-  Group, 
-  Box, 
-  Text, 
-  Title, 
-  Card, 
+import {
+  NumberInput,
+  Button,
+  Group,
+  Box,
+  Text,
+  Title,
+  Card,
   TextInput,
   Select,
   Stack,
-  LoadingOverlay
+  LoadingOverlay,
+  Container,
 } from "@mantine/core";
 import { routes } from "../../routes";
 import api from "../../config/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
+import { DateTimePicker } from "@mantine/dates";
+import { createStyles } from "@mantine/emotion";
 
 interface ExerciseLogResponse {
   data: {
@@ -31,19 +34,23 @@ interface ExerciseLogResponse {
 export const ExerciseLogCreate = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { exercise, userId } = location.state as {
-    exercise: { id: number; name: string };
-    userId: number;
-  } || {};
+  const { classes } = useStyles();
+
+  const { exercise, userId } =
+    (location.state as {
+      exercise: { id: number; name: string };
+      userId: number;
+    }) || {};
 
   if (!exercise?.id || !userId) {
     return (
       <Box maw={600} mx="auto" p="md">
         <Card withBorder shadow="sm" p="lg">
           <Text color="red" mb="md">
-            Missing exercise or user information. Please select an exercise from the list.
+            Missing exercise or user information. Please select an exercise from
+            the list.
           </Text>
-          <Button 
+          <Button
             onClick={() => navigate(routes.exercises)}
             leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
           >
@@ -53,12 +60,13 @@ export const ExerciseLogCreate = () => {
       </Box>
     );
   }
-  
+
   const [duration, setDuration] = useState<string>("30");
   const [durationUnit, setDurationUnit] = useState<string>("minutes");
   const [reps, setReps] = useState<number>(10);
   const [caloriesBurned, setCaloriesBurned] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const durationUnits = [
     { value: "seconds", label: "Seconds" },
@@ -79,30 +87,38 @@ export const ExerciseLogCreate = () => {
         throw new Error("Please enter a valid duration");
       }
 
-      const totalSeconds = durationUnit === "seconds" ? durationValue : 
-                         durationUnit === "minutes" ? durationValue * 60 : 
-                         durationValue * 3600;
+      const totalSeconds =
+        durationUnit === "seconds"
+          ? durationValue
+          : durationUnit === "minutes"
+          ? durationValue * 60
+          : durationValue * 3600;
 
       const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = Math.floor(totalSeconds % 60);
-      
-      const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-      const response = await api.post<ExerciseLogResponse>("/api/exercise-logs", {
-        exerciseId: exercise.id,
-        userId: userId,
-        duration: formattedDuration,
-        rep: reps,
-        createDate: new Date().toISOString()
-    });
-      
+      const formattedDuration = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+      const response = await api.post<ExerciseLogResponse>(
+        "/api/exercise-logs",
+        {
+          exerciseId: exercise.id,
+          userId: userId,
+          duration: formattedDuration,
+          rep: reps,
+          createDate: selectedDate,
+        }
+      );
+
       if (response.data?.data?.caloriesBurned) {
         setCaloriesBurned(response.data.data.caloriesBurned);
         showNotification({
           title: "Success",
           message: "Exercise logged successfully!",
-          color: "green"
+          color: "green",
         });
       } else {
         throw new Error("Invalid response from server");
@@ -111,39 +127,43 @@ export const ExerciseLogCreate = () => {
       console.error("Error logging exercise:", error);
       showNotification({
         title: "Error",
-        message: error.response?.data?.errors?.join(", ") || error.message || "Failed to log exercise",
-        color: "red"
+        message:
+          error.response?.data?.errors?.join(", ") ||
+          error.message ||
+          "Failed to log exercise",
+        color: "red",
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-
   return (
     <Box maw={600} mx="auto" p="md" pos="relative">
       <LoadingOverlay visible={isLoading} />
-      
-      <Button 
-        variant="outline" 
-        mb="xl"
-        onClick={() => navigate(routes.exercises)}
-        leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
-      >
-        Back to Exercises
-      </Button>
-      <Button 
-    onClick={() => navigate(routes.exerciseLog)}
-    leftSection={<FontAwesomeIcon icon={faHistory} />}
->
-    View My Logs
-</Button>
+      <Container className={classes.buttonsContainer}>
+        <Button
+          variant="outline"
+          color="red"
+          onClick={() => navigate(routes.exercises)}
+          leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
+        >
+          Back to Exercises
+        </Button>
+        <Button
+          onClick={() => navigate(routes.exerciseLog)}
+          leftSection={<FontAwesomeIcon icon={faHistory} />}
+        >
+          View My Logs
+        </Button>
+      </Container>
 
-      <Title order={2} mb="xl">Log Exercise: {exercise.name}</Title>
-      
+      <Title order={2} mb="xl">
+        Log Exercise: {exercise.name}
+      </Title>
+
       <Card withBorder shadow="sm" p="lg">
         <Stack>
-
           {/* Duration Input */}
           <Group align="flex-end" grow>
             <TextInput
@@ -172,9 +192,18 @@ export const ExerciseLogCreate = () => {
             required
           />
 
+          <DateTimePicker
+   defaultValue={new Date()}
+value={selectedDate} // Controlled value
+            onChange={setSelectedDate} // Updates state on change
+            valueFormat="DD MMM YYYY hh:mm A"
+            label="Pick date and time"
+            placeholder="Pick date and time"
+          />
+
           {/* Submit Button */}
           <Group mt="xl">
-            <Button 
+            <Button
               onClick={handleSubmit}
               loading={isLoading}
               size="md"
@@ -190,7 +219,9 @@ export const ExerciseLogCreate = () => {
                 Exercise Summary
               </Text>
               <Text mt="sm" size="lg">
-                <Text span fw={500}>Calories Burned:</Text>{" "}
+                <Text span fw={500}>
+                  Calories Burned:
+                </Text>{" "}
                 <Text span c="green" fw={700}>
                   {caloriesBurned.toFixed(2)}
                 </Text>
@@ -205,3 +236,16 @@ export const ExerciseLogCreate = () => {
     </Box>
   );
 };
+
+const useStyles = createStyles(() => {
+  return {
+    buttonsContainer: {
+      padding: "20px",
+      display: "flex",
+      justifyContent: "space-around",
+      alignItems: "center",
+      marginBottom: "20px",
+    },
+  };
+});
+

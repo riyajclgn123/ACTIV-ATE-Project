@@ -27,7 +27,7 @@ export const MealPlanner = () => {
         alignItems: "center",
         fontSize:"50px",
         fontWeight: 500,
-        color: "sandybrown",
+        color: "#4263f5",
 
       }}>
         

@@ -36,10 +36,11 @@ const useStyles = createStyles(() => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "purple", // Dark theme background
+        backgroundColor: "#1c7ed6", // Dark theme background
         fontSize: "15px",
         width: "100%",  // Ensures the footer takes full width of the screen
         marginTop: "10px",
+        fontWeight: "revert",
     
         [`@media (maxWidth: 1024px)`]: {
           fontSize: "18px",  // Slightly reduce font size for medium screens (laptops/tablets)

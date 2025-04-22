@@ -11,7 +11,8 @@ import {
   TextInput,
   Select,
   Stack,
-  LoadingOverlay
+  LoadingOverlay,
+  Container
 } from "@mantine/core";
 import { routes } from "../../routes";
 import api from "../../config/axios";
@@ -19,6 +20,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faHistory } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from "@mantine/notifications";
 import { ApiResponse, ExerciseLogGetDto } from "../../constants/types";
+import { DateTimePicker } from "@mantine/dates";
+import { createStyles } from "@mantine/emotion";
 
 interface ExerciseLogResponse {
   data: {
@@ -39,13 +42,14 @@ export const ExerciseLogUpdate = () => {
       };
   const { id } = useParams();
   const navigate = useNavigate();
-  
+  const { classes } = useStyles();
   const [duration, setDuration] = useState<string>("");
   const [durationUnit, setDurationUnit] = useState<string>("minutes");
   const [reps, setReps] = useState<number>(0);
   const [caloriesBurned, setCaloriesBurned] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [exerciseName, setExerciseName] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const durationUnits = [
     { value: "seconds", label: "Seconds" },
@@ -65,13 +69,10 @@ export const ExerciseLogUpdate = () => {
             throw new Error("Invalid exercise log ID");
           }
 
-          console.log(`Fetching exercise log with ID: ${id}`);
 
       const response = await api.get<ApiResponse<ExerciseLogGetDto>>(`/api/exercise-logs/${id}`);
       
-         // Check if response is valid
 
-         console.log("API Response:", response);
     if (!response.data) {
         throw new Error("No response data received");
       }
@@ -145,11 +146,11 @@ export const ExerciseLogUpdate = () => {
       
     // 2. Then make the update request
     const response = await api.put<ExerciseLogResponse>(`/api/exercise-logs/${id}`, {
-        exerciseId: exercise.id,
+      exerciseId: exercise.id,
       userId: userId,
       duration: formattedDuration,
       rep: reps,
-      updatedDate: new Date().toISOString()
+      updatedDate: selectedDate,
     });
   
       if (response.status !== 200) {
@@ -183,10 +184,10 @@ export const ExerciseLogUpdate = () => {
   return (
     <Box maw={600} mx="auto" p="md" pos="relative">
       <LoadingOverlay visible={isLoading} />
-      
+         <Container className={classes.buttonsContainer}>
       <Button 
         variant="outline" 
-        mb="xl"
+        color="red"
         onClick={() => navigate(routes.exerciseLog)}
         leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
       >
@@ -198,6 +199,7 @@ export const ExerciseLogUpdate = () => {
       >
         View My Logs
       </Button>
+      </Container>
 
       <Title order={2} mb="xl">Update Exercise: {exerciseName}</Title>
       
@@ -230,6 +232,15 @@ export const ExerciseLogUpdate = () => {
             min={0}
             required
           />
+
+             <DateTimePicker 
+                defaultValue={new Date()}
+                          value={selectedDate} // Controlled value
+                          onChange={setSelectedDate} // Updates state on change
+                          valueFormat="DD MMM YYYY hh:mm A"
+                          label="Pick date and time"
+                          placeholder="Pick date and time"
+                        />
 
           {/* Submit Button */}
           <Group mt="xl">
@@ -264,3 +275,15 @@ export const ExerciseLogUpdate = () => {
     </Box>
   );
 };
+
+const useStyles = createStyles(() => {
+  return {
+    buttonsContainer: {
+      padding: "20px",
+      display: "flex",
+      justifyContent: "space-around",
+      alignItems: "center",
+      marginBottom: "20px",
+    },
+  };
+});

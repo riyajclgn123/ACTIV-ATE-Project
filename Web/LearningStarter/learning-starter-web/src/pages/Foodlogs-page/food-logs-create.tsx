@@ -25,6 +25,8 @@ import { showNotification } from "@mantine/notifications";
 import { createStyles } from "@mantine/emotion";
 import { ApiResponse, NutrientGetDto } from "../../constants/types";
 import { useFoodContext } from "../../food/foodcontext";
+import { DateTimePicker } from "@mantine/dates";
+import "@mantine/dates/styles.css";
 
 interface FoodLogResponse {
   data: {
@@ -48,6 +50,7 @@ export const FoodLogCreate = () => {
   const [protein, setProtein] = useState<number>(0);
   const [carbs, setCarbs] = useState<number>(0);
   const [fat, setFat] = useState<number>(0);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const units = [
     { value: "Servings", label: "Servings" },
@@ -172,7 +175,6 @@ export const FoodLogCreate = () => {
           baseFat = nutrient.value;
         }
       });
-
       setCalories(baseCalories * servingAmount);
       setProtein(baseProtein * servingAmount);
       setCarbs(baseCarbs * servingAmount);
@@ -209,6 +211,7 @@ export const FoodLogCreate = () => {
 
       <Card withBorder shadow="sm" p="lg">
         <Stack>
+          {/* Duration Input */}
           <Group align="flex-end" grow>
             <NumberInput
               label="Servings"
@@ -245,12 +248,31 @@ export const FoodLogCreate = () => {
               data={mealTimes}
               required
             />
+            <DateTimePicker
+              clearable
+              defaultValue={new Date()}
+              value={selectedDate} // Controlled value
+              onChange={setSelectedDate} // Updates state on change
+              valueFormat="DD MMM YYYY hh:mm A"
+              label="Pick date and time"
+              placeholder="Pick date and time"
+            />
           </Group>
 
+          {/* Nutrition Facts */}
           <Title order={5} mb="md">
             Nutrition Facts
           </Title>
-          <Card withBorder p="lg" radius="sm">
+          <Card
+            mt="sm"
+            withBorder
+            p="lg"
+            radius="sm"
+            style={{
+              textAlign: "left",
+              fontFamily: "'Helvetica', 'Arial', sans-serif",
+            }}
+          >
             <Text size="lg" fw={700} mb="xs">
               Nutrition Information
             </Text>
@@ -274,8 +296,15 @@ export const FoodLogCreate = () => {
               <Text size="sm">Protein</Text>
               <Text size="sm">{Math.round(protein)} g</Text>
             </Group>
+            
+            <Group justify="space-between" mt="md">
+              <Text size="xs" c="dimmed">
+                g: grams
+              </Text>
+            </Group>
           </Card>
 
+          {/* Submit Button */}
           <Group mt="xl">
             <Button
               onClick={handleSubmit}

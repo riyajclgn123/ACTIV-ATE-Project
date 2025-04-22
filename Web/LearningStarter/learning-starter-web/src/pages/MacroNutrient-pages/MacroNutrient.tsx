@@ -1,5 +1,13 @@
-
-import { Table, Title, Progress } from "@mantine/core";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  ActionIcon,
+  Group,
+  Progress,
+  Slider,
+  Table,
+  Title,
+} from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import { useFoodContext } from "../../food/foodcontext";
 
@@ -21,7 +29,6 @@ export const MacroNutrient = () => {
   };
 
   const currentDate = new Date().toLocaleDateString();
-
 
   return (
     <div>
@@ -69,10 +76,17 @@ export const MacroNutrient = () => {
   );
 };
 
-const useStyles = createStyles(() => ({
-  progressBar: {
-    '& .mantine-Progress-bar': {
-      transition: 'width 500ms ease',
+const useStyles = createStyles(() => {
+  return {
+    homePageContainer: {
+      display: "flex",
+      justifyContent: "center",
     },
-  },
-}));
+
+    progressBar: {
+      "& .mantine-Progress-bar": {
+        transition: "width 500ms ease",
+      },
+    },
+  };
+});

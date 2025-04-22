@@ -13,6 +13,13 @@ import { UserPage } from "../user-page/user-page";
 import { WeightMeasure } from "./WeightMeasure";
 import { useUser } from "../../authentication/use-auth";
 import { Goals } from "./goals";
+import {
+  faUser,
+  faScaleBalanced,
+  faWrench,
+  faBullseye,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //This is a basic Component, and since it is used inside of
 //'../../routes/config.tsx' line 31, that also makes it a page
@@ -22,7 +29,7 @@ function ProfilePicture() {
   const fullName = `${user.firstName} ${user.lastName}`;
   return (
     <Group justify="center" mb="xl">
-      <Avatar name={fullName} color="green" size={100} radius="xl" />
+      <Avatar name={fullName} color="blue" size={100} radius="xl" />
     </Group>
   );
 }
@@ -32,49 +39,77 @@ export const Profile = () => {
     <>
       <Container>
 
-        <Tabs
-          color="green"
-          variant="pills"
-          radius="xl"
-          orientation="horizontal"
-          defaultValue="gallery"
-        >
-          <Tabs.List>
-            <Tabs.Tab value="profile">Profile</Tabs.Tab>
-            <Tabs.Tab value="weightMeasure">Weight Log</Tabs.Tab>
-            <Tabs.Tab value="setting">Settings</Tabs.Tab>
-            <Tabs.Tab value="goals">Goals</Tabs.Tab>
+      <Space h={20} /> 
+
+        <Tabs color="blue" defaultValue="profile">
+          <Tabs.List grow>
+            <Tabs.Tab
+              value="profile"
+              leftSection={<FontAwesomeIcon icon={faUser} />}
+            >
+              Profile
+            </Tabs.Tab>
+            <Tabs.Tab
+              value="weightMeasure"
+              leftSection={<FontAwesomeIcon icon={faScaleBalanced} />}
+            >
+              {" "}
+              Weight Log
+            </Tabs.Tab>
+            <Tabs.Tab
+              value="setting"
+              leftSection={<FontAwesomeIcon icon={faWrench} />}
+            >
+              Settings
+            </Tabs.Tab>
+            <Tabs.Tab
+              value="goals"
+              leftSection={<FontAwesomeIcon icon={faBullseye} />}
+            >
+              Goals
+            </Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="profile">
-          <Space h={30} />
+            <Space h={30} />
 
-            <Text fw={700} size="xlg" mb="xlg">
-              User Information
-            </Text>
-            <Box
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: 20,
-              }}
-            >
-             
-              <ProfilePicture />
-            </Box>
-            <UserPage />
+            <Card withBorder shadow="sm" radius="md">
+              <Text fw={700} size="xlg" mb="xlg">
+                User Information
+              </Text>
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: 20,
+                }}
+              >
+                <ProfilePicture />
+              </Box>
+              <UserPage />
+            </Card>
           </Tabs.Panel>
 
-          <Tabs.Panel value="setting">Setting tab content</Tabs.Panel>
+          <Tabs.Panel value="setting">
+            <Space h={30} />
+            <Card withBorder shadow="sm" radius="md">
+              <Text> Setting tab </Text>
+            </Card>
+          </Tabs.Panel>
 
           <Tabs.Panel value="weightMeasure">
-            <WeightMeasure />
+            <Space h={30} />
+            <Card withBorder shadow="sm" radius="md">
+              <WeightMeasure />
+            </Card>
           </Tabs.Panel>
 
           <Tabs.Panel value="goals">
-            <Goals />
+            <Space h={30} />
+            <Card withBorder shadow="sm" radius="md">
+              <Goals />
+            </Card>
           </Tabs.Panel>
-
         </Tabs>
       </Container>
     </>

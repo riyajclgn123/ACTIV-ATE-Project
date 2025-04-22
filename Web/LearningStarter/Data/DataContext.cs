@@ -20,6 +20,7 @@ public DbSet<Exercise> Exercises { get; set; }
    public DbSet<NutrientType> NutrientTypes { get; set; }
    public DbSet<Achievement> Achievements { get; set; }
    public DbSet<Goal> Goals { get; set; }
+   public DbSet<DailyReport> DailyReports { get; set; }
    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

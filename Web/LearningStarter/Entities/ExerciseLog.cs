@@ -52,3 +52,11 @@ public class ExerciseLogUpdateDto
     public DateTimeOffset UpdatedDate { get; set; }
 
 }
+
+public class ExerciseDailySummaryDto
+{
+    public int UserId { get; set; }
+    public DateTime Date { get; set; }
+    public decimal TotalCaloriesBurned { get; set; }
+}
+

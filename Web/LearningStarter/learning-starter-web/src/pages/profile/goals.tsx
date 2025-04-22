@@ -79,7 +79,7 @@ export const Goals = () => {
           message: "Weight goal saved successfully!",
           color: "green",
         });
-        navigate(routes.goals);
+        navigate(routes.profile);
       }
     } catch (error: any) {
       console.error("Error saving goal:", error);
@@ -99,16 +99,16 @@ export const Goals = () => {
   
 
   return (
-    <Box maw={600} mx="auto" p="md" pos="relative">
+    <Box maw={600}  pos="relative">
       <LoadingOverlay visible={isLoading} />
       <Container className={classes.buttonsContainer}>
         <Button
           variant="outline"
           color="red"
-          onClick={() => navigate(routes.profile)}
+          onClick={() => navigate(routes.home)}
           leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
         >
-          Back to Profile
+          Back to Dashboard
         </Button>
       </Container>
 
@@ -166,8 +166,7 @@ const useStyles = createStyles(() => {
     buttonsContainer: {
       padding: "20px",
       display: "flex",
-      justifyContent: "space-around",
-      alignItems: "center",
+      alignItems: "left",
       marginBottom: "20px",
     },
   };
