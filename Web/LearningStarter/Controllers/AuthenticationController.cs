@@ -86,6 +86,7 @@ public class AuthenticationController : ControllerBase
             DateofBirth = user.DateofBirth,
             Height = user.Height,
             Weight = user.Weight,
+            Gender = user.Gender,
             CreateDate = user.CreateDate,
             UpdatedDate = user.UpdatedDate,
         };

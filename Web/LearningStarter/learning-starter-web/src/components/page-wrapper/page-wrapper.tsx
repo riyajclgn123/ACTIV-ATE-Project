@@ -24,7 +24,8 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({ user, children }) => {
 const useStyles = createStyles(() => {
   return {
     mainContent: {
-      marginTop: "10px",
+      marginTop: "0px",
+    
     },
   };
 });

@@ -24,5 +24,7 @@ export const routes = {
   profile: `/profile`,
   macroNutrient: `/macroNutrient`,
   weeklyReport: `/weeklyReport`,
+  goals: `/goals`,
+  achievements: `/achievements`,
   
 };

@@ -11,11 +11,9 @@ const axiosInstance = axios.create({
 
 const errorHandlers = {
   400: (response: AxiosResponse<unknown, any>) => {
-    console.log("Bad Request. Check your validation for possible errors");
     return Promise.resolve(response);
   },
   401: () => {
-    console.log("Unauthenticated. Make sure you are signed in.");
     return Promise.resolve({
       data: null,
       hasErrors: true,

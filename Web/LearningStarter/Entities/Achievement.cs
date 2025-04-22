@@ -38,7 +38,15 @@ public class AchievementUpdateDto
    public DateTimeOffset CreateDate { get; set; }
    public string Description { get; set; }
 }
-   
+
+public class AchievementCheckDto
+{
+   public decimal GoalWeight { get; set; }
+   public decimal CurrentWeight { get; set; }
+   public bool IsAchieved { get; set; }
+   public bool HasExistingAchievement { get; set; }
+   public AchievementGetDto Achievement { get; set; }
+}
 
 public class AchievmentEntityConfiguration : IEntityTypeConfiguration<Achievement>
 {

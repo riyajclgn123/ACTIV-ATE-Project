@@ -10,6 +10,7 @@ import '@mantine/core/styles.css';
 import { MantineEmotionProvider } from "@mantine/emotion";
 import { FooterSimple } from "./components/footer/footer";
 
+
 const theme = createTheme({
 });
 

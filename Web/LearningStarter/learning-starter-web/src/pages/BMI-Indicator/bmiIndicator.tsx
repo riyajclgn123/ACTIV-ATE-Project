@@ -14,7 +14,6 @@ import {
 import { showNotification } from "@mantine/notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { SemiCircleProgress } from "@mantine/core";
 
 export const BMIIndicator = () => {
   const [weight, setWeight] = useState<string>("");
@@ -99,9 +98,11 @@ export const BMIIndicator = () => {
         Back
       </Button>
 
-      <Title order={2} mb="xl">BMI Calculator</Title>
+   
       
       <Card withBorder shadow="sm" p="lg">
+
+      <Title order={2} mb="xl">BMI Calculator</Title>
         <Stack>
           {/* Weight Input */}
           <Group align="flex-end" grow>
