@@ -59,7 +59,7 @@ export const FoodLogCreate = () => {
   ];
 
   const mealTimes = [
-    { value: "BreakFast", label: "BreakFast" },
+    { value: "Breakfast", label: "Breakfast" },
     { value: "Lunch", label: "Lunch" },
     { value: "Snack", label: "Snack" },
     { value: "Dinner", label: "Dinner" },
@@ -110,7 +110,7 @@ export const FoodLogCreate = () => {
         servingSize: servings,
         calories: calories,
         mealTime: mealTime,
-        createDate: new Date().toISOString(),
+        createDate: selectedDate,
       });
 
       if (response.data) {
