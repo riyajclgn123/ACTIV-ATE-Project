@@ -1,30 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
-  NumberInput,
-  Button,
-  Group,
-  Box,
-  Text,
-  Title,
-  Card,
-  TextInput,
-  Select,
-  Stack,
-  LoadingOverlay,
-  Container,
+    NumberInput,
+    Button,
+    Group,
+    Box,
+    Text,
+    Title,
+    Card,
+    Select,
+    Stack,
+    LoadingOverlay,
+    Container,
 } from "@mantine/core";
 import { routes } from "../../routes";
 import api from "../../config/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowLeft,
-  faCheck,
-  faHistory,
+    faArrowLeft,
+    faCheck,
+    faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
 import { createStyles } from "@mantine/emotion";
 import { ApiResponse, NutrientGetDto } from "../../constants/types";
+import { useFoodContext } from "../../food/foodcontext";
 import { DateTimePicker } from "@mantine/dates";
 import "@mantine/dates/styles.css";
 
@@ -37,6 +37,7 @@ interface FoodLogResponse {
 }
 
 export const FoodLogCreate = () => {
+  const { addFood } = useFoodContext();
   const { classes } = useStyles();
   const location = useLocation();
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ export const FoodLogCreate = () => {
   ];
 
   const mealTimes = [
-    { value: "Breakfast", label: "Breakfast" },
+    { value: "BreakFast", label: "BreakFast" },
     { value: "Lunch", label: "Lunch" },
     { value: "Snack", label: "Snack" },
     { value: "Dinner", label: "Dinner" },
@@ -92,25 +93,6 @@ export const FoodLogCreate = () => {
     }
   }, [food.id, servings, unit]);
 
-  if (!food?.id || !userId) {
-    return (
-      <Box maw={600} mx="auto" p="md">
-        <Card withBorder shadow="sm" p="lg">
-          <Text color="red" mb="md">
-            Missing food or user information. Please select a food item from the
-            list.
-          </Text>
-          <Button
-            onClick={() => navigate(routes.foods)}
-            leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
-          >
-            Back to Foods
-          </Button>
-        </Card>
-      </Box>
-    );
-  }
-
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
@@ -128,11 +110,21 @@ export const FoodLogCreate = () => {
         servingSize: servings,
         calories: calories,
         mealTime: mealTime,
-        createDate: selectedDate,
+        createDate: new Date().toISOString(),
       });
 
-
       if (response.data) {
+        const today = new Date().toISOString().split("T")[0];
+        addFood({
+          calories,
+          protein,
+          carbs,
+          fat,
+          fiber: 0,
+          sugar: 0,
+          date: today,
+        });
+
         showNotification({
           title: "Success",
           message: "Food logged successfully",
@@ -214,7 +206,7 @@ export const FoodLogCreate = () => {
       </Container>
 
       <Title order={2} mb="xl">
-        Log: {food.name}
+        Log: {food?.name || "Food Item"}
       </Title>
 
       <Card withBorder shadow="sm" p="lg">
@@ -236,7 +228,7 @@ export const FoodLogCreate = () => {
               label="Unit"
               value={unit}
               onChange={(val) => {
-                const newUnit = val || "Serving";
+                const newUnit = val || "Servings";
                 setUnit(newUnit);
                 calculateNutrition(servings, newUnit);
               }}
@@ -288,15 +280,10 @@ export const FoodLogCreate = () => {
               Based on {servings} {unit.toLowerCase()}.
             </Text>
             <Group justify="space-between" mb="md">
-              <Text size="md" fw={700}>
-                Calories
-              </Text>
-              <Text size="md" fw={700}>
-                {Math.round(calories)}
-              </Text>
+              <Text size="md" fw={700}>Calories</Text>
+              <Text size="md" fw={700}>{Math.round(calories)}</Text>
             </Group>
-
-            
+            <div style={{ height: "1px", background: "#ddd", margin: "10px 0" }}></div>
             <Group justify="space-between" my="xs">
               <Text size="sm">Total Fat</Text>
               <Text size="sm">{Math.round(fat)} g</Text>
@@ -326,7 +313,7 @@ export const FoodLogCreate = () => {
               disabled={!servings || isNaN(servings)}
               rightSection={<FontAwesomeIcon icon={faCheck} />}
             >
-              Log {food.name}
+              Log {food?.name || "Food"}
             </Button>
           </Group>
 
