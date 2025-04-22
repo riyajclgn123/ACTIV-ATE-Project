@@ -354,7 +354,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
 
         // Group by date and calculate total calories burned each day
         var reports = exerciseLogs
-            .GroupBy(el => el.CreateDate.Date)
+            .GroupBy(el => el.UpdatedDate.Date)
             .Select(g => new ExerciseDailySummaryDto
             {
                 UserId = userId,
