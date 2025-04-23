@@ -42,7 +42,6 @@ export const FoodLogCreate = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [servings, setServings] = useState<number>(1);
-    const [mealTime, setMealTime] = useState<string>("Breakfast");
     const [unit, setUnit] = useState<string>("Servings");
     const [isLoading, setIsLoading] = useState(false);
     const [calories, setCalories] = useState<number>(0);
@@ -50,6 +49,8 @@ export const FoodLogCreate = () => {
     const [carbs, setCarbs] = useState<number>(0);
     const [fat, setFat] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+    const initialMealTime = location.state?.mealTime || "Breakfast";
+    const [mealTime, setMealTime] = useState<string>(initialMealTime);
 
     const units = [
         { value: "Servings", label: "Servings" },

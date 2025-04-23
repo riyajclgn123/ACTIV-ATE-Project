@@ -19,8 +19,12 @@ import api from "../../config/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faArrowLeft,
+    faCancel,
     faCheck,
+    faCross,
+    faDeleteLeft,
     faHistory,
+    faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
 import { createStyles } from "@mantine/emotion";
@@ -184,6 +188,19 @@ export const FoodLogUpdate = () => {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        try {
+            await api.delete(`/api/food-logs/${id}`);
+            showNotification({
+                message: "Log deleted successfully",
+                color: "green",
+            });
+            navigate(routes.foodLog);
+        } catch (error) {
+            showNotification({ message: "Error deleting log", color: "red" });
+        }
+    };
+
     return (
         <Box maw={600} mx="auto" p="md" pos="relative">
             <LoadingOverlay visible={isLoading} />
@@ -196,12 +213,15 @@ export const FoodLogUpdate = () => {
                 >
                     Back to Food Logs
                 </Button>
+                <Button
+                    color="red"
+                    variant="outline"
+                    leftSection={<FontAwesomeIcon icon={faTrash} />}
+                    onClick={() => handleDelete(Number(id))}
+                >
+                    Delete Entry
+                </Button>
             </Container>
-
-            <Title order={2} mb="xl">
-                Update Log: {food.name}
-            </Title>
-
             <Card withBorder shadow="sm" p="lg">
                 <Stack>
                     {/* Duration Input */}
