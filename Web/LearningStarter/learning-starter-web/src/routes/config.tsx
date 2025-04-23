@@ -24,6 +24,7 @@ import { MacroNutrient } from "../pages/MacroNutrient-pages/MacroNutrient";
 import { WeeklyReport } from "../pages/profile/weeklyReport";
 import { Goals } from "../pages/profile/goals";
 import { Achievements } from "../pages/Achievements-page/achievements";
+import { FoodLogUpdate } from "../pages/FoodLogs-page/food-logs-update";
 
 
 //This is where you will tell React Router what to render when the path matches the route specified.
@@ -61,9 +62,8 @@ export const Routes = () => {
           
           <Route path={routes.foodLog} element={<FoodLogListing />} />
           <Route path={routes.foodLogCreate} element={<FoodLogCreate />} />
-          {/*}
           <Route path={routes.foodLogUpdate} element={<FoodLogUpdate />} /> 
-          */}
+
           <Route path={routes.mealplanner} element={<MealPlanner />} />
           <Route path={routes.bmi} element={<BMIIndicator />} />
           <Route path={routes.profile} element={<Profile />} />
