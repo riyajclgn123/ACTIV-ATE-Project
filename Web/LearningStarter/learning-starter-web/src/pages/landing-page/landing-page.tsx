@@ -20,8 +20,6 @@ import { showNotification } from "@mantine/notifications";
 import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
 import api from "../../config/axios";
 import { AxiosError } from "axios";
-import { Slider } from "@mantine/core";
-import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,6 +30,7 @@ import {
   faList,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
+import { DateNavigator } from "../../constants/theme-constants";
 export interface CalorieConsumedResponse {
   date: string;
   dailyCalorieGoal: number;
@@ -65,11 +64,10 @@ export const LandingPage = () => {
   const { user } = useAuth();
   const [calorieGoal, setCalorieGoal] = useState<GoalGetDto | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
-
   const reset = () => setHovered(null);
   const [exerciseCount, setExerciseCount] = useState<number>(0);
-
-  const [unit, setUnit] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [viewMode, setViewMode] = useState("list");
 
   const getStartOfDay = (date: Date | null) => {
     const d = date ? new Date(date) : new Date();
@@ -83,8 +81,8 @@ export const LandingPage = () => {
   };
 
   // Calculate the date range
-  const startDate = getStartOfDay(unit);
-  const endDate = getEndOfDay(unit);
+  const startDate = getStartOfDay(selectedDate);
+  const endDate = getEndOfDay(selectedDate);
 
   useEffect(() => {
     async function fetchExerciseCount() {
@@ -170,16 +168,8 @@ export const LandingPage = () => {
       const response = await api.get<ApiResponse<CalorieConsumedResponse>>(
         `/api/food-logs/user/${
           user.id
-        }/calories-consumed-per-day?date=${getDatestring(unit)}`
+        }/calories-consumed-per-day?date=${getDatestring(selectedDate)}`
       );
-
-      if (response.data.hasErrors) {
-        showNotification({
-          message: "Error fetching fodd consumped",
-          color: "red",
-        });
-        return;
-      }
 
       setFoodConsumed(response.data.data);
     } catch (error) {
@@ -193,7 +183,7 @@ export const LandingPage = () => {
 
   useEffect(() => {
     fetchCalorieConsumed();
-  }, [user?.id, unit]);
+  }, [user?.id, selectedDate]);
 
   const [totals, setTotals] = useState<MealTimeTotals | null>(null);
   const [loading, setLoading] = useState(true);
@@ -208,7 +198,7 @@ export const LandingPage = () => {
       const response = await api.get<ApiResponse<MealTimeTotals>>(
         `/api/food-logs/user/${
           user.id
-        }/user-meal-time-totals?date=${getDatestring(unit)}`
+        }/user-meal-time-totals?date=${getDatestring(selectedDate)}`
       );
 
       if (response.data.hasErrors || !response.data.data) {
@@ -241,7 +231,7 @@ export const LandingPage = () => {
 
   useEffect(() => {
     fetchMealTimeTotals();
-  }, [user?.id, unit]);
+  }, [user?.id, selectedDate]);
 
   const calculatePercentage = (value: number, total: number) => {
     if (!total || total === 0) return 0;
@@ -261,7 +251,7 @@ export const LandingPage = () => {
   };
 
   const percentages = useMemo(() => getPercentages(), [totals]);
-  const [viewMode, setViewMode] = useState("tabs");
+ 
   return (
     <>
       <section id="backgrounddesign">
@@ -302,13 +292,7 @@ export const LandingPage = () => {
                 {viewMode === "tabs" ? "List View" : "Tab View"}
               </Button>
             </div>
-            <DateInput
-              value={unit} // Controlled value
-              onChange={setUnit} // Updates state on change
-              valueFormat="MM/DD/YYYY"
-              label="Pick date and time"
-              placeholder="Pick date and time"
-            />
+            <DateNavigator date={selectedDate} onChange={setSelectedDate} />
             <Space h={30}/>
             {viewMode === "tabs" ? (
               <Tabs defaultValue="Chart">
@@ -475,7 +459,7 @@ export const LandingPage = () => {
                 <Tabs.Panel value="Excercise Logs">
                   <Container className={classes.exerciselog}>
                     <Card withBorder shadow="sm" p="lg">
-                      <ExerciseLogListing />
+                      <ExerciseLogListing date={ false } dateProp={selectedDate}/>
                     </Card>
                   </Container>
                 </Tabs.Panel>
@@ -483,7 +467,7 @@ export const LandingPage = () => {
                 <Tabs.Panel value="Food Logs">
                   <Container className={classes.foodlog}>
                     <Card withBorder shadow="sm" p="lg">
-                      <FoodLogListing />
+                      <FoodLogListing date={ false } dateProp={selectedDate}/>
                     </Card>
                   </Container>
                 </Tabs.Panel>
@@ -639,14 +623,14 @@ export const LandingPage = () => {
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faDumbbell} /> Exercise Logs
                   </Text>
-                  <ExerciseLogListing />
+                  <ExerciseLogListing date = {false} dateProp = {selectedDate} />
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg" mb="md">
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faUtensils} /> Food Logs
                   </Text>
-                  <FoodLogListing />
+                  <FoodLogListing date = {false} dateProp = {selectedDate}/>
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg">

@@ -56,12 +56,7 @@ export const Profile = () => {
               {" "}
               Weight Log
             </Tabs.Tab>
-            <Tabs.Tab
-              value="setting"
-              leftSection={<FontAwesomeIcon icon={faWrench} />}
-            >
-              Settings
-            </Tabs.Tab>
+    
             <Tabs.Tab
               value="goals"
               leftSection={<FontAwesomeIcon icon={faBullseye} />}
@@ -87,13 +82,6 @@ export const Profile = () => {
                 <ProfilePicture />
               </Box>
               <UserPage />
-            </Card>
-          </Tabs.Panel>
-
-          <Tabs.Panel value="setting">
-            <Space h={30} />
-            <Card withBorder shadow="sm" radius="md">
-              <Text> Setting tab </Text>
             </Card>
           </Tabs.Panel>
 

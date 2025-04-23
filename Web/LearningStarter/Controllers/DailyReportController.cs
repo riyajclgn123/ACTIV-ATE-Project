@@ -25,7 +25,7 @@ public class DailyReportsController : ControllerBase
 
         // Get all food logs for the user on the specified date
         var foodLogs = _dataContext.Set<FoodLog>()
-            .Where(fl => fl.UserId == userId && fl.CreateDate.Date == date.Date)
+            .Where(fl => fl.UserId == userId && fl.UpdatedDate.Date == date.Date)
             .ToList();
 
         if (!foodLogs.Any())
@@ -71,8 +71,8 @@ public class DailyReportsController : ControllerBase
         // Get all food logs for the user within the date range
         var foodLogs = _dataContext.Set<FoodLog>()
             .Where(fl => fl.UserId == userId && 
-                        fl.CreateDate.Date >= startDate.Date && 
-                        fl.CreateDate.Date <= endDate.Date)
+                        fl.UpdatedDate.Date >= startDate.Date && 
+                        fl.UpdatedDate.Date <= endDate.Date)
             .ToList();
 
         if (!foodLogs.Any())
@@ -83,7 +83,7 @@ public class DailyReportsController : ControllerBase
 
         // Group by date and meal time
         var reports = foodLogs
-            .GroupBy(fl => new { fl.CreateDate.Date, fl.MealTime })
+            .GroupBy(fl => new { fl.UpdatedDate.Date, fl.MealTime })
             .Select(g => new DailyReportGetDto
             {
                 UserId = userId,

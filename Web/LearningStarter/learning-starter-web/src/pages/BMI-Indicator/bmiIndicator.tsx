@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 export const BMIIndicator = () => {
   const [weight, setWeight] = useState<string>("");
@@ -102,7 +102,7 @@ export const BMIIndicator = () => {
       
       <Card withBorder shadow="sm" p="lg">
 
-      <Title order={2} mb="xl">BMI Calculator</Title>
+      <Title order={2} mb="xl" ><FontAwesomeIcon icon={faCalculator} spacing={20}/>   BMI Calculator</Title>
         <Stack>
           {/* Weight Input */}
           <Group align="flex-end" grow>

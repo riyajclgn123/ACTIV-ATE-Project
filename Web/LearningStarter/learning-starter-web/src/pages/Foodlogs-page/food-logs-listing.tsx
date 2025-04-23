@@ -6,18 +6,21 @@ import {
 } from "../../constants/types";
 import { showNotification } from "@mantine/notifications";
 import api from "../../config/axios";
-import {
-    Table,
-    Title,
-    Group,
-    ActionIcon,
-} from "@mantine/core";
+import { Table, Title, Group, ActionIcon } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+    faTrash,
+    faEdit,
+    faChevronLeft,
+    faChevronRight,
+    faCalendarDay,
+} from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../authentication/use-auth";
-import {  useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
+import { DateInput } from "@mantine/dates";
+import { DateNavigator } from "../../constants/theme-constants";
 
 interface FoodLogWithNutrients extends FoodLogGetDto {
     nutrients: {
@@ -25,17 +28,23 @@ interface FoodLogWithNutrients extends FoodLogGetDto {
         carbs: number;
         fat: number;
     };
-    }
+}
 
-export const FoodLogListing = () => {
+export const FoodLogListing = ({date, dateProp}: any) => {
     const { classes } = useStyles();
     const [logs, setLogs] = useState<FoodLogWithNutrients[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [selectedDate, setSelectedDate] = useState<Date | null>(dateProp);
 
     useEffect(() => {
-        fetchLogs()
+        setSelectedDate(dateProp);
+    }
+    , [dateProp]);
+
+    useEffect(() => {
+        fetchLogs();
     }, [user?.id]);
 
     const fetchLogs = async () => {
@@ -43,17 +52,19 @@ export const FoodLogListing = () => {
 
         setLoading(true);
         try {
-            const response = await api.get<ApiResponse<FoodLogGetDto[]>>(`/api/food-logs/user/${user.id}`);
+            const response = await api.get<ApiResponse<FoodLogGetDto[]>>(
+                `/api/food-logs/user/${user.id}`
+            );
             if (!response.data.data) {
                 setLogs([]);
                 return;
             }
-              const logsWithNutrients = await Promise.all(
+            const logsWithNutrients = await Promise.all(
                 response.data.data.map(async (log) => {
                     try {
-                        const nutrientsResponse = await api.get<ApiResponse<NutrientGetDto[]>>(
-                            `/api/nutrients/by-food/${log.foodId}`
-                        );
+                        const nutrientsResponse = await api.get<
+                            ApiResponse<NutrientGetDto[]>
+                        >(`/api/nutrients/by-food/${log.foodId}`);
 
                         let protein = 0;
                         let carbs = 0;
@@ -83,7 +94,10 @@ export const FoodLogListing = () => {
                             },
                         };
                     } catch (error) {
-                        console.error(`Error fetching nutrients for food ${log.foodId}:`, error);
+                        console.error(
+                            `Error fetching nutrients for food ${log.foodId}:`,
+                            error
+                        );
                         return {
                             ...log,
                             nutrients: {
@@ -97,8 +111,6 @@ export const FoodLogListing = () => {
             );
 
             setLogs(logsWithNutrients);
-
-
         } catch (error) {
             showNotification({
                 message: "Error fetching food logs",
@@ -134,12 +146,21 @@ export const FoodLogListing = () => {
         }
     };
 
+    const filteredLogs = selectedDate
+        ? logs.filter((log) => {
+              const logDate = new Date(log.updatedDate);
+              return (
+                  logDate.getFullYear() === selectedDate.getFullYear() &&
+                  logDate.getMonth() === selectedDate.getMonth() &&
+                  logDate.getDate() === selectedDate.getDate()
+              );
+          })
+        : logs;
+
     return (
         <>
             <div className={classes.log}>
-                <Title order={2} mb="md">
-                    My Food Logs
-                </Title>
+                {date && <DateNavigator date={selectedDate} onChange={setSelectedDate} />} 
                 <Table striped highlightOnHover>
                     <Table.Thead>
                         <Table.Tr>
@@ -150,22 +171,25 @@ export const FoodLogListing = () => {
                             <Table.Th>Carbohydrate</Table.Th>
                             <Table.Th>Fat</Table.Th>
                             <Table.Th>Servings</Table.Th>
-                            <Table.Th>Date</Table.Th>
                             <Table.Th>Actions</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                        {logs.map((log) => (
-                            //fetchNutrients(log),
+                        {filteredLogs.map((log) => (
                             <Table.Tr key={log.id}>
                                 <Table.Td>{log.foodName}</Table.Td>
                                 <Table.Td>{log.calories}</Table.Td>
                                 <Table.Td>{log.mealTime}</Table.Td>
-                                <Table.Td>{log.nutrients.protein.toFixed(1)}</Table.Td>
-                                <Table.Td>{log.nutrients.carbs.toFixed(1)}</Table.Td>
-                                <Table.Td>{log.nutrients.fat.toFixed(1)}</Table.Td>
+                                <Table.Td>
+                                    {log.nutrients.protein.toFixed(1)}
+                                </Table.Td>
+                                <Table.Td>
+                                    {log.nutrients.carbs.toFixed(1)}
+                                </Table.Td>
+                                <Table.Td>
+                                    {log.nutrients.fat.toFixed(1)}
+                                </Table.Td>
                                 <Table.Td>{log.servingSize}</Table.Td>
-                                <Table.Td>{new Date(log.updatedDate).toLocaleDateString()}</Table.Td>
                                 <Table.Td>
                                     <Group>
                                         <ActionIcon

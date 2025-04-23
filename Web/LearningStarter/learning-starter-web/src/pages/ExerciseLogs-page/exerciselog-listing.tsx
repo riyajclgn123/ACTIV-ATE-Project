@@ -9,13 +9,21 @@ import { useAuth } from "../../authentication/use-auth";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
+import { DateNavigator } from "../../constants/theme-constants";
 
-export const ExerciseLogListing = () => {
+export const ExerciseLogListing = ({date, dateProp}: any) => {
     const { classes } = useStyles();
     const [logs, setLogs] = useState<ExerciseLogGetDto[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [selectedDate, setSelectedDate] = useState<Date | null>(dateProp);
+
+    
+    useEffect(() => {
+        setSelectedDate(dateProp);
+    }
+    , [dateProp]);
 
     useEffect(() => {
         fetchLogs();
@@ -63,10 +71,21 @@ export const ExerciseLogListing = () => {
         }
     };
 
+    const filteredLogs = selectedDate
+    ? logs.filter((log) => {
+          const logDate = new Date(log.updatedDate);
+          return (
+              logDate.getFullYear() === selectedDate.getFullYear() &&
+              logDate.getMonth() === selectedDate.getMonth() &&
+              logDate.getDate() === selectedDate.getDate()
+          );
+      })
+    : logs;
+
     return (
         <>
         <div className={classes.log}>
-            <Title order={2} mb="md">My Exercise Logs</Title>
+        {date && <DateNavigator date={selectedDate} onChange={setSelectedDate} />} 
             <Table striped highlightOnHover>
                 <Table.Thead>
                     <Table.Tr>
@@ -74,21 +93,16 @@ export const ExerciseLogListing = () => {
                         <Table.Th>Calories Burned</Table.Th>
                         <Table.Th>Duration</Table.Th>
                         <Table.Th>Reps</Table.Th>
-                        <Table.Th>Date</Table.Th>
                         <Table.Th>Actions</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                    {logs.map(log => (
+                    {filteredLogs.map(log => (
                         <Table.Tr key={log.id}>
                             <Table.Td>{log.exerciseName}</Table.Td>
                             <Table.Td>{log.caloriesBurned.toFixed(2)}</Table.Td>
                             <Table.Td>{log.duration}</Table.Td>
                             <Table.Td>{log.rep}</Table.Td>
-                            <Table.Td>
-                                {new Date(log.updatedDate).toLocaleDateString()}
-                               
-                            </Table.Td>
 
                             
                             <Table.Td>

@@ -323,7 +323,7 @@ public IActionResult CreateExerciseLog([FromBody] ExerciseLogCreateDto createDto
     
         var count = _context
             .Set<ExerciseLog>()
-            .Where(x => x.UserId == userId && x.UpdatedDate >= startDate && x.UpdatedDate <= endDate)
+            .Where(x => x.UserId == userId && x.UpdatedDate.Date >= startDate && x.UpdatedDate.Date <= endDate)
             .Count();
 
         response.Data = count;
