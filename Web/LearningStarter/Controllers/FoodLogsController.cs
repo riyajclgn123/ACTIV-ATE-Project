@@ -186,7 +186,7 @@ public IActionResult GetDailyCalories(
         .Include(fl => fl.Food)
         .ThenInclude(f => f.Nutrients)
         .ThenInclude(n => n.NutrientType)
-        .Where(x => x.UserId == userId && x.CreateDate >= startDate && x.CreateDate < endDate)
+        .Where(x => x.UserId == userId && x.UpdatedDate >= startDate && x.UpdatedDate < endDate)
         .ToList();
 
     var totalCalories = foodLogs.Sum(x => x.Calories);
@@ -497,7 +497,7 @@ public IActionResult GetDailyCalories(
 
         var count = _context
             .Set<FoodLog>()
-            .Where(x => x.UserId == userId && x.UpdatedDate >= startDate && x.UpdatedDate <= endDate )
+            .Where(x => x.UserId == userId && x.UpdatedDate.Date >= startDate && x.UpdatedDate.Date <= endDate )
             .Count();
         
         
