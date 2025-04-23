@@ -20,8 +20,6 @@ import { showNotification } from "@mantine/notifications";
 import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
 import api from "../../config/axios";
 import { AxiosError } from "axios";
-import { Slider } from "@mantine/core";
-import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -69,6 +67,7 @@ export const LandingPage = () => {
   const reset = () => setHovered(null);
   const [exerciseCount, setExerciseCount] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [viewMode, setViewMode] = useState("list");
 
   const getStartOfDay = (date: Date | null) => {
     const d = date ? new Date(date) : new Date();
@@ -252,7 +251,7 @@ export const LandingPage = () => {
   };
 
   const percentages = useMemo(() => getPercentages(), [totals]);
-  const [viewMode, setViewMode] = useState("tabs");
+ 
   return (
     <>
       <section id="backgrounddesign">
@@ -460,7 +459,7 @@ export const LandingPage = () => {
                 <Tabs.Panel value="Excercise Logs">
                   <Container className={classes.exerciselog}>
                     <Card withBorder shadow="sm" p="lg">
-                      <ExerciseLogListing />
+                      <ExerciseLogListing date={ false } dateProp={selectedDate}/>
                     </Card>
                   </Container>
                 </Tabs.Panel>
@@ -624,7 +623,7 @@ export const LandingPage = () => {
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faDumbbell} /> Exercise Logs
                   </Text>
-                  <ExerciseLogListing />
+                  <ExerciseLogListing date = {false} dateProp = {selectedDate} />
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg" mb="md">

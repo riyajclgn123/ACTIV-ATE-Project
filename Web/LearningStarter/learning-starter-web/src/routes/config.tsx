@@ -51,7 +51,7 @@ export const Routes = () => {
             path={routes.exerciseLogUpdate}
             element={<ExerciseLogUpdate />}
           />
-          <Route path={routes.exerciseLog} element={<ExerciseLogListing />} />
+          <Route path={routes.exerciseLog} element={<ExerciseLogListing date={true} dateProp={new Date()}/>} />
           {/* When path === /foods render FoodListing */}`
           <Route path={routes.foods} element={<FoodListing />} />
           <Route path={routes.foodCreate} element={<FoodCreate />} />
