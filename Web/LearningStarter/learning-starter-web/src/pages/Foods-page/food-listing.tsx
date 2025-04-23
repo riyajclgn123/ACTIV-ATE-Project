@@ -19,7 +19,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
-import { faHistory, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowLeft,
+    faHistory,
+    faPencil,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import foodbgImage from "../../assets/foodbg.jpg";
 
 //import { Header } from "@mantine/core";
@@ -139,19 +144,22 @@ export const FoodListing = () => {
                     <Space h="md" />
                     <Container className={classes.buttonContainer}>
                         <Button
+                            onClick={() => navigate(routes.foodLog)}
+                            leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
+                            variant="outline"
+                            color="red"
+                        >
+                            Back To Log
+                        </Button>
+                        <Button
                             onClick={() => {
                                 navigate(routes.foodCreate);
                             }}
+                            leftSection={<FontAwesomeIcon icon={faPlus} />}
+                            variant="outline"
+                            color="blue"
                         >
-                            <FontAwesomeIcon icon={faPlus} />
-                            <Space w={8} />
-                            New Food
-                        </Button>
-
-                        <Button onClick={() => navigate(routes.foodLog)}>
-                            <FontAwesomeIcon icon={faHistory} />
-                            <Space w={8} />
-                            Food Logs
+                            Create Food
                         </Button>
                     </Container>
                 </Container>
@@ -161,7 +169,7 @@ export const FoodListing = () => {
 };
 
 const useStyles = createStyles(() => {
-  const { colorScheme } = useMantineColorScheme(); // 'light' | 'dark' | 'auto'
+    const { colorScheme } = useMantineColorScheme(); // 'light' | 'dark' | 'auto'
     return {
         dropdown: {
             position: "absolute",

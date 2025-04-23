@@ -81,10 +81,10 @@ const navigation: NavigationItem[] = [
     },
   },
   {
-    text: "Foods",
+    text: "Food",
     hide: false,
     nav: {
-      to: routes.foods,
+      to: routes.foodLog,
     },
   },
   {

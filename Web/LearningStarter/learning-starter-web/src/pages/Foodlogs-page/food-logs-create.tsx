@@ -187,7 +187,7 @@ export const FoodLogCreate = () => {
                     onClick={() => navigate(routes.foods)}
                     leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
                 >
-                    Back to Foods
+                    Back to Search
                 </Button>
                 <Button
                     variant="outline"
