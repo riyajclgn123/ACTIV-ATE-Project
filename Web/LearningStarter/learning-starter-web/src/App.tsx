@@ -7,7 +7,7 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import '@mantine/core/styles.css';
-import { MantineEmotionProvider } from "@mantine/emotion";
+import { createStyles, MantineEmotionProvider } from "@mantine/emotion";
 import { FooterSimple } from "./components/footer/footer";
 import { FoodProvider } from "./food/foodcontext"; 
 
@@ -21,7 +21,7 @@ function App() {
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <MantineEmotionProvider>
         <Notifications position="top-right" autoClose={3000} limit={5} />
-        <Container fluid px={0} className="App">
+        <Container fluid px={0} style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
           <AuthProvider>
             <FoodProvider>
               <Routes />

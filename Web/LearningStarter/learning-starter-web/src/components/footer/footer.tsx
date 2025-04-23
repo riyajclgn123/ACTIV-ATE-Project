@@ -39,7 +39,7 @@ const useStyles = createStyles(() => {
         backgroundColor: "#1c7ed6", // Dark theme background
         fontSize: "15px",
         width: "100%",  // Ensures the footer takes full width of the screen
-        marginTop: "10px",
+        marginTop: "auto",
         fontWeight: "revert",
     
         [`@media (maxWidth: 1024px)`]: {
