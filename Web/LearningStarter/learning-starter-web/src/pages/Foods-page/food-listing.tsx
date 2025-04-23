@@ -13,6 +13,7 @@ import {
     Table,
     TextInput,
     Title,
+    useMantineColorScheme,
 } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -114,7 +115,7 @@ export const FoodListing = () => {
                                 <div
                                     key={food.id}
                                     className={classes.dropdownItemContainer}
-                                    onClick={() => setSearchQuery(food.name)}
+                                    onClick={() => handleFoodClick(food)}
                                 >
                                     <div
                                         className={classes.dropdownItem}
@@ -160,6 +161,7 @@ export const FoodListing = () => {
 };
 
 const useStyles = createStyles(() => {
+  const { colorScheme } = useMantineColorScheme(); // 'light' | 'dark' | 'auto'
     return {
         dropdown: {
             position: "absolute",
@@ -183,9 +185,9 @@ const useStyles = createStyles(() => {
         dropdownItemContainer: {
             display: "flex",
             justifyContent: "space-between",
+            cursor: "pointer",
             alignItems: "center",
             width: "100%",
-            borderBottom: "1px solid #eee",
             "&:hover": {
                 backgroundColor: "#f5f5f5",
             },
@@ -194,7 +196,6 @@ const useStyles = createStyles(() => {
         dropdownItem: {
             padding: "5px",
             cursor: "pointer",
-            borderBottom: "1px solid #eee",
             "&:hover": {
                 backgroundColor: "#f5f5f5",
             },
@@ -215,21 +216,17 @@ const useStyles = createStyles(() => {
             justifyContent: "center",
             alignItems: "center",
             position: "relative", // Ensure text is positioned over the background image
-            color: "white",
+            color: colorScheme === "dark" ? "white" : "black",
             fontSize: "20px",
             margin: "0px",
             height: "600px", // Make sure the container takes full height of the screen
             width: "100vw", // Full width of the container
-            //backgroundImage: `url(${foodbgImage})`, // Set the background image
-            backgroundSize: "cover", // Ensure the image covers the full container
-            backgroundPosition: "center", // Center the image in the container
-            backgroundRepeat: "no-repeat", // Prevent repeating the background image
             padding: "0px",
         },
 
         overlayText: {
             position: "absolute",
-            color: "white",
+            color: colorScheme === "dark" ? "white" : "black",
             alignSelf: "center",
             textAlign: "center",
             fontSize: "30px",
