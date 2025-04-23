@@ -9,7 +9,7 @@ import { useAuth } from "../../authentication/use-auth";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
-import { DateNavigator } from "../../constants/theme-constants";
+import { DateNavigator } from "../../components/date-nav/date-nav";
 
 export const ExerciseLogListing = ({date, dateProp}: any) => {
     const { classes } = useStyles();

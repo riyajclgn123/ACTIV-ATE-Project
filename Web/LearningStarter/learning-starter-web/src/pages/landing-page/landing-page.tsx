@@ -30,7 +30,8 @@ import {
   faList,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
-import { DateNavigator } from "../../constants/theme-constants";
+import { DateNavigator } from "../../components/date-nav/date-nav";
+
 export interface CalorieConsumedResponse {
   date: string;
   dailyCalorieGoal: number;

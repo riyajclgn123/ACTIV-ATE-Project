@@ -30,7 +30,8 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
 import { DateInput } from "@mantine/dates";
-import { DateNavigator } from "../../constants/theme-constants";
+import { DateNavigator } from "../../components/date-nav/date-nav";
+
 
 interface FoodLogWithNutrients extends FoodLogGetDto {
     nutrients: {
