@@ -120,7 +120,7 @@ export const FoodLogUpdate = () => {
                     servingSize: servings,
                     calories: calories,
                     mealTime: mealTime,
-                    createDate: selectedDate,
+                    updatedDate: selectedDate,
                 }
             );
 
