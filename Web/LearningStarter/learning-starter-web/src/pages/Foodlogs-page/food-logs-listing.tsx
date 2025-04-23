@@ -8,11 +8,19 @@ import { showNotification } from "@mantine/notifications";
 import api from "../../config/axios";
 import { Table, Title, Group, ActionIcon } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+    faTrash,
+    faEdit,
+    faChevronLeft,
+    faChevronRight,
+    faCalendarDay,
+} from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../authentication/use-auth";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
+import { DateInput } from "@mantine/dates";
+import { DateNavigator } from "../../constants/theme-constants";
 
 interface FoodLogWithNutrients extends FoodLogGetDto {
     nutrients: {
@@ -22,12 +30,18 @@ interface FoodLogWithNutrients extends FoodLogGetDto {
     };
 }
 
-export const FoodLogListing = () => {
+export const FoodLogListing = ({date, dateProp}: any) => {
     const { classes } = useStyles();
     const [logs, setLogs] = useState<FoodLogWithNutrients[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [selectedDate, setSelectedDate] = useState<Date | null>(dateProp);
+
+    useEffect(() => {
+        setSelectedDate(dateProp);
+    }
+    , [dateProp]);
 
     useEffect(() => {
         fetchLogs();
@@ -132,12 +146,21 @@ export const FoodLogListing = () => {
         }
     };
 
+    const filteredLogs = selectedDate
+        ? logs.filter((log) => {
+              const logDate = new Date(log.updatedDate);
+              return (
+                  logDate.getFullYear() === selectedDate.getFullYear() &&
+                  logDate.getMonth() === selectedDate.getMonth() &&
+                  logDate.getDate() === selectedDate.getDate()
+              );
+          })
+        : logs;
+
     return (
         <>
             <div className={classes.log}>
-                <Title order={2} mb="md">
-                    My Food Logs
-                </Title>
+                {date && <DateNavigator date={selectedDate} onChange={setSelectedDate} />} 
                 <Table striped highlightOnHover>
                     <Table.Thead>
                         <Table.Tr>
@@ -148,13 +171,11 @@ export const FoodLogListing = () => {
                             <Table.Th>Carbohydrate</Table.Th>
                             <Table.Th>Fat</Table.Th>
                             <Table.Th>Servings</Table.Th>
-                            <Table.Th>Date</Table.Th>
                             <Table.Th>Actions</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                        {logs.map((log) => (
-                            //fetchNutrients(log),
+                        {filteredLogs.map((log) => (
                             <Table.Tr key={log.id}>
                                 <Table.Td>{log.foodName}</Table.Td>
                                 <Table.Td>{log.calories}</Table.Td>
@@ -169,11 +190,6 @@ export const FoodLogListing = () => {
                                     {log.nutrients.fat.toFixed(1)}
                                 </Table.Td>
                                 <Table.Td>{log.servingSize}</Table.Td>
-                                <Table.Td>
-                                    {new Date(
-                                        log.updatedDate
-                                    ).toLocaleDateString()}
-                                </Table.Td>
                                 <Table.Td>
                                     <Group>
                                         <ActionIcon

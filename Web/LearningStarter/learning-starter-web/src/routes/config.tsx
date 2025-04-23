@@ -60,7 +60,7 @@ export const Routes = () => {
           <Route path={routes.macroNutrient} element={<MacroNutrient />} />
 
           
-          <Route path={routes.foodLog} element={<FoodLogListing />} />
+          <Route path={routes.foodLog} element={<FoodLogListing date={true} dateProp={new Date()}/>} />
           <Route path={routes.foodLogCreate} element={<FoodLogCreate />} />
           <Route path={routes.foodLogUpdate} element={<FoodLogUpdate />} /> 
 
