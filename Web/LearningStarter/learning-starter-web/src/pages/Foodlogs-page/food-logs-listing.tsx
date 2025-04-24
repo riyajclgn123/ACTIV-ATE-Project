@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     ApiResponse,
     FoodLogGetDto,
+    GoalGetDto,
     NutrientGetDto,
 } from "../../constants/types";
 import { showNotification } from "@mantine/notifications";
@@ -31,7 +32,8 @@ import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
 import { DateInput } from "@mantine/dates";
 import { DateNavigator } from "../../components/date-nav/date-nav";
-
+import { CalorieBudgetProgress } from "../../components/calorie-budget-progress-bar/calorie-budget-progress-bar";
+import { AxiosError } from "axios";
 
 interface FoodLogWithNutrients extends FoodLogGetDto {
     nutrients: {
@@ -49,6 +51,7 @@ export const FoodLogListing = ({ date, dateProp }: any) => {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState<Date | null>(dateProp);
     const mealTimeOrder = ["Breakfast", "Lunch", "Dinner", "Snack"];
+    const [calorieGoal, setCalorieGoal] = useState<number | null>(2000);
 
     useEffect(() => {
         setSelectedDate(dateProp);
@@ -180,6 +183,52 @@ export const FoodLogListing = ({ date, dateProp }: any) => {
         {}
     );
 
+    const totalCaloriesForDay = useMemo(() => {
+        return dateFilteredLogs.reduce((sum, log) => sum + log.calories, 0);
+    }, [dateFilteredLogs]);
+
+    useEffect(() => {
+        const fetchCalorieGoal = async () => {
+            try {
+              if (!user) {
+                showNotification({ message: "User not authenticated", color: "red" });
+                return;
+              }
+              const response = await api.get<ApiResponse<GoalGetDto>>(
+                `/api/goals/user/${user.id}`
+              );
+        
+              if (response.data.hasErrors) {
+                showNotification({
+                  message: "Error fetching calorie goal",
+                  color: "red",
+                });
+                return;
+              }
+              setCalorieGoal(response.data.data.dailyCalorieGoal);
+            } catch (error) {
+              const axiosError = error as AxiosError;
+              showNotification({
+                message: `Error fetching calorie goal: ${axiosError.message}`,
+                color: "red",
+              });
+            }
+          };
+        fetchCalorieGoal();
+    }, [user?.id]);
+
+    const totalProtein = useMemo(() => {
+        return dateFilteredLogs.reduce((sum, log) => sum + log.nutrients.protein, 0);
+    }, [dateFilteredLogs]);
+    
+    const totalCarbs = useMemo(() => {
+        return dateFilteredLogs.reduce((sum, log) => sum + log.nutrients.carbs, 0);
+    }, [dateFilteredLogs]);
+    
+    const totalFat = useMemo(() => {
+        return dateFilteredLogs.reduce((sum, log) => sum + log.nutrients.fat, 0);
+    }, [dateFilteredLogs]);
+
     return (
         <>
             <div className={classes.log}>
@@ -189,8 +238,15 @@ export const FoodLogListing = ({ date, dateProp }: any) => {
                         onChange={setSelectedDate}
                     />
                 )}
-
-                {/* Always display all meal times, even when empty */}
+                <div className={classes.calorieBudgetWrapper}>
+                    <CalorieBudgetProgress
+                        consumedCalories={totalCaloriesForDay}
+                        calorieGoal={Number(calorieGoal)}
+                        protein={totalProtein}
+                        carbs={totalCarbs}
+                        fat={totalFat}
+                    />
+                </div>
                 {mealTimeOrder.map((mealTime) => {
                     const mealLogs = logsByMealTime[mealTime] || [];
 
@@ -293,7 +349,11 @@ export const FoodLogListing = ({ date, dateProp }: any) => {
                                 </Table>
                             ) : (
                                 <Text c="dimmed" ta="center" py="xl">
-                                    No {mealTime === "Snack" ? "snacks" : mealTime.toLowerCase()} logged yet.
+                                    No{" "}
+                                    {mealTime === "Snack"
+                                        ? "snacks"
+                                        : mealTime.toLowerCase()}{" "}
+                                    logged yet.
                                 </Text>
                             )}
                         </div>
@@ -318,20 +378,17 @@ const useStyles = createStyles((theme) => {
             minWidth: "70%",
             marginBottom: "20px",
             padding: "16px",
-            // Adjust border color based on theme
             border: `1px solid ${
                 colorScheme === "dark"
                     ? theme.colors.dark[4]
                     : theme.colors[theme.primaryColor][3]
             }`,
             borderRadius: theme.radius.md,
-            // Adjust background color based on theme
             backgroundColor:
                 colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
             boxShadow: theme.shadows.xs,
         },
         mealTimeTitle: {
-            // Title color works in both modes
             color: theme.colors[theme.primaryColor][
                 colorScheme === "dark" ? 4 : 6
             ],
@@ -339,6 +396,10 @@ const useStyles = createStyles((theme) => {
         noLogs: {
             padding: "30px",
             textAlign: "center",
+        },
+        calorieBudgetWrapper: {
+            marginBottom: "20px",
+            width: '70%', 
         },
     };
 });
