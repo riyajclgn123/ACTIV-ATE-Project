@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { ApiResponse } from "../constants/types";
 import { EnvVars } from "./env-vars";
 
-type ErrorHandlerKeys = keyof typeof errorHandlers
+type ErrorHandlerKeys = keyof typeof errorHandlers;
 
 const axiosInstance = axios.create({
   baseURL: EnvVars.apiBaseUrl,
@@ -52,7 +52,7 @@ const errorHandlers = {
 export async function handleResponseError(error: AxiosError) {
   if (error.response) {
     const response: AxiosResponse = error.response;
-    const status = response.status as ErrorHandlerKeys
+    const status = response.status as ErrorHandlerKeys;
     const handler = errorHandlers[status];
     if (handler) {
       const result = await handler(error.response);

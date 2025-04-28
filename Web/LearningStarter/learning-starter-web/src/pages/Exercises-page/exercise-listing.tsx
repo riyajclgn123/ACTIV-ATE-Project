@@ -2,16 +2,7 @@ import { useEffect, useState } from "react";
 import { ApiResponse, ExerciseGetDto } from "../../constants/types";
 import { showNotification } from "@mantine/notifications";
 import api from "../../config/axios";
-import {
-  Button,
-  Container,
-  Flex,
-  Group,
-  Space,
-  Table,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Button, Space, TextInput } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
@@ -19,8 +10,6 @@ import { createStyles } from "@mantine/emotion";
 import { faHistory, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
 import exercisebgImage from "../../assets/exercisebg.jpg";
 import { useAuth } from "../../authentication/use-auth";
-
-//import { Header } from "@mantine/core";
 
 export const ExerciseListing = () => {
   const navigate = useNavigate();
@@ -74,7 +63,7 @@ export const ExerciseListing = () => {
           id: exercise.id,
           name: exercise.name,
         },
-        userId: user.id, // Pass the authenticated user's ID
+        userId: user.id,
       },
     });
   };
@@ -92,15 +81,12 @@ export const ExerciseListing = () => {
           <div className={classes.overlayText}>
             <h2>Insert your Exercise</h2>
             <TextInput
-              //label="Search"
               placeholder="Search for an exercise.."
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.currentTarget.value)}
               className={classes.searchbox}
             />
-            {/* Do Search Bar */}
 
-            {/* Search Dropdown */}
             {searchQuery.trim() !== "" && (
               <div className={classes.dropdown}>
                 {filteredExercises.length > 0 ? (
@@ -123,7 +109,6 @@ export const ExerciseListing = () => {
                     </div>
                   ))
                 ) : (
-                  // "Create New Exercise" option if no match found
                   <div
                     className={classes.createNewExercise}
                     onClick={() => {
@@ -182,20 +167,19 @@ const useStyles = createStyles(() => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      position: "relative", // Ensure text is positioned over the background image
+      position: "relative",
       color: "white",
       fontSize: "20px",
       margin: "0px",
-      height: "600px", // Make sure the container takes full height of the screen
-      width: "100vw", // Full width of the container
-      
+      height: "600px",
+      width: "100vw",
       backgroundImage: `linear-gradient(
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0.5)
-    ),url(${exercisebgImage})`, // Set the background image
-      backgroundSize: "cover", // Ensure the image covers the full container
-      backgroundPosition: "center", // Center the image in the container
-      backgroundRepeat: "no-repeat", // Prevent repeating the background image
+    ),url(${exercisebgImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
       padding: "10px",
     },
 
@@ -209,13 +193,12 @@ const useStyles = createStyles(() => {
       zIndex: 1,
       wordWrap: "break-word",
       whiteSpace: "nowrap",
-     // textShadow: "2px 2px 4px #fa5252",
 
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center", // Aligns content at the top
+      justifyContent: "center",
       alignItems: "center",
-      maxWidth: "80%", // Limit the text width for better readability
+      maxWidth: "80%",
       [`@media (max-width: 768px)`]: {
         fontSize: "24px",
       },
@@ -225,7 +208,7 @@ const useStyles = createStyles(() => {
       fontSize: "20px",
       position: "relative",
       width: "100%",
-      maxWidth: "340px", // Keeps it from stretching too much
+      maxWidth: "340px",
       padding: "5px",
     },
 

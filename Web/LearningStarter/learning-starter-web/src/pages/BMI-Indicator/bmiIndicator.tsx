@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { 
-  NumberInput, 
-  Button, 
-  Group, 
-  Text, 
-  Title, 
-  Card, 
+import {
+  NumberInput,
+  Button,
+  Group,
+  Text,
+  Title,
+  Card,
   Select,
   Stack,
   LoadingOverlay,
-  Box
+  Box,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCalculator } from "@fortawesome/free-solid-svg-icons";
 
 export const BMIIndicator = () => {
   const [weight, setWeight] = useState<string>("");
@@ -36,7 +36,6 @@ export const BMIIndicator = () => {
   const calculateBMI = () => {
     setIsLoading(true);
     try {
-      // Convert all units to metric (kg and m)
       let weightKg = parseFloat(weight);
       let heightM = parseFloat(height);
 
@@ -44,16 +43,13 @@ export const BMIIndicator = () => {
         throw new Error("Please enter valid weight and height");
       }
 
-      // Convert pounds to kg if needed
       if (weightUnit === "lb") {
         weightKg = weightKg * 0.453592;
       }
 
-      // Convert feet to cm first, then to m
       if (heightUnit === "ft") {
-        heightM = heightM * 0.3048; // 1 foot = 0.3048 meters
+        heightM = heightM * 0.3048;
       } else {
-        // Convert cm to m
         heightM = heightM / 100;
       }
 
@@ -63,15 +59,14 @@ export const BMIIndicator = () => {
       showNotification({
         title: "Success",
         message: "BMI calculated successfully!",
-        color: "green"
+        color: "green",
       });
-
     } catch (error: any) {
       console.error("Error calculating BMI:", error);
       showNotification({
         title: "Error",
         message: error.message || "Failed to calculate BMI",
-        color: "red"
+        color: "red",
       });
     } finally {
       setIsLoading(false);
@@ -88,9 +83,9 @@ export const BMIIndicator = () => {
   return (
     <Box maw={600} mx="auto" p="md" pos="relative">
       <LoadingOverlay visible={isLoading} />
-      
-      <Button 
-        variant="outline" 
+
+      <Button
+        variant="outline"
         mb="xl"
         onClick={() => window.history.back()}
         leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
@@ -98,20 +93,17 @@ export const BMIIndicator = () => {
         Back
       </Button>
 
-   
-      
       <Card withBorder shadow="sm" p="lg">
-
-      <Title order={2} mb="xl" ><FontAwesomeIcon icon={faCalculator} spacing={20}/>   BMI Calculator</Title>
+        <Title order={2} mb="xl">
+          <FontAwesomeIcon icon={faCalculator} spacing={20} /> BMI Calculator
+        </Title>
         <Stack>
-          {/* Weight Input */}
           <Group align="flex-end" grow>
             <NumberInput
               label="Weight"
               value={weight}
               onChange={(val) => setWeight(val?.toString() || "")}
               min={0}
-              //precision={1}
               required
             />
             <Select
@@ -122,15 +114,12 @@ export const BMIIndicator = () => {
               required
             />
           </Group>
-
-          {/* Height Input */}
           <Group align="flex-end" grow>
             <NumberInput
               label="Height"
               value={height}
               onChange={(val) => setHeight(val?.toString() || "")}
               min={0}
-              //precision={1}
               required
             />
             <Select
@@ -141,10 +130,8 @@ export const BMIIndicator = () => {
               required
             />
           </Group>
-
-          {/* Submit Button */}
           <Group mt="xl">
-            <Button 
+            <Button
               onClick={calculateBMI}
               loading={isLoading}
               size="md"
@@ -160,20 +147,44 @@ export const BMIIndicator = () => {
                 Your BMI Result
               </Text>
               <Text mt="sm" size="lg">
-                <Text span fw={500}>BMI:</Text>{" "}
-                <Text span c={bmiResult < 18.5 ? "blue" : bmiResult < 25 ? "green" : bmiResult < 30 ? "orange" : "red"} fw={700}>
+                <Text span fw={500}>
+                  BMI:
+                </Text>{" "}
+                <Text
+                  span
+                  c={
+                    bmiResult < 18.5
+                      ? "blue"
+                      : bmiResult < 25
+                      ? "green"
+                      : bmiResult < 30
+                      ? "orange"
+                      : "red"
+                  }
+                  fw={700}
+                >
                   {bmiResult.toFixed(1)} kg/m²
                 </Text>
               </Text>
               <Text size="lg" mt="xs">
                 Category:{" "}
-                <Text span c={bmiResult < 18.5 ? "blue" : bmiResult < 25 ? "green" : bmiResult < 30 ? "orange" : "red"} fw={500}>
+                <Text
+                  span
+                  c={
+                    bmiResult < 18.5
+                      ? "blue"
+                      : bmiResult < 25
+                      ? "green"
+                      : bmiResult < 30
+                      ? "orange"
+                      : "red"
+                  }
+                  fw={500}
+                >
                   {getBmiCategory(bmiResult)}
                 </Text>
               </Text>
-             
 
-             
               <Text size="sm" c="dimmed" mt="xs">
                 Based on {weight} {weightUnit} and {height} {heightUnit}
               </Text>

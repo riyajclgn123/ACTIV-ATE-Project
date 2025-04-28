@@ -5,7 +5,6 @@ import {
   Button,
   Group,
   Box,
-  Text,
   Title,
   Card,
   Select,
@@ -35,7 +34,7 @@ interface GoalResponse {
 export const Goals = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
-  const currentUser = useUser(); // Get current user from auth context
+  const currentUser = useUser();
   const [targetWeight, setTargetWeight] = useState<number>(0);
   const [timePeriod, setTimePeriod] = useState<number>(0);
   const [activityLevel, setActivityLevel] = useState<string>("sedentary");
@@ -43,10 +42,22 @@ export const Goals = () => {
 
   const activityLevels = [
     { value: "sedentary", label: "Sedentary (little or no exercise)" },
-    { value: "lightly active", label: "Lightly active (light exercise 1-3 days/week)" },
-    { value: "moderately active", label: "Moderately active (moderate exercise 3-5 days/week)" },
-    { value: "very active", label: "Very active (hard exercise 6-7 days/week)" },
-    { value: "extra active", label: "Extra active (very hard exercise & physical job)" },
+    {
+      value: "lightly active",
+      label: "Lightly active (light exercise 1-3 days/week)",
+    },
+    {
+      value: "moderately active",
+      label: "Moderately active (moderate exercise 3-5 days/week)",
+    },
+    {
+      value: "very active",
+      label: "Very active (hard exercise 6-7 days/week)",
+    },
+    {
+      value: "extra active",
+      label: "Extra active (very hard exercise & physical job)",
+    },
   ];
 
   const handleSubmit = async () => {
@@ -96,10 +107,8 @@ export const Goals = () => {
     }
   };
 
-  
-
   return (
-    <Box maw={600}  pos="relative">
+    <Box maw={600} pos="relative">
       <LoadingOverlay visible={isLoading} />
       <Container className={classes.buttonsContainer}>
         <Button

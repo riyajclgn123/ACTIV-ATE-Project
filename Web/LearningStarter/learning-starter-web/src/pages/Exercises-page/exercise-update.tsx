@@ -1,201 +1,201 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { 
-  Button, 
-  Container, 
-  TextInput, 
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Button,
+  Container,
+  TextInput,
   LoadingOverlay,
   Title,
   Stack,
-  Group
+  Group,
 } from "@mantine/core";
 import { routes } from "../../routes";
 import api from "../../config/axios";
 import { showNotification } from "@mantine/notifications";
 import { ApiResponse, ExerciseGetDto } from "../../constants/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export const ExerciseUpdate = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const locationState = location.state || {};
-    const { exercise: locationExercise } = locationState as {
-        exercise?: { id: number; name: string; description: string };
-    };
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [exercise, setExercise] = useState<ExerciseGetDto>();
 
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [exercise, setExercise] = useState<ExerciseGetDto>();
+  useEffect(() => {
+    fetchExercise();
+  }, [id]);
 
-    useEffect(() => {
-        fetchExercise();
-    }, [id]);
+  const fetchExercise = async () => {
+    setIsLoading(true);
+    try {
+      if (!id) {
+        throw new Error("Invalid exercise ID");
+      }
 
-    const fetchExercise = async () => {
-        setIsLoading(true);
-        try {
-            if (!id) {
-                throw new Error("Invalid exercise ID");
-            }
+      const response = await api.get<ApiResponse<ExerciseGetDto>>(
+        `/api/exercises/${id}`
+      );
 
-            const response = await api.get<ApiResponse<ExerciseGetDto>>(`/api/exercises/${id}`);
-            
-            if (!response.data) {
-                throw new Error("No response data received");
-            }
+      if (!response.data) {
+        throw new Error("No response data received");
+      }
 
-            if (response.data.hasErrors || !response.data.data) {
-                throw new Error(response.data.errors?.join(", ") || "Exercise not found");
-            }
+      if (response.data.hasErrors || !response.data.data) {
+        throw new Error(
+          response.data.errors?.join(", ") || "Exercise not found"
+        );
+      }
 
-            const exerciseData = response.data.data;
-            setExercise(exerciseData);
-            setName(exerciseData.name);
-            setDescription(exerciseData.description);
-            
-        } catch (error: any) {
-            console.error("Error fetching exercise:", error);
-            showNotification({
-                title: "Error",
-                message: error.response?.data?.errors?.join(", ") || error.message || "Failed to fetch exercise",
-                color: "red"
-            });
-        } finally {
-            setIsLoading(false);
+      const exerciseData = response.data.data;
+      setExercise(exerciseData);
+      setName(exerciseData.name);
+      setDescription(exerciseData.description);
+    } catch (error: any) {
+      console.error("Error fetching exercise:", error);
+      showNotification({
+        title: "Error",
+        message:
+          error.response?.data?.errors?.join(", ") ||
+          error.message ||
+          "Failed to fetch exercise",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      if (!id) {
+        throw new Error("Invalid exercise ID");
+      }
+
+      if (!name) {
+        throw new Error("Name is required");
+      }
+
+      const response = await api.put<ApiResponse<ExerciseGetDto>>(
+        `/api/exercises/${id}`,
+        {
+          name,
+          description,
         }
-    };
+      );
 
-    const handleSubmit = async () => {
-        setIsLoading(true);
-        try {
-            if (!id) {
-                throw new Error("Invalid exercise ID");
-            }
+      if (response.data.hasErrors || !response.data.data) {
+        throw new Error(response.data.errors?.join(", ") || "Update failed");
+      }
 
-            if (!name) {
-                throw new Error("Name is required");
-            }
+      showNotification({
+        title: "Success",
+        message: "Exercise updated successfully!",
+        color: "green",
+      });
+      navigate(routes.exercises);
+    } catch (error: any) {
+      console.error("Error updating exercise:", error);
+      showNotification({
+        title: "Error",
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to update exercise",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-            const response = await api.put<ApiResponse<ExerciseGetDto>>(`/api/exercises/${id}`, {
-                name,
-                description
-            });
+  const handleDelete = async () => {
+    setIsLoading(true);
+    try {
+      if (!id) {
+        throw new Error("Invalid exercise ID");
+      }
 
-            if (response.data.hasErrors || !response.data.data) {
-                throw new Error(response.data.errors?.join(", ") || "Update failed");
-            }
+      const response = await api.delete<ApiResponse<ExerciseGetDto>>(
+        `/api/exercises/${id}`
+      );
 
-            showNotification({
-                title: "Success",
-                message: "Exercise updated successfully!",
-                color: "green"
-            });
-            navigate(routes.exercises);
+      if (response.data.hasErrors) {
+        throw new Error(response.data.errors?.join(", ") || "Delete failed");
+      }
 
-        } catch (error: any) {
-            console.error("Error updating exercise:", error);
-            showNotification({
-                title: "Error",
-                message: error.response?.data?.message || error.message || "Failed to update exercise",
-                color: "red"
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      showNotification({
+        title: "Success",
+        message: "Exercise deleted successfully!",
+        color: "green",
+      });
+      navigate(routes.exercises);
+    } catch (error: any) {
+      console.error("Error deleting exercise:", error);
+      showNotification({
+        title: "Error",
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to delete exercise",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const handleDelete = async () => {
-        setIsLoading(true);
-        try {
-            if (!id) {
-                throw new Error("Invalid exercise ID");
-            }
+  if (isLoading && !exercise) return <LoadingOverlay visible />;
 
-            const response = await api.delete<ApiResponse<ExerciseGetDto>>(`/api/exercises/${id}`);
-            
-            if (response.data.hasErrors) {
-                throw new Error(response.data.errors?.join(", ") || "Delete failed");
-            }
+  return (
+    <Container size="md" p="md" pos="relative">
+      <LoadingOverlay visible={isLoading} />
 
-            showNotification({
-                title: "Success",
-                message: "Exercise deleted successfully!",
-                color: "green"
-            });
-            navigate(routes.exercises);
+      <Button
+        variant="outline"
+        mb="xl"
+        onClick={() => navigate(routes.exercises)}
+        leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
+      >
+        Back to Exercises
+      </Button>
 
-        } catch (error: any) {
-            console.error("Error deleting exercise:", error);
-            showNotification({
-                title: "Error",
-                message: error.response?.data?.message || error.message || "Failed to delete exercise",
-                color: "red"
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      <Title order={2} mb="xl">
+        Update Exercise: {exercise?.name}
+      </Title>
 
-    if (isLoading && !exercise) return <LoadingOverlay visible />;
+      <Stack>
+        <TextInput
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.currentTarget.value)}
+          required
+          withAsterisk
+        />
 
-    return (
-        <Container size="md" p="md" pos="relative">
-            <LoadingOverlay visible={isLoading} />
-            
-            <Button 
-                variant="outline" 
-                mb="xl"
-                onClick={() => navigate(routes.exercises)}
-                leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
-            >
-                Back to Exercises
-            </Button>
+        <TextInput
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.currentTarget.value)}
+        />
 
-            <Title order={2} mb="xl">Update Exercise: {exercise?.name}</Title>
-            
-            <Stack>
-                <TextInput
-                    label="Name"
-                    value={name}
-                    onChange={(e) => setName(e.currentTarget.value)}
-                    required
-                    withAsterisk
-                />
+        <Group mt="xl">
+          <Button onClick={handleSubmit} loading={isLoading} disabled={!name}>
+            Update Exercise
+          </Button>
 
-                <TextInput
-                    label="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.currentTarget.value)}
-                />
+          <Button variant="outline" onClick={() => navigate(routes.exercises)}>
+            Cancel
+          </Button>
 
-                <Group mt="xl">
-                    <Button 
-                        onClick={handleSubmit}
-                        loading={isLoading}
-                        disabled={!name}
-                    >
-                        Update Exercise
-                    </Button>
-                    
-                    <Button 
-                        variant="outline"
-                        onClick={() => navigate(routes.exercises)}
-                    >
-                        Cancel
-                    </Button>
-                    
-                    <Button 
-                        color="red"
-                        onClick={handleDelete}
-                        loading={isLoading}
-                    >
-                        Delete Exercise
-                    </Button>
-                </Group>
-            </Stack>
-        </Container>
-    );
+          <Button color="red" onClick={handleDelete} loading={isLoading}>
+            Delete Exercise
+          </Button>
+        </Group>
+      </Stack>
+    </Container>
+  );
 };

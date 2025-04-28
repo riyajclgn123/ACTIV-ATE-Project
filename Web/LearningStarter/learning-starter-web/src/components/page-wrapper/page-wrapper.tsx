@@ -25,7 +25,6 @@ const useStyles = createStyles(() => {
   return {
     mainContent: {
       marginTop: "0px",
-    
     },
   };
 });

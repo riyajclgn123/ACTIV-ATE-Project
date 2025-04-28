@@ -13,8 +13,6 @@ import {
   Text,
   Avatar,
   Title,
-  useMantineTheme,
-  parseThemeColor,
   Divider,
 } from "@mantine/core";
 import {
@@ -196,8 +194,8 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
                   fallbackSrc="https://placehold.co/600x400?text=Placeholder"
                   src={logo}
                   alt="logo"
-                  width={10} // Should match your CSS width
-                  height={50} // Should match your CSS height
+                  width={10}
+                  height={50}
                 />
               </NavLink>
               {user && <DesktopNavigation />}
@@ -245,22 +243,15 @@ const useStyles = createStyles((theme) => {
     pointer: {
       cursor: "pointer",
     },
-    // logo: {
-    //   cursor: "pointer",
-    //   marginRight: "5px",
-    //   paddingTop: "5px",
-    //   paddingBottom: "5px",
-    //   height: NAVBAR_HEIGHT,
-    // },
 
     logo: {
-      borderRadius: '50%', // Makes it perfectly round
-      objectFit: 'cover', // Ensures the image fills the circle without distortion
-      border: `1px solid ${theme.colors.blue[5]}`, // Optional decorative border
-      boxShadow: theme.shadows.md, // Optional shadow for depth
-      transition: 'transform 0.3s ease', // Optional hover effect
-      '&:hover': {
-        transform: 'scale(1.05)', // Optional hover effect
+      borderRadius: "50%",
+      objectFit: "cover",
+      border: `1px solid ${theme.colors.blue[5]}`,
+      boxShadow: theme.shadows.md,
+      transition: "transform 0.3s ease",
+      "&:hover": {
+        transform: "scale(1.05)",
       },
     },
 
@@ -277,7 +268,7 @@ const useStyles = createStyles((theme) => {
         }).background,
         color: theme.variantColorResolver({
           theme: theme,
-          color: "white",  //changed over here
+          color: "white",
           variant: "light",
         }).color,
       },

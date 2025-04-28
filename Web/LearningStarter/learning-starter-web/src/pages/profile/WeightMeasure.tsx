@@ -30,8 +30,8 @@ export const WeightMeasure = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [editingLog, setEditingLog] = useState<WeightLogGetDto | null>(null);
-  const [unit, setUnit] = useState<'kg' | 'lb'>('kg');
-  const [inputUnit, setInputUnit] = useState<'kg' | 'lb'>('kg');
+  const [unit, setUnit] = useState<"kg" | "lb">("kg");
+  const [inputUnit, setInputUnit] = useState<"kg" | "lb">("kg");
 
   const form = useForm({
     initialValues: {
@@ -41,7 +41,7 @@ export const WeightMeasure = () => {
       weight: (value) => {
         const num = parseFloat(value);
         return isNaN(num) || num <= 0
-          ? 'Please enter a valid weight (greater than 0)'
+          ? "Please enter a valid weight (greater than 0)"
           : null;
       },
     },
@@ -51,7 +51,9 @@ export const WeightMeasure = () => {
     if (!userId) return;
     setLoading(true);
     try {
-      const response = await api.get<ApiResponse<WeightLogGetDto[]>>(`/api/weight-logs/${userId}`);
+      const response = await api.get<ApiResponse<WeightLogGetDto[]>>(
+        `/api/weight-logs/${userId}`
+      );
       setWeightLogs(response.data.data || []);
       setError(null);
     } catch (err) {
@@ -71,7 +73,7 @@ export const WeightMeasure = () => {
 
     try {
       let weightInKg = parseFloat(values.weight);
-      if (inputUnit === 'lb') {
+      if (inputUnit === "lb") {
         weightInKg = weightInKg / 2.20462;
       }
 
@@ -82,9 +84,15 @@ export const WeightMeasure = () => {
       };
 
       if (editingLog) {
-        await api.put<ApiResponse<WeightLogGetDto>>(`/api/weight-logs/${editingLog.id}`, payload);
+        await api.put<ApiResponse<WeightLogGetDto>>(
+          `/api/weight-logs/${editingLog.id}`,
+          payload
+        );
       } else {
-        await api.post<ApiResponse<WeightLogGetDto>>("/api/weight-logs", payload);
+        await api.post<ApiResponse<WeightLogGetDto>>(
+          "/api/weight-logs",
+          payload
+        );
       }
 
       setSuccess(true);
@@ -114,35 +122,53 @@ export const WeightMeasure = () => {
   };
 
   const convertWeight = (kg: number) => {
-    return unit === 'kg'
+    return unit === "kg"
       ? `${kg.toFixed(1)} kg`
       : `${(kg * 2.20462).toFixed(1)} lb`;
   };
 
-  const chartData = weightLogs.map(log => ({
-    date: new Date(log.logDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    Weight: unit === 'kg' ? log.value : log.value * 2.20462,
+  const chartData = weightLogs.map((log) => ({
+    date: new Date(log.logDate).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
+    Weight: unit === "kg" ? log.value : log.value * 2.20462,
   }));
 
   if (loading) return <Loader />;
 
   return (
-    <Box style={{ maxWidth: 800, margin: '0 auto', padding: '1rem' }}>
-      <Text size="xl" mb="md" fw={500}>Weight Tracking</Text>
+    <Box style={{ maxWidth: 800, margin: "0 auto", padding: "1rem" }}>
+      <Text size="xl" mb="md" fw={500}>
+        Weight Tracking
+      </Text>
 
       {error && (
-        <Notification color="red" title="Error" onClose={() => setError(null)} mb="md">
+        <Notification
+          color="red"
+          title="Error"
+          onClose={() => setError(null)}
+          mb="md"
+        >
           {error}
         </Notification>
       )}
 
       {success && (
-        <Notification color="teal" title="Success" onClose={() => setSuccess(false)} mb="md">
-          Weight {editingLog ? 'updated' : 'recorded'} successfully!
+        <Notification
+          color="teal"
+          title="Success"
+          onClose={() => setSuccess(false)}
+          mb="md"
+        >
+          Weight {editingLog ? "updated" : "recorded"} successfully!
         </Notification>
       )}
 
-      <form onSubmit={form.onSubmit(handleSubmit)} style={{ marginBottom: '2rem' }}>
+      <form
+        onSubmit={form.onSubmit(handleSubmit)}
+        style={{ marginBottom: "2rem" }}
+      >
         <Box style={{ display: "flex", gap: "1rem", alignItems: "flex-end" }}>
           <TextInput
             label="Weight"
@@ -156,13 +182,13 @@ export const WeightMeasure = () => {
             label="Unit"
             value={inputUnit}
             onChange={(value) => {
-              const selected = value as 'kg' | 'lb';
+              const selected = value as "kg" | "lb";
               setInputUnit(selected);
               setUnit(selected);
             }}
             data={[
-              { label: 'Kilograms (kg)', value: 'kg' },
-              { label: 'Pounds (lb)', value: 'lb' },
+              { label: "Kilograms (kg)", value: "kg" },
+              { label: "Pounds (lb)", value: "lb" },
             ]}
             required
           />
@@ -172,14 +198,23 @@ export const WeightMeasure = () => {
         </Button>
       </form>
 
-      <Box style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-        <Text size="lg" fw={500}>Your Weight History</Text>
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
+        }}
+      >
+        <Text size="lg" fw={500}>
+          Your Weight History
+        </Text>
         <SegmentedControl
           value={unit}
-          onChange={(value) => setUnit(value as 'kg' | 'lb')}
+          onChange={(value) => setUnit(value as "kg" | "lb")}
           data={[
-            { label: 'Kilograms', value: 'kg' },
-            { label: 'Pounds', value: 'lb' },
+            { label: "Kilograms", value: "kg" },
+            { label: "Pounds", value: "lb" },
           ]}
         />
       </Box>
@@ -200,14 +235,25 @@ export const WeightMeasure = () => {
               <Table.Tbody>
                 {weightLogs.map((log) => (
                   <Table.Tr key={log.id}>
-                    <Table.Td>{new Date(log.logDate).toLocaleDateString()}</Table.Td>
+                    <Table.Td>
+                      {new Date(log.logDate).toLocaleDateString()}
+                    </Table.Td>
                     <Table.Td>{convertWeight(log.value)}</Table.Td>
                     <Table.Td>
                       <Group style={{ display: "flex", gap: "6px" }}>
-                        <Button size="xs" color="blue" onClick={() => handleEdit(log)}>
+                        <Button
+                          size="xs"
+                          color="blue"
+                          onClick={() => handleEdit(log)}
+                        >
                           <FontAwesomeIcon icon={faEdit} />
                         </Button>
-                        <Button size="xs" color="red" variant="outline" onClick={() => handleDelete(log.id)}>
+                        <Button
+                          size="xs"
+                          color="red"
+                          variant="outline"
+                          onClick={() => handleDelete(log.id)}
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </Button>
                       </Group>
@@ -219,7 +265,9 @@ export const WeightMeasure = () => {
           </div>
 
           <Box mt="xl">
-            <Text fw={500} mb="sm">Weight Progress Chart</Text>
+            <Text fw={500} mb="sm">
+              Weight Progress Chart
+            </Text>
             <LineChart
               h={300}
               data={chartData}

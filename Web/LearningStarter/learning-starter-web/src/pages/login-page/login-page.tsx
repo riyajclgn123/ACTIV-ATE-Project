@@ -156,10 +156,8 @@ export const LoginPage = ({
 
         signUpForm.reset();
 
-        // Switch back to login view
         setIsSignUp(false);
 
-        // Pre-fill the username in login form
         loginForm.setFieldValue("userName", values.userName);
       }
     } catch (error) {
@@ -188,10 +186,15 @@ export const LoginPage = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginTop:"80px"
+                  marginTop: "80px",
                 }}
               >
-                <Card withBorder shadow="sm" style={{ width: "600px", padding: "20px" }} className={classes.container1}>
+                <Card
+                  withBorder
+                  shadow="sm"
+                  style={{ width: "600px", padding: "20px" }}
+                  className={classes.container1}
+                >
                   <form onSubmit={loginForm.onSubmit(submitLogin)}>
                     <Text
                       style={{
@@ -268,7 +271,7 @@ export const LoginPage = ({
                   <Text>{signUpForm.errors[""]}</Text>
                 </Alert>
               )}
-                <Space h="lg" />
+              <Space h="lg" />
               <div
                 style={{
                   display: "flex",
@@ -276,167 +279,176 @@ export const LoginPage = ({
                   alignItems: "center",
                 }}
               >
-              <Card withBorder shadow="sm" style={{ width: "600px", padding: "20px" }} className={classes.container2}>
-              <form onSubmit={signUpForm.onSubmit(submitSignUp)}>
-                <Space h="lg" />
-                <Text
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    fontFamily: "serif",
-                    fontSize: "30px",
-                    fontWeight: "bold",
-                    textUnderlineOffset: "5px",
-                    textDecoration: "underline",
-                    textDecorationThickness: "2px",
-                    color: "white",
-                    marginBottom: "20px",
-                  }}
+                <Card
+                  withBorder
+                  shadow="sm"
+                  style={{ width: "600px", padding: "20px" }}
+                  className={classes.container2}
                 >
-                  Create A New Account
-                </Text>
-                <Container px={0}>
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="firstName">First Name</label>
-                    <Input
-                      placeholder="Enter your First Name"
-                      {...signUpForm.getInputProps("firstName")}
-                    />
-                    <Text c="red">{signUpForm.errors["firstName"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="lastName">Last Name</label>
-                    <Input
-                      placeholder="Enter your Last Name"
-                      {...signUpForm.getInputProps("lastName")}
-                    />
-                    <Text c="red">{signUpForm.errors["lastName"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="userName">Username</label>
-                    <Input
-                      placeholder="Enter your Username"
-                      {...signUpForm.getInputProps("userName")}
-                    />
-                    <Text c="red">{signUpForm.errors["userName"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="email">Email</label>
-                    <Input
-                      type="email"
-                      placeholder="Ente your Email"
-                      {...signUpForm.getInputProps("email")}
-                    />
-                    <Text c="red">{signUpForm.errors["email"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="dateofBirth">
-                      Date of Birth (YYYY-MM-DD)
-                    </label>
-                    <Input
-                      placeholder="YYYY-MM-DD"
-                      {...signUpForm.getInputProps("dateofBirth")}
-                    />
-                    <Text c="red">{signUpForm.errors["dateofBirth"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="gender">Gender</label>
-                    <Radio.Group {...signUpForm.getInputProps("gender")}>
-                      <Group mt="xs">
-                        <Radio value="male" label="Male" />
-                        <Radio value="female" label="Female" />
-                        <Radio value="other" label="Other" />
-                      </Group>
-                    </Radio.Group>
-                    <Text c="red">{signUpForm.errors["gender"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="height">Height (cm)</label>
-                    <NumberInput
-                      {...signUpForm.getInputProps("height")}
-                      min={0}
-                      step={1}
-                    />
-                    <Text c="red">{signUpForm.errors["height"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="weight">Weight (kg)</label>
-                    <NumberInput
-                      {...signUpForm.getInputProps("weight")}
-                      min={0}
-                      step={0.1}
-                    />
-                    <Text c="red">{signUpForm.errors["weight"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="password">Password</label>
-                    <Input
-                      type="password"
-                      placeholder="Enter your Password"
-                      {...signUpForm.getInputProps("password")}
-                    />
-                    <Text c="red">{signUpForm.errors["password"]}</Text>
-                  </Container>
-
-                  <Container className={classes.formField} px={0}>
-                    <label htmlFor="confirmPassword">Confirm Password</label>
-                    <Input
-                      type="password"
-                      placeholder="Confirm your Password"
-                      {...signUpForm.getInputProps("confirmPassword")}
-                    />
-                    <Text c="red">{signUpForm.errors["confirmPassword"]}</Text>
-                  </Container>
-
-                  <Container
-                    px={0}
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: "25px",
-                      marginTop: "40px",
-                    }}
-                  >
-                    <Button className={classes.loginButton} type="submit">
-                      Sign Up
-                    </Button>
-                    <Button
-                      className={classes.loginButton}
-                      variant="outline"
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsSignUp(false);
+                  <form onSubmit={signUpForm.onSubmit(submitSignUp)}>
+                    <Space h="lg" />
+                    <Text
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        fontFamily: "serif",
+                        fontSize: "30px",
+                        fontWeight: "bold",
+                        textUnderlineOffset: "5px",
+                        textDecoration: "underline",
+                        textDecorationThickness: "2px",
+                        color: "white",
+                        marginBottom: "20px",
                       }}
                     >
-                      Back to Login
-                    </Button>
-                  </Container>
+                      Create A New Account
+                    </Text>
+                    <Container px={0}>
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="firstName">First Name</label>
+                        <Input
+                          placeholder="Enter your First Name"
+                          {...signUpForm.getInputProps("firstName")}
+                        />
+                        <Text c="red">{signUpForm.errors["firstName"]}</Text>
+                      </Container>
 
-                  <Space h="md" />
-                  <Text ta="center">
-                    Already have an account?{" "}
-                    <Anchor
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsSignUp(false);
-                      }}
-                    >
-                      Login
-                    </Anchor>
-                  </Text>
-                </Container>
-              </form>
-              </Card>
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="lastName">Last Name</label>
+                        <Input
+                          placeholder="Enter your Last Name"
+                          {...signUpForm.getInputProps("lastName")}
+                        />
+                        <Text c="red">{signUpForm.errors["lastName"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="userName">Username</label>
+                        <Input
+                          placeholder="Enter your Username"
+                          {...signUpForm.getInputProps("userName")}
+                        />
+                        <Text c="red">{signUpForm.errors["userName"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="email">Email</label>
+                        <Input
+                          type="email"
+                          placeholder="Ente your Email"
+                          {...signUpForm.getInputProps("email")}
+                        />
+                        <Text c="red">{signUpForm.errors["email"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="dateofBirth">
+                          Date of Birth (YYYY-MM-DD)
+                        </label>
+                        <Input
+                          placeholder="YYYY-MM-DD"
+                          {...signUpForm.getInputProps("dateofBirth")}
+                        />
+                        <Text c="red">{signUpForm.errors["dateofBirth"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="gender">Gender</label>
+                        <Radio.Group {...signUpForm.getInputProps("gender")}>
+                          <Group mt="xs">
+                            <Radio value="male" label="Male" />
+                            <Radio value="female" label="Female" />
+                            <Radio value="other" label="Other" />
+                          </Group>
+                        </Radio.Group>
+                        <Text c="red">{signUpForm.errors["gender"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="height">Height (cm)</label>
+                        <NumberInput
+                          {...signUpForm.getInputProps("height")}
+                          min={0}
+                          step={1}
+                        />
+                        <Text c="red">{signUpForm.errors["height"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="weight">Weight (kg)</label>
+                        <NumberInput
+                          {...signUpForm.getInputProps("weight")}
+                          min={0}
+                          step={0.1}
+                        />
+                        <Text c="red">{signUpForm.errors["weight"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="password">Password</label>
+                        <Input
+                          type="password"
+                          placeholder="Enter your Password"
+                          {...signUpForm.getInputProps("password")}
+                        />
+                        <Text c="red">{signUpForm.errors["password"]}</Text>
+                      </Container>
+
+                      <Container className={classes.formField} px={0}>
+                        <label htmlFor="confirmPassword">
+                          Confirm Password
+                        </label>
+                        <Input
+                          type="password"
+                          placeholder="Confirm your Password"
+                          {...signUpForm.getInputProps("confirmPassword")}
+                        />
+                        <Text c="red">
+                          {signUpForm.errors["confirmPassword"]}
+                        </Text>
+                      </Container>
+
+                      <Container
+                        px={0}
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "25px",
+                          marginTop: "40px",
+                        }}
+                      >
+                        <Button className={classes.loginButton} type="submit">
+                          Sign Up
+                        </Button>
+                        <Button
+                          className={classes.loginButton}
+                          variant="outline"
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsSignUp(false);
+                          }}
+                        >
+                          Back to Login
+                        </Button>
+                      </Container>
+
+                      <Space h="md" />
+                      <Text ta="center">
+                        Already have an account?{" "}
+                        <Anchor
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsSignUp(false);
+                          }}
+                        >
+                          Login
+                        </Anchor>
+                      </Text>
+                    </Container>
+                  </form>
+                </Card>
               </div>
             </>
           )}
@@ -467,7 +479,7 @@ const useStyles = createStyles(() => {
       position: "relative",
       color: "white",
       width: "100%",
-      height:"100%",
+      height: "100%",
       backgroundImage: `linear-gradient(
       rgba(93, 93, 93, 0.5),
       rgba(14, 14, 14, 0.5)
@@ -478,7 +490,6 @@ const useStyles = createStyles(() => {
       overflow: "hidden",
     },
 
-    
     container2: {
       display: "flex",
       justifyContent: "center",
@@ -486,7 +497,7 @@ const useStyles = createStyles(() => {
       position: "relative",
       color: "white",
       width: "100%",
-      height:"100%",
+      height: "100%",
       backgroundImage: `linear-gradient(
       rgba(93, 93, 93, 0.5),
       rgba(14, 14, 14, 0.5)

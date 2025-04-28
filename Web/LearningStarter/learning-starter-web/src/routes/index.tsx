@@ -1,5 +1,6 @@
 import { BMIIndicator } from "../pages/BMI-Indicator/bmiIndicator";
 import { MacroNutrient } from "../pages/MacroNutrient-pages/MacroNutrient";
+import { MealDetail } from "../pages/MealPlanner/mealdetail";
 
 
 //This is where you will declare all of your routes (the ones that show up in the search bar)
@@ -26,5 +27,6 @@ export const routes = {
   weeklyReport: `/weeklyReport`,
   goals: `/goals`,
   achievements: `/achievements`,
+  mealdetail: `/meal/:id`,
   
 };

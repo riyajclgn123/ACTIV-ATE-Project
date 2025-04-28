@@ -1,9 +1,7 @@
 import {
-  Box,
   Button,
   Card,
   Container,
-  Select,
   Space,
   Tabs,
   Text,
@@ -72,16 +70,15 @@ export const LandingPage = () => {
 
   const getStartOfDay = (date: Date | null) => {
     const d = date ? new Date(date) : new Date();
-    return dayjs(d).startOf("day").format("MM/DD/YYYY"); // Sets to 00:00:00.000
+    return dayjs(d).startOf("day").format("MM/DD/YYYY"); 
   };
 
-  // Get end of day (11:59 PM)
   const getEndOfDay = (date: Date | null) => {
     const d = date ? new Date(date) : new Date();
-    return dayjs(d).endOf("day").format("MM/DD/YYYY"); // Sets to 23:59:59.999
+    return dayjs(d).endOf("day").format("MM/DD/YYYY"); 
   };
 
-  // Calculate the date range
+  
   const startDate = getStartOfDay(selectedDate);
   const endDate = getEndOfDay(selectedDate);
 
@@ -239,7 +236,6 @@ export const LandingPage = () => {
     return Math.round((value / total) * 100);
   };
 
-  // Use this instead of your current percentages calculation
   const getPercentages = () => {
     if (!totals) return { breakfast: 0, lunch: 0, dinner: 0, snack: 0 };
 
@@ -617,7 +613,7 @@ export const LandingPage = () => {
                       <Space h="sm" />
                     </div>
                   </div>
-                  {/* Chart content here */}
+
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg" mb="md">

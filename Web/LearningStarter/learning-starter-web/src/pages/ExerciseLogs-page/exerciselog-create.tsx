@@ -164,7 +164,6 @@ export const ExerciseLogCreate = () => {
 
       <Card withBorder shadow="sm" p="lg">
         <Stack>
-          {/* Duration Input */}
           <Group align="flex-end" grow>
             <TextInput
               label="Duration"
@@ -182,8 +181,6 @@ export const ExerciseLogCreate = () => {
               required
             />
           </Group>
-
-          {/* Reps Input */}
           <NumberInput
             label="Repetitions"
             value={reps}
@@ -193,15 +190,13 @@ export const ExerciseLogCreate = () => {
           />
 
           <DateTimePicker
-   defaultValue={new Date()}
-value={selectedDate} // Controlled value
-            onChange={setSelectedDate} // Updates state on change
+            defaultValue={new Date()}
+            value={selectedDate}
+            onChange={setSelectedDate}
             valueFormat="DD MMM YYYY hh:mm A"
             label="Pick date and time"
             placeholder="Pick date and time"
           />
-
-          {/* Submit Button */}
           <Group mt="xl">
             <Button
               onClick={handleSubmit}
@@ -248,4 +243,3 @@ const useStyles = createStyles(() => {
     },
   };
 });
-

@@ -5,8 +5,6 @@ import { useAuth } from "../../authentication/use-auth";
 import "@mantine/charts/styles.css";
 import { getDatestring } from "../landing-page/landing-page";
 
-// Define the exact shape of our chart data
-
 interface ExerciseChartData {
   date: string;
   Exercise: number;
@@ -26,7 +24,6 @@ interface MealChartData {
   Dinner: number;
 }
 
-// Type for the API response items
 interface DailyReport {
   userId: number;
   date: string;
@@ -56,22 +53,20 @@ export const WeeklyReport = () => {
     try {
       const { startDate, endDate } = getDateRange(daysOffset);
 
-      // Fetch both meal and exercise data in parallel
       Promise.allSettled([
         fetch(
-          `/api/dailyReports/user/${
-            user.id
-          }/range?startDate=${getDatestring(startDate)}&endDate=${getDatestring(endDate)}`
+          `/api/dailyReports/user/${user.id}/range?startDate=${getDatestring(
+            startDate
+          )}&endDate=${getDatestring(endDate)}`
         ),
         fetch(
-          `/api/exercise-logs/user/${
-            user.id
-          }/range?startDate=${getDatestring(startDate)}&endDate=${getDatestring(endDate)}`
+          `/api/exercise-logs/user/${user.id}/range?startDate=${getDatestring(
+            startDate
+          )}&endDate=${getDatestring(endDate)}`
         ),
       ]).then((results) => {
         const [mealsResult, exerciseResult] = results;
 
-        // Handle meals data independently
         if (mealsResult.status === "fulfilled") {
           mealsResult.value
             .json()
@@ -87,7 +82,6 @@ export const WeeklyReport = () => {
           console.error("Meals request failed:", mealsResult.reason);
         }
 
-        // Handle exercise data independently
         if (exerciseResult.status === "fulfilled") {
           exerciseResult.value
             .json()
@@ -107,8 +101,6 @@ export const WeeklyReport = () => {
           console.error("Exercise request failed:", exerciseResult.reason);
         }
       });
-
-      // Transform data separately
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -129,7 +121,6 @@ export const WeeklyReport = () => {
         day: "numeric",
       });
 
-      // Initialize with all meal types set to 0
       const dayData: MealChartData = {
         date: dateStr,
         Breakfast: 0,
@@ -194,10 +185,11 @@ export const WeeklyReport = () => {
 
   return (
     <Container>
-      <Title>Weekly Report</Title>
+      <Space h="md" />
+      <Title style={{display:"flex", justifyContent:"center", alignItems:"center"}}>Weekly Report</Title>
       <Space h="md" />
 
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+      <div style={{ display: "flex", marginBottom: "20px", justifyContent:"space-between" }}>
         <Button
           onClick={() => setDaysOffset(daysOffset + 1)}
           disabled={daysOffset >= 4}
@@ -239,7 +231,7 @@ export const WeeklyReport = () => {
       {exerciseData.length > 0 && (
         <>
           <Text size="lg" fw={500} mt="xl">
-            Calories Burned (Exercise)
+            Calories Burned 
           </Text>
           <Space h="md" />
           <LineChart

@@ -27,7 +27,6 @@ export type UserDto = {
   gender: string;
   createDate: string;
   updatedDate: string;
-
 };
 
 export type UserCreateDto = {
@@ -113,8 +112,6 @@ export type FoodUpdateDto = {
   sugar: number;
 };
 
-
-
 export type FoodLogGetDto = {
   id: number;
   userId: number;
@@ -149,28 +146,28 @@ export type FoodLogUpdateDto = {
 };
 export type NutrientGetDto = {
   id: number;
-  nutrientTypeId : number;
+  nutrientTypeId: number;
   foodId: number;
   nutrientTypeName: string;
   value: number;
   unit: string;
 };
 
-export type WeightLogGetDto={
+export type WeightLogGetDto = {
   id: number;
   userId: number;
   value: number;
   logDate: string;
-}
+};
 
-export type WeightLogCreateDto={
+export type WeightLogCreateDto = {
   userId: number;
   value: number;
   logDate: string;
-}
+};
 
-export type GoalGetDto={
-  id: number; 
+export type GoalGetDto = {
+  id: number;
   userId: number;
   value: number;
   timePeriod: number;
@@ -178,13 +175,13 @@ export type GoalGetDto={
   activityLevel: string;
   createDate: string;
   updatedDate: string;
-  dailyCalorieGoal : number;
-}
+  dailyCalorieGoal: number;
+};
 
-export type DailyReportGetDto={
+export type DailyReportGetDto = {
   id: number;
   userId: number;
   date: string;
   mealTime: string;
   calories: number;
-}
+};

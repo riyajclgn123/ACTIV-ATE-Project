@@ -1,5 +1,4 @@
-import { Anchor, Container, Group } from "@mantine/core";
-import Logo from "../../assets/Activ-Ate.png";
+import { Anchor} from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 
 const links = [
@@ -36,25 +35,25 @@ const useStyles = createStyles(() => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#1c7ed6", // Dark theme background
+        backgroundColor: "#1c7ed6", 
         fontSize: "15px",
-        width: "100%",  // Ensures the footer takes full width of the screen
+        width: "100%",  
         marginTop: "auto",
         fontWeight: "revert",
     
         [`@media (maxWidth: 1024px)`]: {
-          fontSize: "18px",  // Slightly reduce font size for medium screens (laptops/tablets)
+          fontSize: "18px", 
         },
     
         [`@media (maxWidth: 768px)`]: {
-          fontSize: "16px",  // Reduce font size further for tablets
-          padding: "12px",   // Reduce padding for smaller screens
+          fontSize: "16px", 
+          padding: "12px",  
         },
     
         [`@media (maxWidth: 480px)`]: {
-          fontSize: "14px",  // Even smaller font size for mobile
-          padding: "10px",   // Less padding on mobile for space efficiency
-          textAlign: "center",  // Ensure text is centered on small screens
+          fontSize: "14px",  
+          padding: "10px",   
+          textAlign: "center",
         },
     },
   };

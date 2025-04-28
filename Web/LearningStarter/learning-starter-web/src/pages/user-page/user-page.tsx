@@ -9,7 +9,6 @@ export const UserPage = () => {
   return (
     <Container>
       <Container>
-        {/* First and Last Name on same line */}
         <Group justify="center" mb="xl">
           <Text size="xl" fw={500}>
             {user.firstName} {user.lastName}
