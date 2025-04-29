@@ -157,7 +157,7 @@ const useStyles = createStyles(() => {
       cursor: "pointer",
       color: "black",
       "&:hover": {
-        color: "blue",
+        color: "orange",
       },
     },
     exerciseListingContainer: {
@@ -171,8 +171,9 @@ const useStyles = createStyles(() => {
       color: "white",
       fontSize: "20px",
       margin: "0px",
-      height: "600px",
-      width: "100vw",
+      height: "600px", // Make sure the container takes full height of the screen
+      width: "100vw", // Full width of the container
+
       backgroundImage: `linear-gradient(
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0.5)
@@ -193,6 +194,7 @@ const useStyles = createStyles(() => {
       zIndex: 1,
       wordWrap: "break-word",
       whiteSpace: "nowrap",
+      // textShadow: "2px 2px 4px #fa5252",
 
       display: "flex",
       flexDirection: "column",
