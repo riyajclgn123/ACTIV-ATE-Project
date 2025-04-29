@@ -1,6 +1,7 @@
 import { Container, Divider, Flex, Group, Text } from "@mantine/core";
 import { useUser } from "../../authentication/use-auth";
 import { createStyles } from "@mantine/emotion";
+import { Button } from "@mantine/core";
 
 export const UserPage = () => {
   const user = useUser();
@@ -22,6 +23,9 @@ export const UserPage = () => {
               Email:
             </Text>
             <Text size="md">{user.email}</Text>
+            <Button variant="transparent" color="orange" size="xs" radius="xs">
+              Edit
+            </Button>
           </Flex>
           <Divider />
           <Flex direction="row">
@@ -29,6 +33,9 @@ export const UserPage = () => {
               Username:
             </Text>
             <Text size="md">{user.userName}</Text>
+            <Button variant="transparent" color="orange" size="xs" radius="xs">
+              Edit
+            </Button>
           </Flex>
           <Divider />
           <Flex direction="row">
@@ -36,6 +43,9 @@ export const UserPage = () => {
               Weight:
             </Text>
             <Text size="md">{user.weight}</Text>
+            <Button variant="transparent" color="orange" size="xs" radius="xs">
+              Edit
+            </Button>
           </Flex>
           <Divider />
           <Flex direction="row">
@@ -43,6 +53,9 @@ export const UserPage = () => {
               Height:
             </Text>
             <Text size="md">{user.height}</Text>
+            <Button variant="transparent" color="orange" size="xs" radius="xs">
+              Edit
+            </Button>
           </Flex>
           <Divider />
           <Flex direction="row">

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { routes } from "../../routes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -13,8 +12,6 @@ import {
   Text,
   Avatar,
   Title,
-  useMantineTheme,
-  parseThemeColor,
   Divider,
 } from "@mantine/core";
 import {
@@ -27,10 +24,11 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import logo from "../../assets/Activ-Ate.png";
+import logo from "../../assets/activatelogo.png";
 import { UserDto } from "../../constants/types";
 import { useAuth } from "../../authentication/use-auth";
 import { createStyles } from "@mantine/emotion";
+import { useEffect, useState } from "react";
 
 type PrimaryNavigationProps = {
   user?: UserDto;
@@ -188,21 +186,17 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
     <Title className={classes.container} order={4}>
       <Container px={20} fluid>
         <Flex direction="row" justify="space-between" align="center">
-          <Group>
-            <Flex direction="row" align="center">
-              <NavLink to={routes.root}>
-                <Image
-                  className={classes.logo}
-                  fallbackSrc="https://placehold.co/600x400?text=Placeholder"
-                  src={logo}
-                  alt="logo"
-                  width={10} // Should match your CSS width
-                  height={50} // Should match your CSS height
-                />
-              </NavLink>
-              {user && <DesktopNavigation />}
-            </Flex>
-          </Group>
+          <NavLink to={routes.root}>
+            <Image
+              className={classes.logo}
+              fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+              src={logo}
+              alt="logo"
+            />
+          </NavLink>
+          <Flex justify="center" style={{ flex: 1 }}>
+            {user && <DesktopNavigation />}
+          </Flex>
           <Group>
             {user && (
               <Menu>
@@ -244,40 +238,47 @@ const useStyles = createStyles((theme) => {
   return {
     pointer: {
       cursor: "pointer",
+      backgroundColor: theme.colors.green[5],
+      color: theme.colors.blue[6],
+      border: `1px solid #ffffff`,
+      transition: "transform 0.2s ease",
+      "&:hover": {
+        transform: "scale(1.1)",
+      },
     },
-    // logo: {
-    //   cursor: "pointer",
-    //   marginRight: "5px",
-    //   paddingTop: "5px",
-    //   paddingBottom: "5px",
-    //   height: NAVBAR_HEIGHT,
-    // },
 
     logo: {
-      borderRadius: '50%', // Makes it perfectly round
-      objectFit: 'cover', // Ensures the image fills the circle without distortion
-      border: `1px solid ${theme.colors.blue[5]}`, // Optional decorative border
-      boxShadow: theme.shadows.md, // Optional shadow for depth
-      transition: 'transform 0.3s ease', // Optional hover effect
-      '&:hover': {
-        transform: 'scale(1.05)', // Optional hover effect
+      width: 50,
+      height: 50,
+      borderRadius: "50%",
+      objectFit: "cover",
+      border: `1px solid ${theme.colors.blue[5]}`,
+      boxShadow: theme.shadows.md,
+      transition: "transform 0.3s ease",
+      marginRight: 20,
+      "&:hover": {
+        transform: "scale(1.05)",
       },
     },
 
     paddedMenuItem: {
       margin: "0px 5px 0px 5px",
       color: "black",
+      "&:hover": {
+        color: "white",
+        backgroundColor: theme.colors.green[5],
+      },
     },
     linkActive: {
       "&, &:hover": {
         backgroundColor: theme.variantColorResolver({
           theme: theme,
-          color: theme.primaryColor,
+          color: theme.colors.green[5],
           variant: "light",
         }).background,
         color: theme.variantColorResolver({
           theme: theme,
-          color: "white",  //changed over here
+          color: "white",
           variant: "light",
         }).color,
       },
@@ -289,7 +290,7 @@ const useStyles = createStyles((theme) => {
       height: "100%",
     },
     container: {
-      backgroundColor: "#1c7ed6",
+      backgroundColor: "#0fa462",
     },
   };
 });

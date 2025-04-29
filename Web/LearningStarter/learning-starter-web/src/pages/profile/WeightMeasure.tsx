@@ -40,7 +40,7 @@ export const WeightMeasure = () => {
       weight: (value) => {
         const num = parseFloat(value);
         return isNaN(num) || num <= 0
-          ? 'Please enter a valid weight (greater than 0)'
+          ? "Please enter a valid weight (greater than 0)"
           : null;
       },
     },
@@ -55,7 +55,9 @@ export const WeightMeasure = () => {
 
     try {
       setLoading(true);
-      const response = await api.get<ApiResponse<WeightLogGetDto[]>>(`/api/weight-logs/${userId}`);
+      const response = await api.get<ApiResponse<WeightLogGetDto[]>>(
+        `/api/weight-logs/${userId}`
+      );
       const data = response.data.data;
       if (data === null || data === undefined) {
         setWeightLogs([]);
@@ -122,8 +124,10 @@ export const WeightMeasure = () => {
   if (loading) return <Loader />;
 
   return (
-    <Box style={{ maxWidth: 800, margin: '0', padding: '1rem' }}>
-      <Text size="xl" mb="md" fw={500}>Weight Tracking</Text>
+    <Box style={{ maxWidth: 800, margin: "0", padding: "1rem" }}>
+      <Text size="xl" mb="md" fw={500}>
+        Weight Tracking
+      </Text>
 
       {error && (
         <Notification
@@ -137,12 +141,20 @@ export const WeightMeasure = () => {
       )}
 
       {success && (
-        <Notification color="teal" title="Success" onClose={() => setSuccess(false)} mb="md">
-          Weight {editingLog ? 'updated' : 'recorded'} successfully!
+        <Notification
+          color="teal"
+          title="Success"
+          onClose={() => setSuccess(false)}
+          mb="md"
+        >
+          Weight {editingLog ? "updated" : "recorded"} successfully!
         </Notification>
       )}
 
-      <form onSubmit={form.onSubmit(handleSubmit)} style={{ marginBottom: '2rem' }}>
+      <form
+        onSubmit={form.onSubmit(handleSubmit)}
+        style={{ marginBottom: "2rem" }}
+      >
         <TextInput
           label="Enter your current weight (kg)"
           placeholder="e.g. 75.5"
@@ -151,12 +163,14 @@ export const WeightMeasure = () => {
           mb="md"
           {...form.getInputProps("weight")}
         />
-        <Button type="submit" color="indigo">
+        <Button type="submit" color="orange">
           {editingLog ? "Update Weight" : "Record Weight"}
         </Button>
       </form>
 
-      <Text size="lg" mt="xl" mb="sm" fw={500}>Your Weight History</Text>
+      <Text size="lg" mt="xl" mb="sm" fw={500}>
+        Your Weight History
+      </Text>
 
       {weightLogs.length === 0 ? (
         <Text color="dimmed">No weight records found</Text>
@@ -173,12 +187,27 @@ export const WeightMeasure = () => {
             <Table.Tbody>
               {weightLogs.map((log) => (
                 <Table.Tr key={log.id}>
-                  <Table.Td>{new Date(log.logDate).toLocaleDateString()}</Table.Td>
+                  <Table.Td>
+                    {new Date(log.logDate).toLocaleDateString()}
+                  </Table.Td>
                   <Table.Td>{log.value.toFixed(1)}</Table.Td>
                   <Table.Td>
                     <Group style={{ display: "flex", gap: "6px" }}>
-                      <Button size="xs" color="blue" onClick={() => handleEdit(log)}>Edit</Button>
-                      <Button size="xs" color="red" variant="outline" onClick={() => handleDelete(log.id)}>Delete</Button>
+                      <Button
+                        size="xs"
+                        color="orange"
+                        onClick={() => handleEdit(log)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        size="xs"
+                        color="red"
+                        variant="outline"
+                        onClick={() => handleDelete(log.id)}
+                      >
+                        Delete
+                      </Button>
                     </Group>
                   </Table.Td>
                 </Table.Tr>
@@ -196,6 +225,6 @@ const useStyles = createStyles(() => {
     table: {
       margin: "20px 0",
       padding: "10px",
-    }
-  }
+    },
+  };
 });

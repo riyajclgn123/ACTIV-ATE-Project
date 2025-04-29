@@ -38,8 +38,7 @@ export const Profile = () => {
   return (
     <>
       <Container>
-
-      <Space h={20} /> 
+        <Space h={20} />
 
         <Tabs color="blue" defaultValue="profile">
           <Tabs.List grow>
@@ -56,7 +55,7 @@ export const Profile = () => {
               {" "}
               Weight Log
             </Tabs.Tab>
-    
+
             <Tabs.Tab
               value="goals"
               leftSection={<FontAwesomeIcon icon={faBullseye} />}
