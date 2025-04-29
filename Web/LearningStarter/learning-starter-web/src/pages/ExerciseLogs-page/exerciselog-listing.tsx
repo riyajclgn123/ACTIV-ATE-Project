@@ -19,8 +19,8 @@ import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
 import { DateNavigator } from "../../components/date-nav/date-nav";
 
-export const ExerciseLogListing = ({ date, dateProp }: any) => {
-  const { classes } = useStyles();
+export const ExerciseLogListing = ({ date, dateProp, fullWidth = false }: any) => {
+  const { classes } = useStyles({fullWidth});
   const [logs, setLogs] = useState<ExerciseLogGetDto[]>([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -154,7 +154,7 @@ export const ExerciseLogListing = ({ date, dateProp }: any) => {
   );
 };
 
-const useStyles = createStyles((theme) => {
+const useStyles = createStyles((theme, { fullWidth}: {fullWidth: boolean}) => {
   const { colorScheme } = useMantineColorScheme(); // 'light' | 'dark' | 'auto'
   return {
     log: {
@@ -165,7 +165,7 @@ const useStyles = createStyles((theme) => {
       justifyContent: "center",
     },
     exerciseCard: {
-      minWidth: "70%",
+      width: fullWidth ? "100%" : "70%",
       marginBottom: "20px",
       padding: "16px",
       border: `1px solid ${

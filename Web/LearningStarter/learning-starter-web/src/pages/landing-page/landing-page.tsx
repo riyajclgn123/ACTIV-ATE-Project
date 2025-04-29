@@ -620,14 +620,14 @@ export const LandingPage = () => {
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faDumbbell} /> Exercise Logs
                   </Text>
-                  <ExerciseLogListing date = {false} dateProp = {selectedDate} />
+                  <ExerciseLogListing date = {false} dateProp = {selectedDate} fullWidth={true}/>
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg" mb="md">
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faUtensils} /> Food Logs
                   </Text>
-                  <FoodLogListing date = {false} dateProp = {selectedDate}/>
+                  <FoodLogListing date = {false} dateProp = {selectedDate} fullWidth={true}/>
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg">

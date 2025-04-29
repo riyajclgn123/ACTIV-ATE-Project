@@ -35,8 +35,8 @@ interface FoodLogWithNutrients extends FoodLogGetDto {
   };
 }
 
-export const FoodLogListing = ({ date, dateProp }: any) => {
-  const { classes } = useStyles();
+export const FoodLogListing = ({ date, dateProp, fullWidth= false }: any) => {
+  const { classes } = useStyles({fullWidth});
   const [logs, setLogs] = useState<FoodLogWithNutrients[]>([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -322,7 +322,7 @@ export const FoodLogListing = ({ date, dateProp }: any) => {
   );
 };
 
-const useStyles = createStyles((theme) => {
+const useStyles = createStyles((theme, { fullWidth}: {fullWidth: boolean}) => {
   const { colorScheme } = useMantineColorScheme(); // 'light' | 'dark' | 'auto'
   return {
     log: {
@@ -333,7 +333,7 @@ const useStyles = createStyles((theme) => {
       justifyContent: "center",
     },
     mealTimeCard: {
-      minWidth: "70%",
+      width: fullWidth ? "100%" : "70%",
       marginBottom: "20px",
       padding: "16px",
       border: `1px solid ${
@@ -355,7 +355,7 @@ const useStyles = createStyles((theme) => {
     },
     calorieBudgetWrapper: {
       marginBottom: "20px",
-      width: "70%",
+      width: fullWidth ? "100%" : "70%",
     },
   };
 });
