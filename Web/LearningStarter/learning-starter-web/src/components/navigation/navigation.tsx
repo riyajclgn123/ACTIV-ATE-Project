@@ -17,6 +17,7 @@ import {
 import {
   NAVBAR_HEIGHT,
   NAVBAR_HEIGHT_NUMBER,
+  PRIMARY_COLOR_GREEN,
 } from "../../constants/theme-constants";
 import {
   NavLink,
@@ -290,7 +291,7 @@ const useStyles = createStyles((theme) => {
       height: "100%",
     },
     container: {
-      backgroundColor: "#0fa462",
+      backgroundColor: PRIMARY_COLOR_GREEN,
     },
   };
 });

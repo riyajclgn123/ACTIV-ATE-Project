@@ -94,7 +94,6 @@ export const CalorieBudgetProgress = ({
           </Group>
 
           {isOverBudget ? (
-            // over budget → two segments: green (goal) + red (excess)
             <Progress.Root size="xl" radius="md">
               <Progress.Section
                 value={(calorieGoal / consumedCalories) * 100}
@@ -108,9 +107,8 @@ export const CalorieBudgetProgress = ({
               />
             </Progress.Root>
           ) : (
-            // under budget → regular single-value bar
             <Progress
-              value={percentage} // 0–100
+              value={percentage} 
               color="green"
               size="xl"
               radius="md"
