@@ -35,7 +35,9 @@ export const Goals = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
   const currentUser = useUser();
+
   const [targetWeight, setTargetWeight] = useState<number>(0);
+  const [unit, setUnit] = useState<"kg" | "lb">("lb"); 
   const [timePeriod, setTimePeriod] = useState<number>(0);
   const [activityLevel, setActivityLevel] = useState<string>("sedentary");
   const [isLoading, setIsLoading] = useState(false);
@@ -75,9 +77,12 @@ export const Goals = () => {
         throw new Error("Please enter a valid time period (0 or positive)");
       }
 
+      const weightInKg =
+        unit === "lb" ? targetWeight / 2.20462 : targetWeight;
+
       const response = await api.post<GoalResponse>("/api/goals", {
         userId: currentUser.id,
-        value: targetWeight,
+        value: weightInKg,
         timePeriod: timePeriod,
         type: "weight",
         activityLevel: activityLevel,
@@ -127,14 +132,26 @@ export const Goals = () => {
 
       <Card withBorder shadow="sm" p="lg">
         <Stack>
-          <NumberInput
-            label="Target Weight (kg)"
-            value={targetWeight}
-            onChange={(val) => setTargetWeight(Number(val))}
-            min={0}
-            step={1}
-            required
-          />
+          <Box style={{ display: "flex", gap: "1rem", alignItems: "flex-end" }}>
+            <NumberInput
+              label={`Target Weight (${unit})`}
+              value={targetWeight}
+              onChange={(val) => setTargetWeight(Number(val))}
+              min={0}
+              step={0.1}
+              required
+            />
+            <Select
+              label="Unit"
+              value={unit}
+              onChange={(val) => setUnit((val as "kg" | "lb") || "lb")}
+              data={[
+                { value: "lb", label: "Pounds (lb)" }, // listed first
+                { value: "kg", label: "Kilograms (kg)" },
+              ]}
+              required
+            />
+          </Box>
 
           <NumberInput
             label="Time Period (days)"
@@ -170,13 +187,11 @@ export const Goals = () => {
   );
 };
 
-const useStyles = createStyles(() => {
-  return {
-    buttonsContainer: {
-      padding: "20px",
-      display: "flex",
-      alignItems: "left",
-      marginBottom: "20px",
-    },
-  };
-});
+const useStyles = createStyles(() => ({
+  buttonsContainer: {
+    padding: "20px",
+    display: "flex",
+    alignItems: "left",
+    marginBottom: "20px",
+  },
+}));
