@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { routes } from "../../routes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -18,6 +17,7 @@ import {
 import {
   NAVBAR_HEIGHT,
   NAVBAR_HEIGHT_NUMBER,
+  PRIMARY_COLOR_GREEN,
 } from "../../constants/theme-constants";
 import {
   NavLink,
@@ -29,6 +29,7 @@ import logo from "../../assets/activatelogo.png";
 import { UserDto } from "../../constants/types";
 import { useAuth } from "../../authentication/use-auth";
 import { createStyles } from "@mantine/emotion";
+import { useEffect, useState } from "react";
 
 type PrimaryNavigationProps = {
   user?: UserDto;
