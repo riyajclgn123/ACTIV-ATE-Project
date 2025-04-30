@@ -35,7 +35,7 @@ const useStyles = createStyles(() => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#1c7ed6", 
+        backgroundColor: "#0fa462", 
         fontSize: "15px",
         width: "100%",  
         marginTop: "auto",

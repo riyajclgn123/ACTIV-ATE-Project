@@ -12,7 +12,7 @@ import { RingProgress } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
 import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
-import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
+//import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
 import { useAuth } from "../../authentication/use-auth";
 import { showNotification } from "@mantine/notifications";
 import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
@@ -254,10 +254,14 @@ export const LandingPage = () => {
       <section id="backgrounddesign">
         <div className={classes.container1}>
           <div className={classes.overlayText}>
+          <Text style={{alignItems:"center", fontSize:"20vh", color:"#D3D3D3", fontFamily:"cursive"}}>
+          ACTIV-ATE
+          </Text>
             <p className={classes.quote}>
+              
               "Your Journey to a Healthier You Starts Here!"
             </p>
-            <p>Welcome to your personalized fitness companion!</p>
+            {/* <p>Welcome to your personalized fitness companion!</p> */}
             <p className={classes.threeword}>Track. Plan. Achieve.</p>
           </div>
         </div>
@@ -312,12 +316,12 @@ export const LandingPage = () => {
                   >
                     Food Logs
                   </Tabs.Tab>
-                  <Tabs.Tab
+                  {/* <Tabs.Tab
                     value="Macro Counts"
                     leftSection={<FontAwesomeIcon icon={faHandHoldingHeart} />}
                   >
                     Macro Counts
-                  </Tabs.Tab>
+                  </Tabs.Tab> */}
                 </Tabs.List>
 
                 <Tabs.Panel value="Chart">
@@ -419,7 +423,7 @@ export const LandingPage = () => {
                         size="18px"
                         ta="center"
                         mt="lg"
-                        style={{ fontWeight: "bold" }}
+                        style={{ fontWeight: "bold"}}
                       >
                         Food Count
                       </Text>
@@ -436,7 +440,7 @@ export const LandingPage = () => {
                         size="18px"
                         ta="center"
                         mt="lg"
-                        style={{ fontWeight: "bold" }}
+                        style={{ fontWeight: "bold", }}
                       >
                         Exercise Count
                       </Text>
@@ -454,28 +458,24 @@ export const LandingPage = () => {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Excercise Logs">
-                  <Container className={classes.exerciselog}>
                     <Card withBorder shadow="sm" p="lg">
-                      <ExerciseLogListing date={ false } dateProp={selectedDate}/>
+                      <ExerciseLogListing date={ false } dateProp={selectedDate} fullWidth={true}/>
                     </Card>
-                  </Container>
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Food Logs">
-                  <Container className={classes.foodlog}>
                     <Card withBorder shadow="sm" p="lg">
-                      <FoodLogListing date={ false } dateProp={selectedDate}/>
+                      <FoodLogListing date={ false } dateProp={selectedDate} fullWidth= {true}/>
                     </Card>
-                  </Container>
                 </Tabs.Panel>
 
-                <Tabs.Panel value="Macro Counts">
+                {/* <Tabs.Panel value="Macro Counts">
                   <Container className={classes.macronutrient}>
                     <Card withBorder shadow="sm" p="lg">
                       <MacroNutrient />
                     </Card>
                   </Container>
-                </Tabs.Panel>
+                </Tabs.Panel> */}
               </Tabs>
             ) : (
               <div>
@@ -630,12 +630,12 @@ export const LandingPage = () => {
                   <FoodLogListing date = {false} dateProp = {selectedDate} fullWidth={true}/>
                 </Card>
 
-                <Card withBorder shadow="sm" p="lg">
+                {/* <Card withBorder shadow="sm" p="lg">
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faHandHoldingHeart} /> Macro Counts
                   </Text>
                   <MacroNutrient />
-                </Card>
+                </Card> */}
               </div>
             )}
           </Card>
@@ -693,7 +693,7 @@ const useStyles = createStyles(() => {
       zIndex: 1,
       wordWrap: "break-word",
       whiteSpace: "nowrap",
-      textShadow: "2px 2px 4px rgb(31, 101, 239)",
+      // textShadow: "2px 2px 4px rgb(31, 101, 239)",
       "@media (max-width: 768px)": {
         fontSize: "20px",
         maxWidth: "80%",
@@ -809,8 +809,6 @@ const useStyles = createStyles(() => {
       marginTop: "30px",
       marginBottom: "30px",
     },
-
-    box: {},
 
     coursel: {
       gap: "100px",
