@@ -18,9 +18,8 @@ import {
 import api from "../../config/axios";
 import { showNotification } from "@mantine/notifications";
 import { createStyles } from "@mantine/emotion";
-import { useState } from "react";
-import bgImage from "../../assets/login.jpg";
-import bgImage1 from "../../assets/signup.jpg";
+import { useEffect, useRef, useState } from "react";
+import backgroundVideo from "../../assets/bgvideo3.mp4";
 
 type LoginRequest = {
   userName: string;
@@ -53,6 +52,15 @@ export const LoginPage = ({
   const styles = useStyles();
   const { classes } = styles;
   const [isSignUp, setIsSignUp] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.error("Video play failed:", error);
+      });
+    }
+  }, []);
 
   const loginForm = useForm<LoginRequest>({
     initialValues: {
@@ -170,6 +178,19 @@ export const LoginPage = ({
 
   return (
     <PageWrapper>
+    <div className={classes.videoContainer}>
+      <video
+        ref={videoRef}
+        className={classes.videoBackground}
+        autoPlay
+        loop
+        muted
+        playsInline
+      >
+        <source src={backgroundVideo} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
       <Container>
         <Container px={0}>
           {!isSignUp ? (
@@ -186,7 +207,8 @@ export const LoginPage = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginTop: "80px",
+                  minHeight:"90vh",
+                  width:"100%"
                 }}
               >
                 <Card
@@ -460,6 +482,21 @@ export const LoginPage = ({
 
 const useStyles = createStyles(() => {
   return {
+    videoContainer: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      zIndex: -1,
+      overflow: 'hidden',
+    },
+    videoBackground: {
+      objectFit: 'cover',
+      width: '100%',
+      height: '100%',
+      //opacity: 0.8,
+    },
     generalErrors: {
       marginBottom: "8px",
     },
@@ -471,7 +508,6 @@ const useStyles = createStyles(() => {
     formField: {
       marginBottom: "8px",
     },
-
     container1: {
       display: "flex",
       justifyContent: "center",
@@ -480,16 +516,10 @@ const useStyles = createStyles(() => {
       color: "white",
       width: "100%",
       height: "100%",
-      backgroundImage: `linear-gradient(
-      rgba(93, 93, 93, 0.5),
-      rgba(14, 14, 14, 0.5)
-    ),url(${bgImage})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backdropFilter: 'blur(5px)',
       overflow: "hidden",
     },
-
     container2: {
       display: "flex",
       justifyContent: "center",
@@ -498,14 +528,10 @@ const useStyles = createStyles(() => {
       color: "white",
       width: "100%",
       height: "100%",
-      backgroundImage: `linear-gradient(
-      rgba(93, 93, 93, 0.5),
-      rgba(14, 14, 14, 0.5)
-    ),url(${bgImage1})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backdropFilter: 'blur(5px)',
       overflow: "hidden",
+      marginBottom: "10px"
     },
   };
 });

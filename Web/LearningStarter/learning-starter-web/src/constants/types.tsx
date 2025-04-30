@@ -27,6 +27,7 @@ export type UserDto = {
   gender: string;
   createDate: string;
   updatedDate: string;
+
 };
 
 export type UserCreateDto = {
@@ -40,6 +41,19 @@ export type UserCreateDto = {
   dateofBirth: string;
   gender: string;
   createDate: string;
+};
+
+export type UserUpdateDto ={
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  weight: number;
+  height: number;
+  dateofBirth: string;
+  gender: string;
+  updatedDate: string;
+  password? :string;
 };
 
 export type ExerciseGetDto = {
@@ -185,3 +199,4 @@ export type DailyReportGetDto = {
   mealTime: string;
   calories: number;
 };
+

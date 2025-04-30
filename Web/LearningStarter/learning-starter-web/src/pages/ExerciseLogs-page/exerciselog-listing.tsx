@@ -96,15 +96,18 @@ export const ExerciseLogListing = ({ date, dateProp, fullWidth = false }: any) =
           <DateNavigator date={selectedDate} onChange={setSelectedDate} />
         )}
         <div className={classes.exerciseCard}>
+          <div style={{ display: "flex", justifyContent:"flex-end"}}>
           <Button
             variant="light"
             color="blue"
             leftSection={<FontAwesomeIcon icon={faPlus} />}
             onClick={() => navigate(routes.exercises, {})}
+            
           >
-            {" "}
+            
             Add Exercise
           </Button>
+          </div>
           <Space h="md"></Space>
           <Table striped highlightOnHover>
             <Table.Thead>

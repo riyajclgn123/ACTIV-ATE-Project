@@ -458,15 +458,15 @@ export const LandingPage = () => {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Excercise Logs">
-                    <Card withBorder shadow="sm" p="lg">
+                    {/* <Card withBorder shadow="sm" p="lg"> */}
                       <ExerciseLogListing date={ false } dateProp={selectedDate} fullWidth={true}/>
-                    </Card>
+                    {/* </Card> */}
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Food Logs">
-                    <Card withBorder shadow="sm" p="lg">
+                    {/* <Card withBorder shadow="sm" p="lg"> */}
                       <FoodLogListing date={ false } dateProp={selectedDate} fullWidth= {true}/>
-                    </Card>
+                    {/* </Card> */}
                 </Tabs.Panel>
 
                 {/* <Tabs.Panel value="Macro Counts">
