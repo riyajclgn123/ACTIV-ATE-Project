@@ -27,6 +27,7 @@ export type UserDto = {
   gender: string;
   createDate: string;
   updatedDate: string;
+  profilePictureUrl: string | null;
 
 };
 
@@ -54,6 +55,7 @@ export type UserUpdateDto ={
   gender: string;
   updatedDate: string;
   password? :string;
+  profilePictureUrl?: string;
 };
 
 export type ExerciseGetDto = {

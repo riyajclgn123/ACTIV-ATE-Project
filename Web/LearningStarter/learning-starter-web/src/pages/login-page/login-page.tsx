@@ -266,11 +266,12 @@ export const LoginPage = ({
                           marginTop: "40px",
                         }}
                       >
-                        <Button className={classes.loginButton} type="submit">
+                        <Button className={classes.loginButton} type="submit" color="#0fa462">
                           Login
                         </Button>
                         <Button
                           className={classes.loginButton}
+                          color="#0fa462"
                           type="button"
                           variant="outline"
                           onClick={(e) => {
@@ -439,13 +440,14 @@ export const LoginPage = ({
                           marginTop: "40px",
                         }}
                       >
-                        <Button className={classes.loginButton} type="submit">
+                        <Button className={classes.loginButton} type="submit" color="#0fa462">
                           Sign Up
                         </Button>
                         <Button
                           className={classes.loginButton}
                           variant="outline"
                           type="button"
+                          color="#0fa462"
                           onClick={(e) => {
                             e.preventDefault();
                             setIsSignUp(false);
@@ -464,6 +466,7 @@ export const LoginPage = ({
                             e.preventDefault();
                             setIsSignUp(false);
                           }}
+                           c="#0fa462"
                         >
                           Login
                         </Anchor>

@@ -112,6 +112,7 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseSpaStaticFiles();
+        app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();

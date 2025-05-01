@@ -471,6 +471,7 @@ export const Profile = () => {
 const useStyles = createStyles((theme) => ({
   profileCard: {
     position: "relative",
+    marginBottom: "10px"
   },
   editButton: {
     position: "absolute",

@@ -136,4 +136,5 @@ export const mapUser = (user: any): UserDto => ({
   gender: user.gender,
   createDate: user.createdAt,
   updatedDate: user.updatedAt,
+  profilePictureUrl: user.profilePictureUrl || null, // Add this line
 });

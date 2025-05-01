@@ -113,7 +113,7 @@ export const Goals = () => {
   };
 
   return (
-    <Box maw={600} pos="relative">
+    <Box maw={800} mx="auto" pos="relative">
       <LoadingOverlay visible={isLoading} />
       <Container className={classes.buttonsContainer}>
         <Button
@@ -126,72 +126,101 @@ export const Goals = () => {
         </Button>
       </Container>
 
-      <Title order={2} mb="xl">
+      <Title order={2} mb="xl" ta="center">
         Create Weight Goal
       </Title>
 
-      <Card withBorder shadow="sm" p="lg">
-        <Stack>
-          <Box style={{ display: "flex", gap: "1rem", alignItems: "flex-end" }}>
+   
+        <Card withBorder shadow="sm" p="lg" className={classes.innerCard}>
+          <Stack align="center">
+            <Box className={classes.inputGroup}>
+              <NumberInput
+                label={`Target Weight (${unit})`}
+                value={targetWeight}
+                onChange={(val) => setTargetWeight(Number(val))}
+                min={0}
+                step={0.1}
+                required
+              />
+              <Select
+                label="Unit"
+                value={unit}
+                onChange={(val) => setUnit((val as "kg" | "lb") || "lb")}
+                data={[
+                  { value: "lb", label: "Pounds (lb)" },
+                  { value: "kg", label: "Kilograms (kg)" },
+                ]}
+                required
+              />
+            </Box>
+
             <NumberInput
-              label={`Target Weight (${unit})`}
-              value={targetWeight}
-              onChange={(val) => setTargetWeight(Number(val))}
+              label="Time Period (days)"
+              description="0 means no specific time frame"
+              value={timePeriod}
+              onChange={(val) => setTimePeriod(Number(val))}
               min={0}
-              step={0.1}
               required
+              className={classes.centeredInput}
             />
+
             <Select
-              label="Unit"
-              value={unit}
-              onChange={(val) => setUnit((val as "kg" | "lb") || "lb")}
-              data={[
-                { value: "lb", label: "Pounds (lb)" }, // listed first
-                { value: "kg", label: "Kilograms (kg)" },
-              ]}
+              label="Activity Level"
+              value={activityLevel}
+              onChange={(val) => setActivityLevel(val || "sedentary")}
+              data={activityLevels}
               required
+              className={classes.centeredInput}
             />
-          </Box>
 
-          <NumberInput
-            label="Time Period (days)"
-            description="0 means no specific time frame"
-            value={timePeriod}
-            onChange={(val) => setTimePeriod(Number(val))}
-            min={0}
-            required
-          />
-
-          <Select
-            label="Activity Level"
-            value={activityLevel}
-            onChange={(val) => setActivityLevel(val || "sedentary")}
-            data={activityLevels}
-            required
-          />
-
-          <Group mt="xl">
-            <Button
-              onClick={handleSubmit}
-              loading={isLoading}
-              size="md"
-              disabled={!targetWeight || isNaN(targetWeight)}
-              rightSection={<FontAwesomeIcon icon={faBullseye} />}
-            >
-              Save Goal
-            </Button>
-          </Group>
-        </Stack>
-      </Card>
+            <Group mt="xl">
+              <Button
+                onClick={handleSubmit}
+                loading={isLoading}
+                size="md"
+                disabled={!targetWeight || isNaN(targetWeight)}
+                rightSection={<FontAwesomeIcon icon={faBullseye} />}
+              >
+                Save Goal
+              </Button>
+            </Group>
+          </Stack>
+        </Card>
     </Box>
   );
 };
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles((theme) => ({
   buttonsContainer: {
     padding: "20px",
     display: "flex",
-    alignItems: "left",
     marginBottom: "20px",
+  },
+  outerCard: {
+    padding: "40px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    
+  },
+  innerCard: {
+    width: "100%",
+    maxWidth: "600px",
+    
+  },
+  inputGroup: {
+    display: "flex",
+    gap: "1rem",
+    alignItems: "flex-end",
+    width: "100%",
+    justifyContent: "center",
+    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      flexDirection: "column",
+      alignItems: "center",
+    },
+  },
+  centeredInput: {
+    width: "100%",
+    maxWidth: "400px",
   },
 }));

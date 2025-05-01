@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using LearningStarter.Common;
 using LearningStarter.Data;
 using LearningStarter.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -211,12 +214,6 @@ public class UsersController : ControllerBase
         {
             response.AddError("userName", "User name cannot be empty.");
         }
-
-        if (string.IsNullOrEmpty(userUpdateDto.Password))
-        {
-            response.AddError("password", "Password cannot be empty.");
-        }
-        
         if (string.IsNullOrEmpty(userUpdateDto.Email))
         {
             response.AddError("email", "Email cannot be empty.");
@@ -293,6 +290,65 @@ public class UsersController : ControllerBase
         _context.Users.Remove(user);
         _context.SaveChanges();
 
+        return Ok(response);
+    }
+    
+    [HttpPost("{id}/profile-picture")]
+    public async Task<IActionResult> UploadProfilePicture(int id, IFormFile file)
+    {
+        var response = new Response();
+    
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        if (user == null)
+        {
+            response.AddError("id", "User not found");
+            return NotFound(response);
+        }
+
+        if (file == null || file.Length == 0)
+        {
+            response.AddError("file", "No file uploaded");
+            return BadRequest(response);
+        }
+
+        // Validate file type and size
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(extension))
+        {
+            response.AddError("file", "Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.");
+            return BadRequest(response);
+        }
+
+        if (file.Length > 5 * 1024 * 1024) // 5MB limit
+        {
+            response.AddError("file", "File size exceeds 5MB limit");
+            return BadRequest(response);
+        }
+
+        // Create uploads directory if it doesn't exist
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        // Generate unique filename
+        var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        // Save the file
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        // Update user's profile picture URL
+        user.ProfilePictureUrl = $"/uploads/{uniqueFileName}";
+        user.UpdatedDate = DateTimeOffset.UtcNow;
+        await _userManager.UpdateAsync(user);
+
+        response.Data = new { ProfilePictureUrl = user.ProfilePictureUrl };
         return Ok(response);
     }
 }
