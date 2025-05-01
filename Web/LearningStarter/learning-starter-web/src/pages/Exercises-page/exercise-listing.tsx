@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ApiResponse, ExerciseGetDto } from "../../constants/types";
 import { showNotification } from "@mantine/notifications";
 import api from "../../config/axios";
-import { Button, Space, TextInput } from "@mantine/core";
+import { Button, Card, SimpleGrid, Space, TextInput, Text, useMantineColorScheme } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
@@ -10,7 +10,15 @@ import { createStyles } from "@mantine/emotion";
 import { faHistory, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
 import exercisebgImage from "../../assets/exercisebg.jpg";
 import { useAuth } from "../../authentication/use-auth";
-
+import dumbell from "../../assets/dumbbell.jpg";
+import squart from "../../assets/squart.jpg";
+import legpress from "../../assets/legpress.jpg";
+import flat from "../../assets/flat.jpg";
+import cardio from "../../assets/cardio.jpg";
+import cycling from "../../assets/cycling.jpg";
+import chestpress from "../../assets/chestpress.jpg";
+import inclined from "../../assets/inclined.jpg";
+import cable from "../../assets/cable1.jpg";
 export const ExerciseListing = () => {
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -74,9 +82,59 @@ export const ExerciseListing = () => {
     navigate(`/exercises/update/${exerciseId}`);
   };
 
+  const exerciseImages: Record<string, string> = {
+    "Dumbbell": dumbell,
+    "Squat": squart,
+    "Leg Press": legpress,
+    "Flat Bench Press": flat,
+    "Cardio": cardio,
+    "Cycling": cycling,
+    "Chest Press": chestpress,
+    "Inclined Bench Press": inclined,
+    //"cable machine": cable,
+    // Add more mappings as needed
+  };
+
   return (
     <>
       <section>
+
+      <div className={classes.gridContainer}>
+          <Text size="xl" fw={700} ta="center" mb="xl" className={classes.sectionTitle}>
+            Quick Log Exercises
+          </Text>
+          <SimpleGrid
+            cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+            spacing="xl"
+            verticalSpacing="xl"
+          >
+            {exercises.map((exercise) => (
+              <Card
+                key={exercise.id}
+                shadow="sm"
+                padding="lg"
+                radius="md"
+                withBorder
+                className={classes.exerciseCard}
+                onClick={() => handleExerciseClick(exercise)}
+              >
+                <Card.Section className={classes.cardImageSection}>
+                  <img
+                    src={exerciseImages[exercise.name] || dumbell}
+                    height={200}
+                    width="100%"
+                    alt={exercise.name}
+                    className={classes.cardImage}
+                  />
+                </Card.Section>
+                <Text fw={600} size="md" mt="sm" ta="center" className={classes.exerciseName}>
+                  {exercise.name}
+                </Text>
+              </Card>
+            ))}
+          </SimpleGrid>
+        </div>
+
         <div className={classes.container}>
           <div className={classes.overlayText}>
             <h2>Insert your Exercise</h2>
@@ -128,31 +186,101 @@ export const ExerciseListing = () => {
             )}
 
             <div className={classes.buttonBackground}>
+            <Button
+                onClick={() => navigate(routes.exerciseLog)}
+                leftSection={<FontAwesomeIcon icon={faHistory} />}
+                variant="outline"
+              color="red"
+              >
+                Back To Log
+              </Button>
               <Button
                 onClick={() => {
                   navigate(routes.exerciseCreate);
                 }}
+                variant="outline"
+              color="blue"
               >
                 <FontAwesomeIcon icon={faPlus} />
                 <Space w={8} />
-                New Exercise
+                Create Exercise
               </Button>
-              <Button
-                onClick={() => navigate(routes.exerciseLog)}
-                leftSection={<FontAwesomeIcon icon={faHistory} />}
-              >
-                View My Logs
-              </Button>
+              
             </div>
           </div>
         </div>
+
       </section>
     </>
   );
 };
 
-const useStyles = createStyles(() => {
+const useStyles = createStyles((theme) => {
+   const { colorScheme } = useMantineColorScheme();
+   const isDark = colorScheme === 'dark';
   return {
+    gridContainer: {
+      padding: theme.spacing.xl,
+      maxWidth: '1400px',
+      margin: '0 auto',
+    },
+    sectionTitle: {
+      fontSize: '2rem',
+      color: isDark ? theme.colors.gray[1] : theme.colors.dark[7],
+      marginBottom: '2rem',
+      position: 'relative',
+      '&::after': {
+        content: '""',
+        display: 'block',
+        width: '100px',
+        height: '4px',
+        backgroundColor: "#0fa462",
+        margin: '0.5rem auto 0',
+        borderRadius: '2px',
+      },
+    },
+  
+    exerciseCard: {
+      cursor: 'pointer',
+      transition: 'transform 0.2s, box-shadow 0.2s',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      aspectRatio: '1/1', // Makes the card square
+      '&:hover': {
+        transform: 'translateY(-5px)',
+        boxShadow: theme.shadows.lg,
+      },
+    },
+  
+    cardImageSection: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden',
+      borderBottom: `1px solid ${theme.colors.gray[2]}`,
+    },
+  
+    cardImage: {
+      objectFit: 'cover',
+      width: '100%',
+      height: '100%',
+      transition: 'transform 0.3s',
+      '&:hover': {
+        transform: 'scale(1.05)',
+      },
+    },
+  
+    exerciseName: {
+      color: isDark ? theme.colors.gray[1] : theme.colors.gray[7],
+      padding: theme.spacing.sm,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      fontSize: "18px"
+    },
+
     iconButton: {
       cursor: "pointer",
       color: "black",
@@ -171,8 +299,8 @@ const useStyles = createStyles(() => {
       color: "white",
       fontSize: "20px",
       margin: "0px",
-      height: "600px", // Make sure the container takes full height of the screen
-      width: "100vw", // Full width of the container
+      minHeight: "100vh", // Make sure the container takes full height of the screen
+      width: "100%", // Full width of the container
 
       backgroundImage: `linear-gradient(
       rgba(0, 0, 0, 0.5),

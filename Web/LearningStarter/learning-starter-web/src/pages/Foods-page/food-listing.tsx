@@ -218,8 +218,8 @@ const useStyles = createStyles(() => {
       color: colorScheme === "dark" ? "white" : "black",
       fontSize: "20px",
       margin: "0px",
-      height: "600px",
-      width: "100vw",
+      minHeight: "100vh",
+      width: "100%",
       padding: "10px",
       backgroundImage: `linear-gradient(
                 rgba(0, 0, 0, 0.5),
