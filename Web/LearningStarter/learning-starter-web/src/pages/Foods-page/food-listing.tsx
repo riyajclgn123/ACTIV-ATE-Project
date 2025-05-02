@@ -29,6 +29,15 @@ import {
     faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import foodbgImage from "../../assets/foodbg.jpg";
+import dumbell from "../../assets/dumbbell.jpg";
+import squat from "../../assets/squart.jpg";
+import legpress from "../../assets/legpress.jpg";
+import flat from "../../assets/flat.jpg";
+import cardio from "../../assets/cardio.jpg";
+import cycling from "../../assets/cycling.jpg";
+import chestpress from "../../assets/chestpress.jpg";
+import inclined from "../../assets/inclined.jpg";
+import cable from "../../assets/cable1.jpg";
 
 export const FoodListing = () => {
     const location = useLocation();
@@ -93,6 +102,19 @@ export const FoodListing = () => {
         navigate(`/foods/update/${foodId}`);
     };
 
+    const foodImages: Record<string, string> = {
+        Dumbbell: dumbell,
+        Squat: squat,
+        "Leg Press": legpress,
+        "Flat Bench Press": flat,
+        Cardio: cardio,
+        Cycling: cycling,
+        "Chest Press": chestpress,
+        "Inclined Bench Press": inclined,
+        //"cable machine": cable,
+        // Add more mappings as needed
+    };
+
     return (
         <>
             <Container
@@ -102,17 +124,14 @@ export const FoodListing = () => {
                 style={{ maxWidth: "100vw" }}
             >
                 <Container className={classes.headerSection}>
-                    <Group
-                        mb="30px"
-                        gap={"lg"}
-                    >
+                    <Container className={classes.buttonsContainer}>
                         <Button
                             onClick={() => navigate(routes.foodLog)}
                             leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
                             color="red"
                             variant="outline"
                         >
-                            Back To Log
+                            Back To Food Log
                         </Button>
                         <Button
                             onClick={() => navigate(routes.foodCreate)}
@@ -121,8 +140,8 @@ export const FoodListing = () => {
                         >
                             Create New Food
                         </Button>
-                    </Group>
-                    <div className={classes.searchContainer}>
+                    </Container>
+                    <Container className={classes.searchContainer}>
                         <TextInput
                             placeholder="Search for a food..."
                             value={searchQuery}
@@ -160,9 +179,49 @@ export const FoodListing = () => {
                                 ))}
                             </div>
                         )}
-                    </div>
-                    
+                    </Container>
                 </Container>
+                
+                <div className={classes.gridContainer}>
+                    <SimpleGrid
+                        cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                        spacing="20px"
+                        verticalSpacing="20px"
+                    >
+                        {foods.map((food) => (
+                            <Card
+                                key={food.id}
+                                shadow="sm"
+                                padding="lg"
+                                radius="md"
+                                withBorder
+                                className={classes.foodCard}
+                                onClick={() => handleFoodClick(food)}
+                            >
+                                <Card.Section
+                                    className={classes.cardImageSection}
+                                >
+                                    <img
+                                        src={foodImages[food.name] || dumbell}
+                                        height={200}
+                                        width="100%"
+                                        alt={food.name}
+                                        className={classes.cardImage}
+                                    />
+                                </Card.Section>
+                                <Text
+                                    fw={600}
+                                    size="md"
+                                    mt="sm"
+                                    ta="center"
+                                    className={classes.foodName}
+                                >
+                                    {food.name}
+                                </Text>
+                            </Card>
+                        ))}
+                    </SimpleGrid>
+                </div>
             </Container>
         </>
     );
@@ -173,6 +232,53 @@ const useStyles = createStyles((theme) => {
     const isDark = colorScheme === "dark";
 
     return {
+        gridContainer: {
+            padding: '20px',
+            maxWidth: "1400px",
+            margin: "0 auto",
+        },
+
+        foodCard: {
+            cursor: "pointer",
+            transition: "transform 0.2s, box-shadow 0.2s",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            aspectRatio: "1/1", // Makes the card square
+            "&:hover": {
+                transform: "translateY(-5px)",
+                boxShadow: theme.shadows.lg,
+            },
+        },
+
+        cardImageSection: {
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            borderBottom: `1px solid ${theme.colors.gray[2]}`,
+        },
+
+        cardImage: {
+            objectFit: "cover",
+            width: "100%",
+            height: "100%",
+            transition: "transform 0.3s",
+            "&:hover": {
+                transform: "scale(1.05)",
+            },
+        },
+
+        foodName: {
+            color: isDark ? theme.colors.gray[1] : theme.colors.gray[7],
+            padding: theme.spacing.sm,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            fontSize: "18px",
+        },
+
         container: {
             display: "flex",
             flexDirection: "column",
@@ -181,19 +287,14 @@ const useStyles = createStyles((theme) => {
             margin: "0px",
             minHeight: "100vh",
             width: "100%",
-            padding: "20px",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
         },
 
         headerSection: {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            marginBottom: "30px",
             width: "100%",
-            padding: "30px",
+            padding: "20px 20px 0 20px",
         },
 
         searchContainer: {
@@ -257,6 +358,15 @@ const useStyles = createStyles((theme) => {
             "&:hover": {
                 color: theme.colors.blue[7],
             },
+        },
+
+        buttonsContainer: {
+          padding: "0px",
+          display: "flex",
+          gap: "20px",
+          justifyContent: "center",
+          marginBottom: "20px",
+          width: "100%",
         },
     };
 });
