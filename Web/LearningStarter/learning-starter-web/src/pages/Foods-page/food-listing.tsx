@@ -363,10 +363,10 @@ const useStyles = createStyles((theme) => {
         buttonsContainer: {
           padding: "0px",
           display: "flex",
-          gap: "20px",
-          justifyContent: "center",
+          justifyContent: "space-around",
           marginBottom: "20px",
           width: "100%",
+          maxWidth: "560px",
         },
     };
 });

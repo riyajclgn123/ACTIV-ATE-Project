@@ -176,7 +176,7 @@ export const FoodLogCreate = () => {
   };
 
   return (
-    <Box maw={600} mx="auto" p="md" pos="relative">
+    <Box maw={600} mx="auto" p="20px" pos="relative">
       <LoadingOverlay visible={isLoading} />
       <Container className={classes.buttonsContainer}>
         <Button
@@ -196,11 +196,11 @@ export const FoodLogCreate = () => {
         </Button>
       </Container>
 
-      <Title order={2} mb="xl">
+      <Title order={2} mb="20px">
         Log: {food.name}
       </Title>
 
-      <Card withBorder shadow="sm" p="lg">
+      <Card withBorder shadow="sm" p="20px">
         <Stack>
           <Group align="flex-end" grow>
             <NumberInput
@@ -251,7 +251,7 @@ export const FoodLogCreate = () => {
           <Card
             mt="sm"
             withBorder
-            p="lg"
+            p="20px"
             radius="sm"
             style={{
               textAlign: "left",
@@ -317,11 +317,11 @@ export const FoodLogCreate = () => {
 const useStyles = createStyles(() => {
   return {
     buttonsContainer: {
-      padding: "20px",
       display: "flex",
       justifyContent: "space-around",
       alignItems: "center",
       marginBottom: "20px",
+      padding: "0px",
     },
   };
 });
