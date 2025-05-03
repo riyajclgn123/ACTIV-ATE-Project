@@ -67,7 +67,7 @@ export const ExerciseLogCreate = () => {
   const [reps, setReps] = useState<number>(10);
   const [caloriesBurned, setCaloriesBurned] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const durationUnits = [
     { value: "seconds", label: "Seconds" },

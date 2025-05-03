@@ -376,8 +376,8 @@ export const LandingPage = () => {
                             ta="center"
                             style={{ fontWeight: "bold" }}
                           >
-                            {foodConsumed?.totalCalories || 0} /{" "}
-                            {calorieGoal?.dailyCalorieGoal || 0} kcal
+                            {foodConsumed?.totalCalories ? Math.round(foodConsumed.totalCalories) : 0} /{" "}
+                            {calorieGoal?.dailyCalorieGoal ? Math.round(calorieGoal.dailyCalorieGoal) : 0} kcal
                           </Text>
                           <Text
                             size="sm"
@@ -390,8 +390,7 @@ export const LandingPage = () => {
                                   : "green",
                             }}
                           >
-                            {foodConsumed?.calorieDifference?.toFixed(2) ||
-                              "0.00"}{" "}
+                            {foodConsumed?.calorieDifference ? Math.round(foodConsumed.calorieDifference) : 0}{" "}
                             kcal{" "}
                             {foodConsumed?.calorieDifference &&
                             foodConsumed.calorieDifference >= 0
@@ -544,8 +543,8 @@ export const LandingPage = () => {
                             ta="center"
                             style={{ fontWeight: "bold" }}
                           >
-                            {foodConsumed?.totalCalories || 0} /{" "}
-                            {calorieGoal?.dailyCalorieGoal || 0} kcal
+                            {foodConsumed?.totalCalories ? Math.round(foodConsumed.totalCalories) : 0} /{" "}
+                            {calorieGoal?.dailyCalorieGoal ? Math.round(calorieGoal.dailyCalorieGoal) : 0} kcal
                           </Text>
                           <Text
                             size="sm"
@@ -559,10 +558,8 @@ export const LandingPage = () => {
                             }}
                           >
                             {foodConsumed?.calorieDifference !== undefined
-                              ? Number(foodConsumed.calorieDifference).toFixed(
-                                  2
-                                )
-                              : "0.00"}{" "}
+                              ? Math.round(foodConsumed.calorieDifference)
+                              : "0"}{" "}
                             kcal{" "}
                             {foodConsumed?.calorieDifference !== undefined &&
                             foodConsumed.calorieDifference >= 0
