@@ -171,17 +171,17 @@ public class Startup
 
         var seededExercise1 = new Exercise
         {
-            Name = "Dumb bell",
+            Name = "Dumbbell",
             Description = "Big one",
         };
         var seededExercise2 = new Exercise
         {
-            Name = "Leg press",
+            Name = "Leg Press",
             Description = "Flat bench",
         };
         var seededExercise3 = new Exercise
         {
-            Name = "Chest press",
+            Name = "Chest Press",
             Description = "Inclined",
         };
         var seededExercise4 = new Exercise
@@ -189,11 +189,41 @@ public class Startup
             Name = "Cardio",
             Description = "Manual one",
         };
+        var seededExercise5 = new Exercise
+        {
+            Name = "Inclined Bench Press",
+            Description = "Manual one",
+        };
+        var seededExercise6 = new Exercise
+        {
+            Name = "Flat Bench Press",
+            Description = "Manual one",
+        };
+        var seededExercise7 = new Exercise
+        {
+            Name = "Squat",
+            Description = "Manual one",
+        };
+        var seededExercise8 = new Exercise
+        {
+            Name = "Cycling",
+            Description = "Manual one",
+        };
+        // var seededExercise9 = new Exercise
+        // {
+        //     Name = "cable machine",
+        //     Description = "Manual one",
+        // };
         
         dataContext.Set<Exercise>().Add(seededExercise1);
         dataContext.Set<Exercise>().Add(seededExercise2);
         dataContext.Set<Exercise>().Add(seededExercise3);
         dataContext.Set<Exercise>().Add(seededExercise4);
+        dataContext.Set<Exercise>().Add(seededExercise5);
+        dataContext.Set<Exercise>().Add(seededExercise6);
+        dataContext.Set<Exercise>().Add(seededExercise7);
+        dataContext.Set<Exercise>().Add(seededExercise8);
+        //dataContext.Set<Exercise>().Add(seededExercise9);
         dataContext.SaveChanges();
     }
     
