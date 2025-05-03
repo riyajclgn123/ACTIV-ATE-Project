@@ -5,7 +5,6 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
-    "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mantine/charts": "7.12.2",
@@ -74,6 +73,7 @@
     ]
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "postcss": "^8.4.45",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",

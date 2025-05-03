@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
   TextInput,
+  useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
@@ -70,7 +71,7 @@ function ProfilePicture() {
       {previewUrl ? (
         <Avatar src={previewUrl} alt={fullName} size={100} radius="xl" />
       ) : (
-        <Avatar color="blue" size={100} radius="xl">
+        <Avatar color="#52aead" size={100} radius="xl">
           {initials}
         </Avatar>
       )}
@@ -78,19 +79,20 @@ function ProfilePicture() {
       <FileButton
         onChange={handleFileChange}
         accept="image/png,image/jpeg,image/gif"
+        
       >
         {(props) => (
           <ActionIcon
             {...props}
             variant="filled"
-            color="blue"
+            color="#008b84"
             radius="xl"
             size="sm"
             pos="absolute"
             bottom={0}
             right={0}
           >
-            <FontAwesomeIcon icon={faCamera} size="xs" />
+            <FontAwesomeIcon icon={faCamera} size="xs" color="white" />
           </ActionIcon>
         )}
       </FileButton>
@@ -142,24 +144,26 @@ export const Profile = () => {
 
   const handleSave = async () => {
     try {
+      const currentDateTime = new Date().toISOString();
+
       const updatedUserData = {
         ...editedUser,
-        updatedDate: new Date().toISOString(),
+        updatedDate: currentDateTime,
       };
+      const response = await api.put(`/api/users/${user.id}`, updatedUserData);
+    
+      if (response.status === 200) {
+        notifications.show({
+          title: "Success!",
+          message: "Your profile has been updated",
+          color: "teal",
+          icon: <IconCheck />,
+        });
 
-      const updatedUser = await updateUserProfile(user.id, updatedUserData);
-
-      notifications.show({
-        title: "Success!",
-        message: "Your profile has been updated",
-        color: "teal",
-        icon: <IconCheck />,
-      });
-
-      // If your useAuth hook provides an update function, you can use it here
-      // For example: updateUser(updatedUser);
-
-      setIsEditing(false);
+        setIsEditing(false);
+      } else {
+        throw new Error("Failed to update profile");
+      }
     } catch (error) {
       notifications.show({
         title: "Error",
@@ -221,7 +225,7 @@ export const Profile = () => {
       <Container>
         <Space h={20} />
 
-        <Tabs color="blue" defaultValue="profile">
+        <Tabs color="#008b84" defaultValue="profile">
           <Tabs.List grow>
             <Tabs.Tab
               value="profile"
@@ -258,7 +262,7 @@ export const Profile = () => {
                 {!isEditing ? (
                   <ActionIcon
                     variant="outline"
-                    color="blue"
+                    color="#52aead"
                     onClick={handleEdit}
                     className={classes.editButton}
                   >
@@ -289,9 +293,10 @@ export const Profile = () => {
                   display: "flex",
                   justifyContent: "center",
                   marginBottom: 20,
+                  
                 }}
               >
-                <ProfilePicture />
+                <ProfilePicture/>
               </Box>
 
               <Divider my="sm" />
@@ -451,14 +456,14 @@ export const Profile = () => {
 
           <Tabs.Panel value="weightMeasure">
             <Space h={30} />
-            <Card withBorder shadow="sm" radius="md">
+            <Card withBorder shadow="sm" radius="md" className={classes.profileCard}>
               <WeightMeasure />
             </Card>
           </Tabs.Panel>
 
           <Tabs.Panel value="goals">
             <Space h={30} />
-            <Card withBorder shadow="sm" radius="md">
+            <Card withBorder shadow="sm" radius="md" className={classes.profileCard}>
               <Goals />
             </Card>
           </Tabs.Panel>
@@ -468,10 +473,28 @@ export const Profile = () => {
   );
 };
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme) => {
+   const { colorScheme } = useMantineColorScheme();
+  return{
   profileCard: {
     position: "relative",
-    marginBottom: "10px"
+    marginBottom: "20px",
+    border: `1px solid ${
+      colorScheme === "dark"
+        ? "#008b84"
+        : theme.colors[theme.primaryColor][3]
+    }`,
+    
+    borderRadius: theme.radius.md,
+    background: "rgba(255, 255, 255, 0.05)",
+            backdropFilter: "blur(10px)",
+            boxShadow: 
+            `
+                  0 4px 6px rgba(0, 0, 0, 0.1), 
+                  0 8px 20px rgba(0, 0, 0, 0.2), 
+                  0 12px 24px rgba(0, 0, 0, 0.15)
+             `,
+    
   },
   editButton: {
     position: "absolute",
@@ -497,4 +520,4 @@ const useStyles = createStyles((theme) => ({
     flex: 1,
     maxWidth: "200px",
   },
-}));
+}});

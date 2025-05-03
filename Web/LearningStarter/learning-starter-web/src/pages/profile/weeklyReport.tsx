@@ -193,12 +193,16 @@ export const WeeklyReport = () => {
         <Button
           onClick={() => setDaysOffset(daysOffset + 1)}
           disabled={daysOffset >= 4}
+          variant="outline"
+              color="#FFD700"
         >
           Previous Week
         </Button>
         <Button
           onClick={() => setDaysOffset(Math.max(0, daysOffset - 1))}
           disabled={daysOffset === 0}
+          variant="outline"
+              color="#FFD700"
         >
           Next Week
         </Button>

@@ -10,6 +10,7 @@ import {
   Box,
   Select,
   SegmentedControl,
+  Flex,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useAuth } from "../../authentication/use-auth";
@@ -138,8 +139,8 @@ export const WeightMeasure = () => {
   if (loading) return <Loader />;
 
   return (
-    <Box style={{ maxWidth: 800, margin: "0 auto", padding: "1rem" }}>
-      <Text size="xl" mb="md" fw={500}>
+    <Box style={{padding:"1.2rem",}}>
+      <Text mb="md" fw={700} size="xl">
         Weight Tracking
       </Text>
 
@@ -169,7 +170,13 @@ export const WeightMeasure = () => {
         onSubmit={form.onSubmit(handleSubmit)}
         style={{ marginBottom: "2rem" }}
       >
-        <Box style={{ display: "flex", gap: "1rem", alignItems: "flex-end" }}>
+         <Flex
+          direction={{ base: 'column', sm: 'row' }}
+          gap="md"
+          align="center"
+          justify="center"
+          wrap="wrap"
+        >
           <TextInput
             label="Weight"
             placeholder="e.g. 75.5"
@@ -192,10 +199,10 @@ export const WeightMeasure = () => {
             ]}
             required
           />
-        </Box>
-        <Button type="submit" color="indigo" mt="md">
+        <Button type="submit" color="#008b84" mt="md" variant="light" style={{ alignSelf: 'flex-end' }}>
           {editingLog ? "Update Weight" : "Record Weight"}
         </Button>
+        </Flex>
       </form>
 
       <Box
@@ -206,7 +213,7 @@ export const WeightMeasure = () => {
           marginBottom: "1rem",
         }}
       >
-        <Text size="lg" fw={500}>
+        <Text size="xl" fw={500}>
           Your Weight History
         </Text>
         <SegmentedControl
@@ -243,7 +250,8 @@ export const WeightMeasure = () => {
                       <Group style={{ display: "flex", gap: "6px" }}>
                         <Button
                           size="xs"
-                          color="blue"
+                          
+                          color="#008b84"
                           onClick={() => handleEdit(log)}
                         >
                           <FontAwesomeIcon icon={faEdit} />
@@ -251,7 +259,7 @@ export const WeightMeasure = () => {
                         <Button
                           size="xs"
                           color="red"
-                          variant="outline"
+                          
                           onClick={() => handleDelete(log.id)}
                         >
                           <FontAwesomeIcon icon={faTrash} />
@@ -265,7 +273,7 @@ export const WeightMeasure = () => {
           </div>
 
           <Box mt="xl">
-            <Text fw={500} mb="sm">
+            <Text fw={500} mb="md" size="xl">
               Weight Progress Chart
             </Text>
             <LineChart
@@ -275,7 +283,7 @@ export const WeightMeasure = () => {
               unit={unit}
               withLegend={false}
               curveType="monotone"
-              series={[{ name: "Weight", color: "blue" }]}
+              series={[{ name: "Weight", color: "red" }]}
             />
           </Box>
         </>

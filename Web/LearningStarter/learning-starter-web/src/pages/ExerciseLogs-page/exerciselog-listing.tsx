@@ -99,7 +99,7 @@ export const ExerciseLogListing = ({ date, dateProp, fullWidth = false }: any) =
           <div style={{ display: "flex", justifyContent:"flex-end"}}>
           <Button
             variant="light"
-            color="blue"
+            color="#008b84"
             leftSection={<FontAwesomeIcon icon={faPlus} />}
             onClick={() => navigate(routes.exercises, {})}
             
@@ -173,13 +173,18 @@ const useStyles = createStyles((theme, { fullWidth}: {fullWidth: boolean}) => {
       padding: "16px",
       border: `1px solid ${
         colorScheme === "dark"
-          ? theme.colors.dark[4]
+          ? "#008b84"
           : theme.colors[theme.primaryColor][3]
       }`,
       borderRadius: theme.radius.md,
-      backgroundColor:
-        colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
-      boxShadow: theme.shadows.xs,
+      background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              boxShadow: 
+              `
+                    0 4px 6px rgba(0, 0, 0, 0.1), 
+                    0 8px 20px rgba(0, 0, 0, 0.2), 
+                    0 12px 24px rgba(0, 0, 0, 0.15)
+               `,
     },
   };
 });

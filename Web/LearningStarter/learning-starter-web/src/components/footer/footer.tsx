@@ -1,4 +1,4 @@
-import { Anchor} from "@mantine/core";
+import { Anchor, useMantineColorScheme} from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 
 const links = [
@@ -29,13 +29,16 @@ export function FooterSimple() {
   );
 }
 
-const useStyles = createStyles(() => {
+const useStyles = createStyles((theme) => {
+   const { colorScheme } = useMantineColorScheme();
+    const isDark = colorScheme === "dark";
   return {
     container: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#0fa462", 
+        color: isDark ? theme.white : theme.black,
+        backgroundColor: "#008b84", 
         fontSize: "15px",
         width: "100%",  
         marginTop: "auto",

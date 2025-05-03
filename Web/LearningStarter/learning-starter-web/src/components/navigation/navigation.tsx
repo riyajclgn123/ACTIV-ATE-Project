@@ -13,6 +13,7 @@ import {
   Avatar,
   Title,
   Divider,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   NAVBAR_HEIGHT,
@@ -25,11 +26,12 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import logo from "../../assets/activatelogo.png";
+import logo from "../../assets/logodone.png";
 import { UserDto } from "../../constants/types";
 import { useAuth } from "../../authentication/use-auth";
 import { createStyles } from "@mantine/emotion";
 import { useEffect, useState } from "react";
+
 
 type PrimaryNavigationProps = {
   user?: UserDto;
@@ -182,6 +184,7 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
   const { logout } = useAuth();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
+  const theme = useMantineTheme();
   const dark = colorScheme === "dark";
   return (
     <Title className={classes.container} order={4}>
@@ -202,7 +205,12 @@ export const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
             {user && (
               <Menu>
                 <Menu.Target>
-                  <Avatar className={classes.pointer}>
+                  <Avatar className={classes.pointer}
+                  color= "white"
+                  style={{
+                    color:  "white",
+                    backgroundColor:  "#52aead" 
+                  }}>
                     {user.firstName.substring(0, 1)}
                     {user.lastName.substring(0, 1)}
                   </Avatar>
@@ -239,9 +247,8 @@ const useStyles = createStyles((theme) => {
   return {
     pointer: {
       cursor: "pointer",
-      backgroundColor: "#f0f3f4",
-      color: theme.colors.blue[6],
-      border: `1px solid #ffffff`,
+     
+      //border: `1px solid ${'#ffffff'}`,
       transition: 'transform 0.2s ease',
       '&:hover': {
         transform: 'scale(1.1)',
@@ -252,46 +259,65 @@ const useStyles = createStyles((theme) => {
       width: 50, 
       height: 50, 
       borderRadius: "50%", 
-      objectFit: "cover", 
-      border: `1px solid ${theme.colors.blue[5]}`,
+      objectFit: "contain", 
       boxShadow: theme.shadows.md,
       transition: "transform 0.3s ease",
       marginRight: 20,
+      backgroundColor: "transparent",
       "&:hover": {
         transform: "scale(1.05)",
       },
     },
 
     paddedMenuItem: {
-      margin: "0px 5px 0px 5px",
-      color: "black",
-      "&:hover": {
-        color: "white", 
-        backgroundColor: theme.colors.green[5], 
+      position: "relative",
+      margin: "0px 5px",
+      color: "#ced4da",
+      textDecoration: "none",
+      overflow: "hidden",
+      transition: "color 0.3s ease",
+    
+      "&::after": {
+        content: '""',
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        height: "2px",
+        backgroundColor: "#52aead",
+        transform: "scaleX(0)",
+        transformOrigin: "left",
+        transition: "transform 0.3s ease-in-out",
       },
-    },
+    
+      "&:hover": {
+    backgroundColor:"transparent",
+        "&::after": {
+          transform: "scaleX(1.3)",
+        },
+      },
+    }
+,    
     linkActive: {
       "&, &:hover": {
-        backgroundColor: theme.variantColorResolver({
-          theme: theme,
-          color: theme.colors.green[5],
-          variant: "light",
-        }).background,
+        backgroundColor:"white",
         color: theme.variantColorResolver({
           theme: theme,
-          color: "white",
+          color: "black",
           variant: "light",
         }).color,
       },
     },
     desktopNav: {
       height: NAVBAR_HEIGHT,
+      color: "black"
     },
     fullHeight: {
       height: "100%",
     },
     container: {
-      backgroundColor: "#0fa462",
+     
+      color: "#008b84"
     },
   };
 });

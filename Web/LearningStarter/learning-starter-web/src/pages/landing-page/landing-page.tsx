@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  Container,
-  Space,
-  Tabs,
-  Text,
-} from "@mantine/core";
+import { Button, Card, Container, Space, Tabs, Text } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import bgImage from "../../assets/bg.jpeg";
 import { RingProgress } from "@mantine/core";
@@ -70,15 +63,14 @@ export const LandingPage = () => {
 
   const getStartOfDay = (date: Date | null) => {
     const d = date ? new Date(date) : new Date();
-    return dayjs(d).startOf("day").format("MM/DD/YYYY"); 
+    return dayjs(d).startOf("day").format("MM/DD/YYYY");
   };
 
   const getEndOfDay = (date: Date | null) => {
     const d = date ? new Date(date) : new Date();
-    return dayjs(d).endOf("day").format("MM/DD/YYYY"); 
+    return dayjs(d).endOf("day").format("MM/DD/YYYY");
   };
 
-  
   const startDate = getStartOfDay(selectedDate);
   const endDate = getEndOfDay(selectedDate);
 
@@ -132,7 +124,7 @@ export const LandingPage = () => {
       const response = await api.get<ApiResponse<GoalGetDto>>(
         `/api/goals/user/${user.id}`
       );
-
+  
       if (response.data.hasErrors) {
         showNotification({
           message: "Error fetching calorie goal",
@@ -140,24 +132,39 @@ export const LandingPage = () => {
         });
         return;
       }
-
-      setCalorieGoal(response.data.data);
+  
+      const newGoal = response.data.data;
+      setCalorieGoal(newGoal);
+      
+      // Force a recalculation with the new goal
+      if (foodConsumed) {
+        setFoodConsumed({
+          ...foodConsumed,
+          dailyCalorieGoal: newGoal.dailyCalorieGoal,
+          calorieDifference: foodConsumed.totalCalories - newGoal.dailyCalorieGoal
+        });
+      } else {
+        fetchCalorieConsumed(newGoal.dailyCalorieGoal);
+      }
     } catch (error) {
       const axiosError = error as AxiosError;
-      showNotification({
-        message: `Error fetching calorie goal: ${axiosError.message}`,
-        color: "red",
-      });
+      console.error("Error fetching calorie goal:", axiosError.message);
     }
   };
-
+  
   useEffect(() => {
     fetchCalorieGoal();
   }, [user?.id]);
 
   const [foodConsumed, setFoodConsumed] =
     useState<CalorieConsumedResponse | null>(null);
-  const fetchCalorieConsumed = async () => {
+
+  
+  useEffect(() => {
+    fetchCalorieConsumed();
+  }, [user?.id, selectedDate]);
+
+  const fetchCalorieConsumed = async (goal?: number) => {
     try {
       if (!user) {
         showNotification({ message: "User not authenticated", color: "red" });
@@ -168,20 +175,21 @@ export const LandingPage = () => {
           user.id
         }/calories-consumed-per-day?date=${getDatestring(selectedDate)}`
       );
-
-      setFoodConsumed(response.data.data);
+  
+      const data = response.data.data;
+      if (data) {
+        // Always calculate the difference based on current goal
+        const currentGoal = goal ?? calorieGoal?.dailyCalorieGoal ?? data.dailyCalorieGoal;
+        data.calorieDifference = data.totalCalories - currentGoal;
+        data.dailyCalorieGoal = currentGoal;
+      }
+  
+      setFoodConsumed(data);
     } catch (error) {
       const axiosError = error as AxiosError;
-      showNotification({
-        message: `Error fetching calorie goal: ${axiosError.message}`,
-        color: "red",
-      });
+      console.error("Error fetching calorie data:", axiosError.message);
     }
   };
-
-  useEffect(() => {
-    fetchCalorieConsumed();
-  }, [user?.id, selectedDate]);
 
   const [totals, setTotals] = useState<MealTimeTotals | null>(null);
   const [loading, setLoading] = useState(true);
@@ -231,6 +239,12 @@ export const LandingPage = () => {
     fetchMealTimeTotals();
   }, [user?.id, selectedDate]);
 
+  useEffect(() => {
+    if (calorieGoal) {
+      fetchCalorieConsumed();
+    }
+  }, [calorieGoal]);
+
   const calculatePercentage = (value: number, total: number) => {
     if (!total || total === 0) return 0;
     return Math.round((value / total) * 100);
@@ -248,28 +262,51 @@ export const LandingPage = () => {
   };
 
   const percentages = useMemo(() => getPercentages(), [totals]);
- 
+
   return (
     <>
-      <section id="backgrounddesign">
+      <section
+        id="backgrounddesign"
+        style={{
+          padding: "1.5vw",
+        }}
+      >
         <div className={classes.container1}>
           <div className={classes.overlayText}>
-          <Text style={{alignItems:"center", fontSize:"20vh", color:"#D3D3D3", fontFamily:"cursive"}}>
-          ACTIV-ATE
-          </Text>
-            <p className={classes.quote}>
-              
-              "Your Journey to a Healthier You Starts Here!"
-            </p>
-            {/* <p>Welcome to your personalized fitness companion!</p> */}
+            <Text
+              style={{
+                alignItems: "center",
+                fontSize: "20vh",
+                color: "#D3D3D3",
+                fontFamily: "cursive",
+              }}
+            >
+              ACTIV-ATE
+            </Text>
+            <p className={classes.quote}>"Your Journey to a Healthier!"</p>
+
             <p className={classes.threeword}>Track. Plan. Achieve.</p>
           </div>
         </div>
       </section>
 
       <section id="after-background-design" className={classes.afterBackground}>
-        <Container>
-          <Card withBorder shadow="sm" p="lg">
+        <div style={{ padding: "1.5vw" }}>
+          <Card
+            shadow="xl"
+            p="lg"
+            style={{
+              marginBottom: "10px",
+              borderRadius: "2vw",
+              background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              boxShadow: `
+                    0 4px 6px rgba(0, 0, 0, 0.1), 
+                    0 8px 20px rgba(0, 0, 0, 0.2), 
+                    0 12px 24px rgba(0, 0, 0, 0.15)
+               `,
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -285,7 +322,12 @@ export const LandingPage = () => {
               </Text>
               <Button
                 variant="outline"
-                leftSection={<FontAwesomeIcon icon={viewMode === "tabs" ? faList: faTable} />}
+                color="#008b84"
+                leftSection={
+                  <FontAwesomeIcon
+                    icon={viewMode === "tabs" ? faList : faTable}
+                  />
+                }
                 onClick={() =>
                   setViewMode(viewMode === "tabs" ? "list" : "tabs")
                 }
@@ -294,9 +336,9 @@ export const LandingPage = () => {
               </Button>
             </div>
             <DateNavigator date={selectedDate} onChange={setSelectedDate} />
-            <Space h={30}/>
+            <Space h={30} />
             {viewMode === "tabs" ? (
-              <Tabs defaultValue="Chart">
+              <Tabs defaultValue="Chart" color="#008b84">
                 <Tabs.List grow>
                   <Tabs.Tab
                     value="Chart"
@@ -348,7 +390,9 @@ export const LandingPage = () => {
                                   : "green",
                             }}
                           >
-                            {foodConsumed?.calorieDifference || 0} kcal{" "}
+                            {foodConsumed?.calorieDifference?.toFixed(2) ||
+                              "0.00"}{" "}
+                            kcal{" "}
                             {foodConsumed?.calorieDifference &&
                             foodConsumed.calorieDifference >= 0
                               ? "over"
@@ -401,9 +445,9 @@ export const LandingPage = () => {
                       <Space h="sm" />
                       <Text
                         size="18px"
-                        ta="center"
+                        // ta="center"
                         mt="lg"
-                        style={{ fontWeight: "bold" }}
+                        style={{ fontWeight: "bold", textAlign: "left" }}
                       >
                         Base Goal
                       </Text>
@@ -423,7 +467,7 @@ export const LandingPage = () => {
                         size="18px"
                         ta="center"
                         mt="lg"
-                        style={{ fontWeight: "bold"}}
+                        style={{ fontWeight: "bold" }}
                       >
                         Food Count
                       </Text>
@@ -440,7 +484,7 @@ export const LandingPage = () => {
                         size="18px"
                         ta="center"
                         mt="lg"
-                        style={{ fontWeight: "bold", }}
+                        style={{ fontWeight: "bold" }}
                       >
                         Exercise Count
                       </Text>
@@ -458,15 +502,23 @@ export const LandingPage = () => {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Excercise Logs">
-                    {/* <Card withBorder shadow="sm" p="lg"> */}
-                      <ExerciseLogListing date={ false } dateProp={selectedDate} fullWidth={true}/>
-                    {/* </Card> */}
+                  {/* <Card withBorder shadow="sm" p="lg"> */}
+                  <ExerciseLogListing
+                    date={false}
+                    dateProp={selectedDate}
+                    fullWidth={true}
+                  />
+                  {/* </Card> */}
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Food Logs">
-                    {/* <Card withBorder shadow="sm" p="lg"> */}
-                      <FoodLogListing date={ false } dateProp={selectedDate} fullWidth= {true}/>
-                    {/* </Card> */}
+                  {/* <Card withBorder shadow="sm" p="lg"> */}
+                  <FoodLogListing
+                    date={false}
+                    dateProp={selectedDate}
+                    fullWidth={true}
+                  />
+                  {/* </Card> */}
                 </Tabs.Panel>
 
                 {/* <Tabs.Panel value="Macro Counts">
@@ -506,8 +558,13 @@ export const LandingPage = () => {
                                   : "green",
                             }}
                           >
-                            {foodConsumed?.calorieDifference || 0} kcal{" "}
-                            {foodConsumed?.calorieDifference &&
+                            {foodConsumed?.calorieDifference !== undefined
+                              ? Number(foodConsumed.calorieDifference).toFixed(
+                                  2
+                                )
+                              : "0.00"}{" "}
+                            kcal{" "}
+                            {foodConsumed?.calorieDifference !== undefined &&
                             foodConsumed.calorieDifference >= 0
                               ? "over"
                               : "under"}
@@ -613,21 +670,28 @@ export const LandingPage = () => {
                       <Space h="sm" />
                     </div>
                   </div>
-
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg" mb="md">
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faDumbbell} /> Exercise Logs
                   </Text>
-                  <ExerciseLogListing date = {false} dateProp = {selectedDate} fullWidth={true}/>
+                  <ExerciseLogListing
+                    date={false}
+                    dateProp={selectedDate}
+                    fullWidth={true}
+                  />
                 </Card>
 
                 <Card withBorder shadow="sm" p="lg" mb="md">
                   <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
                     <FontAwesomeIcon icon={faUtensils} /> Food Logs
                   </Text>
-                  <FoodLogListing date = {false} dateProp = {selectedDate} fullWidth={true}/>
+                  <FoodLogListing
+                    date={false}
+                    dateProp={selectedDate}
+                    fullWidth={true}
+                  />
                 </Card>
 
                 {/* <Card withBorder shadow="sm" p="lg">
@@ -639,7 +703,7 @@ export const LandingPage = () => {
               </div>
             )}
           </Card>
-        </Container>
+        </div>
       </section>
     </>
   );
@@ -653,8 +717,11 @@ const useStyles = createStyles(() => {
     },
 
     container1: {
+      marginTop: "1vw",
+
       display: "flex",
       justifyContent: "center",
+      borderRadius: "30px",
       alignItems: "center",
       position: "relative",
       color: "white",
@@ -814,7 +881,7 @@ const useStyles = createStyles(() => {
       gap: "100px",
       flexDirection: "row",
       display: "flex",
-      justifyContent: "center",
+      justifyContent: "space-around",
       alignItems: "center",
 
       "@media (max-width: 768px)": {
@@ -838,12 +905,11 @@ const useStyles = createStyles(() => {
     text: {
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
+      marginRight: "2vw",
+      alignItems: "flex-start",
       flexDirection: "column",
     },
 
-    afterBackground: {
-      marginTop: "50px",
-    },
+    afterBackground: {},
   };
 });

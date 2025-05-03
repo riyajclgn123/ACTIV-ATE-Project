@@ -200,10 +200,10 @@ export const FoodLogListing = ({ date, dateProp, fullWidth= false }: any) => {
         setCalorieGoal(response.data.data.dailyCalorieGoal);
       } catch (error) {
         const axiosError = error as AxiosError;
-        showNotification({
-          message: `Error fetching calorie goal: ${axiosError.message}`,
-          color: "red",
-        });
+        // showNotification({
+        //   message: `Error fetching calorie goal: ${axiosError.message}`,
+        //   color: "red",
+        // });
       }
     };
     fetchCalorieGoal();
@@ -250,7 +250,7 @@ export const FoodLogListing = ({ date, dateProp, fullWidth= false }: any) => {
                 </Title>
                 <Button
                   variant="light"
-                  color="blue"
+                color="#008b84"
                   leftSection={<FontAwesomeIcon icon={faPlus} />}
                   onClick={() =>
                     navigate(routes.foods, {
@@ -298,7 +298,6 @@ export const FoodLogListing = ({ date, dateProp, fullWidth= false }: any) => {
                         <Table.Td>
                           <ActionIcon
                             color="red"
-                            variant="subtle"
                             onClick={() => handleDelete(log.id)}
                           >
                             <FontAwesomeIcon icon={faTrash} />
@@ -323,7 +322,7 @@ export const FoodLogListing = ({ date, dateProp, fullWidth= false }: any) => {
 };
 
 const useStyles = createStyles((theme, { fullWidth}: {fullWidth: boolean}) => {
-  const { colorScheme } = useMantineColorScheme(); // 'light' | 'dark' | 'auto'
+  const { colorScheme } = useMantineColorScheme(); 
   return {
     log: {
       margin: "20px",
@@ -334,20 +333,27 @@ const useStyles = createStyles((theme, { fullWidth}: {fullWidth: boolean}) => {
     },
     mealTimeCard: {
       width: fullWidth ? "100%" : "70%",
-      marginBottom: "20px",
+      marginBottom: "40px",
       padding: "16px",
       border: `1px solid ${
         colorScheme === "dark"
-          ? theme.colors.dark[4]
+          ? "#008b84"
           : theme.colors[theme.primaryColor][3]
       }`,
+      
       borderRadius: theme.radius.md,
-      backgroundColor:
-        colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
-      boxShadow: theme.shadows.xs,
+      background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              boxShadow: 
+              `
+                    0 4px 6px rgba(0, 0, 0, 0.1), 
+                    0 8px 20px rgba(0, 0, 0, 0.2), 
+                    0 12px 24px rgba(0, 0, 0, 0.15)
+               `,
     },
     mealTimeTitle: {
-      color: theme.colors[theme.primaryColor][colorScheme === "dark" ? 4 : 6],
+      //color: theme.colors[theme.primaryColor][colorScheme === "dark" ? 4 : 6],
+      color:"#008b84",
     },
     noLogs: {
       padding: "30px",

@@ -10,10 +10,12 @@ import {
   Stack,
   LoadingOverlay,
   Box,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCalculator } from "@fortawesome/free-solid-svg-icons";
+import { createStyles } from "@mantine/emotion";
 
 export const BMIIndicator = () => {
   const [weight, setWeight] = useState<string>("");
@@ -22,6 +24,7 @@ export const BMIIndicator = () => {
   const [heightUnit, setHeightUnit] = useState<string>("cm");
   const [bmiResult, setBmiResult] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { classes } = useStyles();
 
   const weightUnits = [
     { value: "kg", label: "Kilograms" },
@@ -87,15 +90,16 @@ export const BMIIndicator = () => {
       <Button
         variant="outline"
         mb="xl"
+        color="red"
         onClick={() => window.history.back()}
         leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
       >
         Back
       </Button>
 
-      <Card withBorder shadow="sm" p="lg">
+      <Card withBorder shadow="sm" p="lg" className={classes.card1}>
         <Title order={2} mb="xl">
-          <FontAwesomeIcon icon={faCalculator} spacing={20} /> BMI Calculator
+          <FontAwesomeIcon icon={faCalculator}  /> BMI Calculator
         </Title>
         <Stack>
           <Group align="flex-end" grow>
@@ -136,6 +140,8 @@ export const BMIIndicator = () => {
               loading={isLoading}
               size="md"
               disabled={!weight || !height}
+              color="#008b84"
+              variant="light"
             >
               Calculate BMI
             </Button>
@@ -195,3 +201,28 @@ export const BMIIndicator = () => {
     </Box>
   );
 };
+
+const useStyles = createStyles((theme) => {
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+
+  return {
+    card1: {
+      border: `1px solid ${
+        colorScheme === "dark"
+          ? "#008b84"
+          : theme.colors[theme.primaryColor][3]
+      }`,
+      
+      borderRadius: theme.radius.md,
+      background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              boxShadow: 
+              `
+                    0 4px 6px rgba(0, 0, 0, 0.1), 
+                    0 8px 20px rgba(0, 0, 0, 0.2), 
+                    0 12px 24px rgba(0, 0, 0, 0.15)
+               `,
+    },
+  }
+});

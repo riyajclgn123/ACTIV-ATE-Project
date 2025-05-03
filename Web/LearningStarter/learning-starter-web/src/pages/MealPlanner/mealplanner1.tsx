@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Group, Image, Space, Text, Title } from "@mantine/core";
+import { Badge, Button, Card, Group, Image, Space, Text, Title, useMantineColorScheme } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import { useNavigate } from "react-router-dom";
 import { FC } from "react";
@@ -97,21 +97,6 @@ const meals: Meal[] = [
   },
 ];
 
-const useStyles = createStyles(() => ({
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: "30px",
-    margin: "30px",
-  },
-  card: {
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-    "&:hover": {
-      cursor: "pointer",
-      transform: "scale(1.05)",
-    },
-  },
-}));
 
 export const MealPlanner: FC = () => {
   const { classes } = useStyles();
@@ -124,9 +109,6 @@ export const MealPlanner: FC = () => {
   return (
     <div>
       <Space h="md" />
-      <Title ta="center" order={1} c="blue.7" fw={600}>
-        Meal Plans
-      </Title>
       <Space h="md" />
 
       <div className={classes.grid}>
@@ -139,41 +121,102 @@ export const MealPlanner: FC = () => {
             withBorder
             className={classes.card}
           >
-            <Card.Section>
+            <Card.Section className={classes.cardSection}>
               <Image
                 src={meal.image}
-                height={300}
-                fit="cover"
+                className={classes.cardImage}
                 alt={meal.title}
                 radius="md"
               />
             </Card.Section>
 
-            <Group justify="space-between" mt="md" mb="xs">
-              <Text size="lg" fw={600}>
-                {meal.title}
+            <div className={classes.cardContent}>
+              <Group justify="space-between" mt="md" mb="xs">
+                <Text size="lg" fw={600}>
+                  {meal.title}
+                </Text>
+                <Badge color="#008b84" variant="light">
+                  New
+                </Badge>
+              </Group>
+
+              <Text size="sm" c="dimmed">
+                {meal.description}
               </Text>
-              <Badge color="blue" variant="light">
-                New
-              </Badge>
-            </Group>
-
-            <Text size="sm" c="dimmed">
-              {meal.description}
-            </Text>
-
-            <Button
-              color="blue"
-              fullWidth
-              mt="md"
-              radius="md"
-              onClick={() => handleViewRecipe(meal)}
-            >
-              Look for Ingredient and Recipes
-            </Button>
+<div className={classes.cardFooter}>
+              <Button
+                color="#52aead"
+                variant="outline"
+                fullWidth
+                mt="md"
+                radius="md"
+                
+                onClick={() => handleViewRecipe(meal)}
+              >
+                Look for Ingredient and Recipes
+              </Button>
+              </div>
+            </div>
           </Card>
         ))}
       </div>
     </div>
   );
 };
+const useStyles = createStyles((theme) => {
+  const { colorScheme } = useMantineColorScheme();
+  return {
+ 
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "30px",
+    margin: "30px",
+  },
+  card: {
+    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%", // Ensure all cards have same height
+    "&:hover": {
+      cursor: "pointer",
+      transform: "scale(1.05)",
+    },
+    border: `1px solid ${
+      colorScheme === "dark"
+        ? "#008b84"
+        : theme.colors[theme.primaryColor][3]
+    }`,
+    borderRadius: theme.radius.md,
+      background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              boxShadow: 
+              `
+                    0 4px 6px rgba(0, 0, 0, 0.1), 
+                    0 8px 20px rgba(0, 0, 0, 0.2), 
+                    0 12px 24px rgba(0, 0, 0, 0.15)
+               `,
+  },
+  cardSection: {
+    height: "250px",
+    overflow: "hidden",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cardImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "contain", // Show full image without cropping
+  },
+  cardContent: {
+    flex: 1, // Takes all available space pushing button to bottom
+    display: "flex",
+    flexDirection: "column",
+  },
+  cardFooter: { // NEW: Added specific footer styling
+    marginTop: "auto",
+    paddingTop: "16px", // Add some space above the button
+  },
+}
+});

@@ -65,7 +65,7 @@ export const CalorieBudgetProgress = ({
       bg={colorScheme === "dark" ? "dark.6" : "white"}
       m="0 px"
     >
-      <Tabs defaultValue="Calorie Budget">
+      <Tabs defaultValue="Calorie Budget" color="#008b84">
         <Tabs.List grow mb={20}>
           <Tabs.Tab
             value="Calorie Budget"

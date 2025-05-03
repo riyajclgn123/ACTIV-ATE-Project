@@ -113,7 +113,7 @@ export const Goals = () => {
   };
 
   return (
-    <Box maw={800} mx="auto" pos="relative">
+    <Box style={{paddingX:"1.2rem",}}>
       <LoadingOverlay visible={isLoading} />
       <Container className={classes.buttonsContainer}>
         <Button
@@ -131,7 +131,7 @@ export const Goals = () => {
       </Title>
 
    
-        <Card withBorder shadow="sm" p="lg" className={classes.innerCard}>
+        <Card withBorder shadow="sm"  className={classes.innerCard}>
           <Stack align="center">
             <Box className={classes.inputGroup}>
               <NumberInput
@@ -180,6 +180,8 @@ export const Goals = () => {
                 size="md"
                 disabled={!targetWeight || isNaN(targetWeight)}
                 rightSection={<FontAwesomeIcon icon={faBullseye} />}
+                color="#008b84"
+                variant="light"
               >
                 Save Goal
               </Button>
@@ -194,19 +196,23 @@ const useStyles = createStyles((theme) => ({
   buttonsContainer: {
     padding: "20px",
     display: "flex",
-    marginBottom: "20px",
   },
   outerCard: {
-    padding: "40px",
+    //padding: "40px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     
   },
   innerCard: {
-    width: "100%",
-    maxWidth: "600px",
-    
+    alignItems:"center",
+    justifyContent:"center",
+    display:"flex",
+    //border: "1px solid #e0e0e0", 
+    borderRadius: theme.radius.md, 
+    padding: theme.spacing.lg, 
+    maxWidth: "600px", 
+    margin: "0 auto", 
   },
   inputGroup: {
     display: "flex",
@@ -222,5 +228,6 @@ const useStyles = createStyles((theme) => ({
   centeredInput: {
     width: "100%",
     maxWidth: "400px",
+
   },
 }));

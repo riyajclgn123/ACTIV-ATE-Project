@@ -191,6 +191,7 @@ export const FoodLogCreate = () => {
           variant="outline"
           onClick={() => navigate(routes.foodLog)}
           leftSection={<FontAwesomeIcon icon={faHistory} />}
+          color="#52aead"
         >
           View My Logs
         </Button>
@@ -300,6 +301,8 @@ export const FoodLogCreate = () => {
               size="md"
               disabled={!servings || isNaN(servings)}
               rightSection={<FontAwesomeIcon icon={faCheck} />}
+              color="#008b84"
+              variant="light"
             >
               Log {food.name}
             </Button>

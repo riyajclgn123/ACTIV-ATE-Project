@@ -7,7 +7,7 @@ import { PageWrapper } from "../components/page-wrapper/page-wrapper";
 import { routes } from ".";
 import { ExerciseListing } from "../pages/Exercises-page/exercise-listing";
 import { FoodListing } from "../pages/Foods-page/food-listing";
-import { MealPlanner } from "../pages/MealPlanner/mealplanner";
+import { MealPlanner } from "../pages/MealPlanner/mealplanner1";
 import { FoodCreate } from "../pages/Foods-page/food-create";
 import { FoodUpdate } from "../pages/Foods-page/food-update";
 import { ExerciseCreate } from "../pages/Exercises-page/exercise-create";

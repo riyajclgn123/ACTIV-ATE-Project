@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Container,
+  createTheme,
   Group,
   Input,
   NumberInput,
@@ -20,6 +21,7 @@ import { showNotification } from "@mantine/notifications";
 import { createStyles } from "@mantine/emotion";
 import { useEffect, useRef, useState } from "react";
 import backgroundVideo from "../../assets/bgvideo3.mp4";
+import SignUpForm from "./signup";
 
 type LoginRequest = {
   userName: string;
@@ -39,6 +41,12 @@ type SignUpRequest = {
   confirmPassword: string;
 };
 
+const theme = createTheme({
+  fontFamily: "Montserrat, sans-serif",
+  headings: {
+    fontFamily: "Montserrat, sans-serif",
+  },
+});
 type LoginResponse = ApiResponse<boolean>;
 
 //This is a *fairly* basic form
@@ -56,7 +64,7 @@ export const LoginPage = ({
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
+      videoRef.current.play().catch((error) => {
         console.error("Video play failed:", error);
       });
     }
@@ -178,307 +186,141 @@ export const LoginPage = ({
 
   return (
     <PageWrapper>
-    <div className={classes.videoContainer}>
-      <video
-        ref={videoRef}
-        className={classes.videoBackground}
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        <source src={backgroundVideo} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    </div>
-      <Container>
-        <Container px={0}>
-          {!isSignUp ? (
-            <>
-              {loginForm.errors[""] && (
-                <Alert className={classes.generalErrors} color="red">
-                  <Text>{loginForm.errors[""]}</Text>
-                </Alert>
-              )}
+      <div className={classes.videoContainer}>
+        <video
+          ref={videoRef}
+          className={classes.videoBackground}
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src={backgroundVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
-              <Space h="lg" />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  minHeight:"90vh",
-                  width:"100%"
-                }}
-              >
-                <Card
-                  withBorder
-                  shadow="sm"
-                  style={{ width: "600px", padding: "20px" }}
-                  className={classes.container1}
-                >
-                  <form onSubmit={loginForm.onSubmit(submitLogin)}>
-                    <Text
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        fontFamily: "serif",
-                        fontSize: "30px",
-                        fontWeight: "bold",
-                        textUnderlineOffset: "5px",
-                        textDecoration: "underline",
-                        textDecorationThickness: "2px",
-                        color: "white",
-                        marginBottom: "20px",
-                      }}
-                    >
-                      Log In Your Account
-                    </Text>
-                    <Container px={0}>
-                      <Container className={classes.formField} px={0}>
-                        <Container px={0}>
-                          <label htmlFor="userName">Username</label>
-                        </Container>
-                        <Input
-                          placeholder="Enter your Username"
-                          {...loginForm.getInputProps("userName")}
-                        />
-                        <Text c="red">{loginForm.errors["userName"]}</Text>
-                      </Container>
-                      <Container className={classes.formField} px={0}>
-                        <Container px={0}>
-                          <label htmlFor="password">Password</label>
-                        </Container>
-                        <Input
-                          type="password"
-                          placeholder="Enter your Password"
-                          {...loginForm.getInputProps("password")}
-                        />
-                        <Text c="red">{loginForm.errors["password"]}</Text>
-                      </Container>
+      <div className={classes.mainContainer}>
+        <div className={classes.splitContainer}>
+          {/* Left side - Title section */}
+          <div className={classes.titleSection}>
+            <Text className={classes.mainTitle1}>
+              Welcome to
+            </Text>
 
-                      <Container
-                        px={0}
+            <Text className={classes.mainTitle}>
+           Activ-Ate
+            </Text>
+            <Text className={classes.subTitle}>
+              Health  🔸  Wellness  🔸  Fitness
+            </Text>
+          </div>
+
+          {/* Right side - Login/Signup card */}
+          <div className={classes.formSection}>
+            <Container px={0}>
+              {!isSignUp ? (
+                <>
+                  {loginForm.errors[""] && (
+                    <Alert className={classes.generalErrors} color="red">
+                      <Text>{loginForm.errors[""]}</Text>
+                    </Alert>
+                  )}
+                  <Space h="lg" />
+                  <Card
+                    withBorder
+                    shadow="sm"
+                    style={{
+                      width: "27vw",
+                      height: "60vh",
+                      padding: "2vw",
+                      
+                    }}
+                    className={classes.container1}
+                  >
+                    <form onSubmit={loginForm.onSubmit(submitLogin)}>
+                      <Text
                         style={{
                           display: "flex",
-                          flexDirection: "row",
-                          gap: "25px",
-                          marginTop: "40px",
+                          justifyContent: "center",
+                          fontFamily: "Montserrat, sans-serif",
+                          fontSize: "2vw",
+                          fontWeight: "500",
+
+                          color: "white",
+                          marginBottom: "20px",
                         }}
                       >
-                        <Button className={classes.loginButton} type="submit" color="#0fa462">
-                          Login
-                        </Button>
-                        <Button
-                          className={classes.loginButton}
-                          color="#0fa462"
-                          type="button"
-                          variant="outline"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setIsSignUp(true);
-                          }}
-                        >
-                          Sign Up
-                        </Button>
-                      </Container>
-                    </Container>
-                  </form>
-                </Card>
-              </div>
-            </>
-          ) : (
-            <>
-              {signUpForm.errors[""] && (
-                <Alert className={classes.generalErrors} color="red">
-                  <Text>{signUpForm.errors[""]}</Text>
-                </Alert>
-              )}
-              <Space h="lg" />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Card
-                  withBorder
-                  shadow="sm"
-                  style={{ width: "600px", padding: "20px" }}
-                  className={classes.container2}
-                >
-                  <form onSubmit={signUpForm.onSubmit(submitSignUp)}>
-                    <Space h="lg" />
-                    <Text
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        fontFamily: "serif",
-                        fontSize: "30px",
-                        fontWeight: "bold",
-                        textUnderlineOffset: "5px",
-                        textDecoration: "underline",
-                        textDecorationThickness: "2px",
-                        color: "white",
-                        marginBottom: "20px",
-                      }}
-                    >
-                      Create A New Account
-                    </Text>
-                    <Container px={0}>
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="firstName">First Name</label>
-                        <Input
-                          placeholder="Enter your First Name"
-                          {...signUpForm.getInputProps("firstName")}
-                        />
-                        <Text c="red">{signUpForm.errors["firstName"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="lastName">Last Name</label>
-                        <Input
-                          placeholder="Enter your Last Name"
-                          {...signUpForm.getInputProps("lastName")}
-                        />
-                        <Text c="red">{signUpForm.errors["lastName"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="userName">Username</label>
-                        <Input
-                          placeholder="Enter your Username"
-                          {...signUpForm.getInputProps("userName")}
-                        />
-                        <Text c="red">{signUpForm.errors["userName"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="email">Email</label>
-                        <Input
-                          type="email"
-                          placeholder="Ente your Email"
-                          {...signUpForm.getInputProps("email")}
-                        />
-                        <Text c="red">{signUpForm.errors["email"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="dateofBirth">
-                          Date of Birth (YYYY-MM-DD)
-                        </label>
-                        <Input
-                          placeholder="YYYY-MM-DD"
-                          {...signUpForm.getInputProps("dateofBirth")}
-                        />
-                        <Text c="red">{signUpForm.errors["dateofBirth"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="gender">Gender</label>
-                        <Radio.Group {...signUpForm.getInputProps("gender")}>
-                          <Group mt="xs">
-                            <Radio value="male" label="Male" />
-                            <Radio value="female" label="Female" />
-                            <Radio value="other" label="Other" />
-                          </Group>
-                        </Radio.Group>
-                        <Text c="red">{signUpForm.errors["gender"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="height">Height (cm)</label>
-                        <NumberInput
-                          {...signUpForm.getInputProps("height")}
-                          min={0}
-                          step={1}
-                        />
-                        <Text c="red">{signUpForm.errors["height"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="weight">Weight (kg)</label>
-                        <NumberInput
-                          {...signUpForm.getInputProps("weight")}
-                          min={0}
-                          step={0.1}
-                        />
-                        <Text c="red">{signUpForm.errors["weight"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="password">Password</label>
-                        <Input
-                          type="password"
-                          placeholder="Enter your Password"
-                          {...signUpForm.getInputProps("password")}
-                        />
-                        <Text c="red">{signUpForm.errors["password"]}</Text>
-                      </Container>
-
-                      <Container className={classes.formField} px={0}>
-                        <label htmlFor="confirmPassword">
-                          Confirm Password
-                        </label>
-                        <Input
-                          type="password"
-                          placeholder="Confirm your Password"
-                          {...signUpForm.getInputProps("confirmPassword")}
-                        />
-                        <Text c="red">
-                          {signUpForm.errors["confirmPassword"]}
-                        </Text>
-                      </Container>
-
-                      <Container
-                        px={0}
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          gap: "25px",
-                          marginTop: "40px",
-                        }}
-                      >
-                        <Button className={classes.loginButton} type="submit" color="#0fa462">
-                          Sign Up
-                        </Button>
-                        <Button
-                          className={classes.loginButton}
-                          variant="outline"
-                          type="button"
-                          color="#0fa462"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setIsSignUp(false);
-                          }}
-                        >
-                          Back to Login
-                        </Button>
-                      </Container>
-
-                      <Space h="md" />
-                      <Text ta="center">
-                        Already have an account?{" "}
-                        <Anchor
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setIsSignUp(false);
-                          }}
-                           c="#0fa462"
-                        >
-                          Login
-                        </Anchor>
+                        Log In Your Account
                       </Text>
-                    </Container>
-                  </form>
-                </Card>
-              </div>
-            </>
-          )}
-        </Container>
-      </Container>
+                      <Container px={0}>
+                        <Container className={classes.formField} px={0}>
+                          <Container px={0}>
+                            <label htmlFor="userName">Username</label>
+                          </Container>
+                          <Input
+                            placeholder="Enter your Username"
+                            {...loginForm.getInputProps("userName")}
+                          />
+                          <Text c="red">{loginForm.errors["userName"]}</Text>
+                        </Container>
+                        <Container className={classes.formField} px={0}>
+                          <Container px={0}>
+                            <label htmlFor="password">Password</label>
+                          </Container>
+                          <Input
+                            type="password"
+                            placeholder="Enter your Password"
+                            {...loginForm.getInputProps("password")}
+                          />
+                          <Text c="red">{loginForm.errors["password"]}</Text>
+                        </Container>
+
+                        <Container
+                          px={0}
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "25px",
+                            marginTop: "40px",
+                          }}
+                        >
+                          <Button
+                            className={classes.loginButton}
+                            type="submit"
+                            color="#b20030"
+                            variant="filled"
+                          >
+                            Login
+                          </Button>
+                          <Button
+                            className={classes.loginButton}
+                            color="blue"
+                            type="button"
+                            variant="filled"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setIsSignUp(true);
+                            }}
+                          >
+                            Sign Up
+                          </Button>
+                        </Container>
+                      </Container>
+                    </form>
+                  </Card>
+                </>
+              ) : (
+                <SignUpForm
+                  signUpForm={signUpForm}
+                  submitSignUp={submitSignUp}
+                  setIsSignUp={setIsSignUp}
+                />
+              )}
+            </Container>
+          </div>
+        </div>
+      </div>
     </PageWrapper>
   );
 };
@@ -486,31 +328,102 @@ export const LoginPage = ({
 const useStyles = createStyles(() => {
   return {
     videoContainer: {
-      position: 'fixed',
+      position: "fixed",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
+      width: "100%",
+      height: "100%",
       zIndex: -1,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     videoBackground: {
-      objectFit: 'cover',
-      width: '100%',
-      height: '100%',
+      objectFit: "cover",
+      width: "100%",
+      height: "100%",
       //opacity: 0.8,
     },
     generalErrors: {
       marginBottom: "8px",
+      color: "#ff6b6b",
+      fontWeight: 500,
     },
 
     loginButton: {
       marginTop: "8px",
+      borderRadius:"30px",
+      
+      transition: "background-color 0.3s, transform 0.2s",
+      ":hover": {
+        backgroundColor: "#1e90ff",
+        transform: "scale(1.02)",
+      },
     },
 
     formField: {
       marginBottom: "8px",
     },
+
+    mainContainer: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      width: "100%",
+      padding: "20px",
+    },
+
+    splitContainer: {
+      display: "flex",
+      flexWrap: "wrap",
+      width: "100%",
+      gap: "40px",
+    },
+
+    titleSection: {
+      flex: 1,
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      color: "white",
+      padding: "50px",
+      textShadow: "1px 1px 4px rgba(0,0,0,0.6)",
+    },
+
+    mainTitle1: {
+      fontSize: "2rem",
+      fontWeight: 200,
+      lineHeight: 1.2,
+      width: "100%",
+      marginBottom: "10px",
+      fontFamily: "Montserrat, sans-serif",
+      textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
+    },
+    mainTitle: {
+      fontSize: "4rem",
+      fontWeight: 600,
+      lineHeight: 1.2,
+      width: "100%",
+      marginBottom: "35px",
+      fontFamily: "Montserrat, sans-serif",
+      textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
+    },
+
+    subTitle: {
+      fontSize: "2rem",
+      opacity: 0.9,
+      fontFamily: "Montserrat, sans-serif",
+      textShadow: "1px 1px 3px rgba(0,0,0,0.4)",
+    },
+
+    formSection: {
+      flex: 1,
+      display: "flex",
+      justifyContent: "center",
+      color: "black",
+      alignItems: "center",
+    },
+
     container1: {
       display: "flex",
       justifyContent: "center",
@@ -518,11 +431,16 @@ const useStyles = createStyles(() => {
       position: "relative",
       color: "white",
       width: "100%",
-      height: "100%",
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      backdropFilter: 'blur(5px)',
-      overflow: "hidden",
+      maxWidth: "500px",
+      padding: "40px",
+      backgroundColor: "rgba(17, 25, 40, 0.78)", // translucent dark background
+      backdropFilter: "blur(16px) saturate(200%)",
+      WebkitBackdropFilter: "blur(16px) saturate(200%)", // for Safari
+      borderRadius: "12px",
+      border: "1px solid rgba(255, 255, 255, 0.125)",
+      boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
     },
+    
     container2: {
       display: "flex",
       justifyContent: "center",
@@ -530,11 +448,13 @@ const useStyles = createStyles(() => {
       position: "relative",
       color: "white",
       width: "100%",
-      height: "100%",
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      backdropFilter: 'blur(5px)',
-      overflow: "hidden",
-      marginBottom: "10px"
+      maxWidth: "500px",
+      padding: "40px",
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      backdropFilter: "blur(5px)",
+      borderRadius: "20px",
+      boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
     },
   };
 });
+

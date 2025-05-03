@@ -16,7 +16,7 @@ export const DateNavigator = ({ date, onChange }: DateNavigatorProps) => {
 
   return (
     <Group justify="center" align="center" mb="md">
-      <ActionIcon size="lg" variant="light" onClick={goPrev} color="blue">
+      <ActionIcon size="lg" variant="light" onClick={goPrev} color="#008b84">
         <FontAwesomeIcon icon={faChevronLeft} />
       </ActionIcon>
 
@@ -26,9 +26,10 @@ export const DateNavigator = ({ date, onChange }: DateNavigatorProps) => {
         placeholder="Select date"
         style={{ width: 293 }}
         styles={{ input: { textAlign: "center", fontWeight: 500, padding: 0 } }}
+       
       />
 
-      <ActionIcon size="lg" variant="light" onClick={goNext} color="blue">
+      <ActionIcon size="lg" variant="light" onClick={goNext} color="#008b84">
         <FontAwesomeIcon icon={faChevronRight} />
       </ActionIcon>
     </Group>

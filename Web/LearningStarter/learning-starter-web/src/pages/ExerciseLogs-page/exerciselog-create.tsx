@@ -21,6 +21,7 @@ import { faArrowLeft, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
 import { DateTimePicker } from "@mantine/dates";
 import { createStyles } from "@mantine/emotion";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 interface ExerciseLogResponse {
   data: {
@@ -153,13 +154,15 @@ export const ExerciseLogCreate = () => {
         <Button
           onClick={() => navigate(routes.exerciseLog)}
           leftSection={<FontAwesomeIcon icon={faHistory} />}
+          color="#52aead"
+          variant="outline"
         >
           View My Logs
         </Button>
       </Container>
 
       <Title order={2} mb="xl">
-        Log Exercise: {exercise.name}
+        Log: {exercise.name}
       </Title>
 
       <Card withBorder shadow="sm" p="lg">
@@ -197,14 +200,18 @@ export const ExerciseLogCreate = () => {
             label="Pick date and time"
             placeholder="Pick date and time"
           />
+
           <Group mt="xl">
             <Button
               onClick={handleSubmit}
               loading={isLoading}
               size="md"
               disabled={!duration || isNaN(parseFloat(duration))}
+              rightSection={<FontAwesomeIcon icon={faCheck} />}
+                        color="#008b84"
+                        variant="light"
             >
-              Calculate Calories
+              Log {exercise.name}
             </Button>
           </Group>
 

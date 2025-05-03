@@ -12,12 +12,16 @@ import {
   Divider,
   SimpleGrid,
   ThemeIcon,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { useAuth } from "../../authentication/use-auth";
 import api from "../../config/axios";
 import { routes } from "../../routes";
 import { IconCheck, IconTarget, IconTrophy } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { createStyles } from "@mantine/emotion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"; 
 
 interface Achievement {
   id: number;
@@ -49,6 +53,7 @@ export const Achievements = () => {
   const [goalStatus, setGoalStatus] = useState<GoalStatusResponse | null>(null);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { classes } = useStyles();
 
   const fetchData = async () => {
     try {
@@ -102,7 +107,12 @@ export const Achievements = () => {
 
       <Group justify="space-between" mb="xl">
         <Title order={2}>Your Achievements</Title>
-        <Button onClick={() => navigate(routes.home)}>Back to Dashboard</Button>
+        <Button 
+        onClick={() => navigate(routes.home)} 
+        leftSection={<FontAwesomeIcon icon={faArrowLeft} />} 
+        variant="outline"
+        color="#008b84"
+        >Back to Dashboard</Button>
       </Group>
 
       {error && (
@@ -112,10 +122,10 @@ export const Achievements = () => {
       )}
 
       {goalStatus && (
-        <Card withBorder shadow="sm" mb="xl" padding="lg">
+        <Card withBorder shadow="sm" mb="xl" padding="lg" className={classes.card1}>
           <Stack>
             <Group>
-              <ThemeIcon color="blue" size="lg" radius="xl">
+              <ThemeIcon color="#52aead" size="lg" radius="xl">
                 <IconTarget size="1.2rem" />
               </ThemeIcon>
               <Text size="xl" fw={500}>
@@ -177,7 +187,7 @@ export const Achievements = () => {
             </div>
 
             {goalStatus.isAchieved && goalStatus.achievement && (
-              <Card withBorder mt="sm" style={{ backgroundColor: "#f8f9fa" }}>
+              <Card withBorder mt="sm" style={{ backgroundColor: "transparent" }} className={classes.card1}>
                 <Group>
                   <ThemeIcon color="yellow" size="lg" radius="xl">
                     <IconTrophy size="1.2rem" />
@@ -198,7 +208,7 @@ export const Achievements = () => {
         </Card>
       )}
 
-      <Card withBorder shadow="sm" padding="lg">
+      <Card withBorder shadow="sm" padding="lg" className={classes.card1}>
         <Stack>
           <Group>
             <ThemeIcon color="yellow" size="lg" radius="xl">
@@ -240,3 +250,25 @@ export const Achievements = () => {
     </Container>
   );
 };
+
+const useStyles = createStyles((theme) => {
+  const { colorScheme } = useMantineColorScheme(); 
+  return {
+    card1: {
+      border: `1px solid ${
+        colorScheme === "dark"
+          ? "#008b84"
+          : theme.colors[theme.primaryColor][3]
+      }`,
+      
+      borderRadius: theme.radius.md,
+      background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              boxShadow: 
+              `
+                    0 4px 6px rgba(0, 0, 0, 0.1), 
+                    0 8px 20px rgba(0, 0, 0, 0.2), 
+                    0 12px 24px rgba(0, 0, 0, 0.15)
+               `,
+    },
+  }});

@@ -12,7 +12,10 @@ import { FooterSimple } from "./components/footer/footer";
 import { FoodProvider } from "./food/foodcontext"; 
 
 
+
+
 const theme = createTheme({
+ 
 });
 
 //This is almost the base level of your app.  You can also put global things here.
