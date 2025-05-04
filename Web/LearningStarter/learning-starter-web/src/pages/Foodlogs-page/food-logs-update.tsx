@@ -315,6 +315,8 @@ export const FoodLogUpdate = () => {
               size="md"
               disabled={!servings || isNaN(servings)}
               rightSection={<FontAwesomeIcon icon={faCheck} />}
+              color="#008b84"
+              variant="light"
             >
               Update {food.name}
             </Button>

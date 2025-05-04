@@ -17,7 +17,7 @@ import {
 import { routes } from "../../routes";
 import api from "../../config/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faHistory } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faCheck, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { showNotification } from "@mantine/notifications";
 import { ApiResponse, ExerciseLogGetDto } from "../../constants/types";
 import { DateTimePicker } from "@mantine/dates";
@@ -49,7 +49,7 @@ export const ExerciseLogUpdate = () => {
   const [caloriesBurned, setCaloriesBurned] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [exerciseName, setExerciseName] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const durationUnits = [
     { value: "seconds", label: "Seconds" },
@@ -203,13 +203,15 @@ export const ExerciseLogUpdate = () => {
         <Button
           onClick={() => navigate(routes.exerciseLog)}
           leftSection={<FontAwesomeIcon icon={faHistory} />}
+          color="#52aead"
+          variant="outline"
         >
           View My Logs
         </Button>
       </Container>
 
       <Title order={2} mb="xl">
-        Update Exercise: {exerciseName}
+        Update : {exerciseName}
       </Title>
 
       <Card withBorder shadow="sm" p="lg">
@@ -245,7 +247,7 @@ export const ExerciseLogUpdate = () => {
             value={selectedDate}
             onChange={setSelectedDate}
             valueFormat="DD MMM YYYY hh:mm A"
-            label="Pick date and time"
+            label="Date and Time"
             placeholder="Pick date and time"
           />
 
@@ -255,8 +257,11 @@ export const ExerciseLogUpdate = () => {
               loading={isLoading}
               size="md"
               disabled={!duration || isNaN(parseFloat(duration))}
+                rightSection={<FontAwesomeIcon icon={faCheck} />}
+                                      color="#008b84"
+                                      variant="light"
             >
-              Update Log
+              Update {exercise?.name}
             </Button>
           </Group>
 
