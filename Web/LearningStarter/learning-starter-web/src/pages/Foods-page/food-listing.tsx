@@ -36,6 +36,8 @@ import tboneSteak from "../../assets/tbone-steak.jpg";
 import mashedPotatoes from "../../assets/mashed-potatoes.jpg";
 import eggSandwich from "../../assets/egg-sandwich.jpg";
 import proteinShake from "../../assets/protein-shake.jpg";
+import biryani from "../../assets/biryani.jpg";
+import momo from "../../assets/momo.jpg";
 
 
 export const FoodListing = () => {
@@ -108,6 +110,8 @@ export const FoodListing = () => {
     'T-bone steak': tboneSteak,
     'French fries': frenchFries,
     'Protein shake': proteinShake,
+    'Biryani': biryani,
+    'Momo': momo,
   };
 
   return (
