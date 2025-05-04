@@ -28,16 +28,15 @@ import {
   faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import foodbgImage from "../../assets/foodbg.jpg";
-import dumbell from "../../assets/dumbbell.jpg";
-import squat from "../../assets/squart.jpg";
-import legpress from "../../assets/legpress.jpg";
-import flat from "../../assets/flat.jpg";
-import cardio from "../../assets/cardio.jpg";
-import cycling from "../../assets/cycling.jpg";
-import chestpress from "../../assets/chestpress.jpg";
-import inclined from "../../assets/inclined.jpg";
-import cable from "../../assets/cable1.jpg";
+import pizza from "../../assets/pizza.jpg";
+import burger from "../../assets/burger.jpg";
+import friedChickenLeg from "../../assets/fried-chicken-leg.jpg";
+import frenchFries from "../../assets/french-fries.jpg";
+import tboneSteak from "../../assets/tbone-steak.jpg";
+import mashedPotatoes from "../../assets/mashed-potatoes.jpg";
+import eggSandwich from "../../assets/egg-sandwich.jpg";
+import proteinShake from "../../assets/protein-shake.jpg";
+
 
 export const FoodListing = () => {
   const location = useLocation();
@@ -101,14 +100,14 @@ export const FoodListing = () => {
   };
 
   const foodImages: Record<string, string> = {
-    'Pizza': dumbell,
-    'Burger': squat,
-    'Fried chicken leg': legpress,
-    'Mashed potatoes': flat,
-    'Egg sandwich': cardio,
-    'T-bone steak': cycling,
-    'French fries': chestpress,
-    'Protein shake': inclined,
+    'Pizza': pizza,
+    'Burger': burger,
+    'Fried chicken leg': friedChickenLeg,
+    'Mashed potatoes': mashedPotatoes,
+    'Egg sandwich': eggSandwich,
+    'T-bone steak': tboneSteak,
+    'French fries': frenchFries,
+    'Protein shake': proteinShake,
   };
 
   return (
@@ -196,7 +195,7 @@ export const FoodListing = () => {
               >
                 <Card.Section className={classes.cardImageSection}>
                   <img
-                    src={foodImages[food.name] || dumbell}
+                    src={foodImages[food.name] || pizza}
                     height={200}
                     width="100%"
                     alt={food.name}
