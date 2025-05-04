@@ -204,15 +204,11 @@ export const LoginPage = ({
         <div className={classes.splitContainer}>
           {/* Left side - Title section */}
           <div className={classes.titleSection}>
-            <Text className={classes.mainTitle1}>
-              Welcome to
-            </Text>
+            <Text className={classes.mainTitle1}>Welcome to</Text>
 
-            <Text className={classes.mainTitle}>
-           Activ-Ate
-            </Text>
+            <Text className={classes.mainTitle}>Activ-Ate</Text>
             <Text className={classes.subTitle}>
-              Health  🔸  Wellness  🔸  Fitness
+              Health 🔸 Wellness 🔸 Fitness
             </Text>
           </div>
 
@@ -234,7 +230,6 @@ export const LoginPage = ({
                       width: "27vw",
                       height: "60vh",
                       padding: "2vw",
-                      
                     }}
                     className={classes.container1}
                   >
@@ -350,8 +345,8 @@ const useStyles = createStyles(() => {
 
     loginButton: {
       marginTop: "8px",
-      borderRadius:"30px",
-      
+      borderRadius: "30px",
+
       transition: "background-color 0.3s, transform 0.2s",
       ":hover": {
         backgroundColor: "#1e90ff",
@@ -433,14 +428,14 @@ const useStyles = createStyles(() => {
       width: "100%",
       maxWidth: "500px",
       padding: "40px",
-      backgroundColor: "rgba(17, 25, 40, 0.78)", // translucent dark background
+      backgroundColor: "rgba(17, 25, 40, 0.78)",
       backdropFilter: "blur(16px) saturate(200%)",
-      WebkitBackdropFilter: "blur(16px) saturate(200%)", // for Safari
+      WebkitBackdropFilter: "blur(16px) saturate(200%)",
       borderRadius: "12px",
       border: "1px solid rgba(255, 255, 255, 0.125)",
       boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
     },
-    
+
     container2: {
       display: "flex",
       justifyContent: "center",
@@ -457,4 +452,3 @@ const useStyles = createStyles(() => {
     },
   };
 });
-

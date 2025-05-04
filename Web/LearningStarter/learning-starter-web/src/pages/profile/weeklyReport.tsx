@@ -186,15 +186,29 @@ export const WeeklyReport = () => {
   return (
     <Container>
       <Space h="md" />
-      <Title style={{display:"flex", justifyContent:"center", alignItems:"center"}}>Weekly Report</Title>
+      <Title
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        Weekly Report
+      </Title>
       <Space h="md" />
 
-      <div style={{ display: "flex", marginBottom: "20px", justifyContent:"space-between" }}>
+      <div
+        style={{
+          display: "flex",
+          marginBottom: "20px",
+          justifyContent: "space-between",
+        }}
+      >
         <Button
           onClick={() => setDaysOffset(daysOffset + 1)}
           disabled={daysOffset >= 4}
           variant="outline"
-              color="#FFD700"
+          color="#FFD700"
         >
           Previous Week
         </Button>
@@ -202,7 +216,7 @@ export const WeeklyReport = () => {
           onClick={() => setDaysOffset(Math.max(0, daysOffset - 1))}
           disabled={daysOffset === 0}
           variant="outline"
-              color="#FFD700"
+          color="#FFD700"
         >
           Next Week
         </Button>
@@ -235,7 +249,7 @@ export const WeeklyReport = () => {
       {exerciseData.length > 0 && (
         <>
           <Text size="lg" fw={500} mt="xl">
-            Calories Burned 
+            Calories Burned
           </Text>
           <Space h="md" />
           <LineChart

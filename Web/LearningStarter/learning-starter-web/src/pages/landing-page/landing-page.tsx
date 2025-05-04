@@ -5,7 +5,6 @@ import { RingProgress } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 import { ExerciseLogListing } from "../ExerciseLogs-page/exerciselog-listing";
 import { FoodLogListing } from "../FoodLogs-page/food-logs-listing";
-//import { MacroNutrient } from "../MacroNutrient-pages/MacroNutrient";
 import { useAuth } from "../../authentication/use-auth";
 import { showNotification } from "@mantine/notifications";
 import { ApiResponse, FoodLogGetDto, GoalGetDto } from "../../constants/types";
@@ -17,7 +16,6 @@ import {
   faChartLine,
   faDumbbell,
   faUtensils,
-  faHandHoldingHeart,
   faList,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
@@ -135,8 +133,6 @@ export const LandingPage = () => {
   
       const newGoal = response.data.data;
       setCalorieGoal(newGoal);
-      
-      // Force a recalculation with the new goal
       if (foodConsumed) {
         setFoodConsumed({
           ...foodConsumed,
@@ -178,7 +174,6 @@ export const LandingPage = () => {
   
       const data = response.data.data;
       if (data) {
-        // Always calculate the difference based on current goal
         const currentGoal = goal ?? calorieGoal?.dailyCalorieGoal ?? data.dailyCalorieGoal;
         data.calorieDifference = data.totalCalories - currentGoal;
         data.dailyCalorieGoal = currentGoal;
@@ -290,7 +285,7 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      <section id="after-background-design" className={classes.afterBackground}>
+      <section id="after-background-design">
         <div style={{ padding: "1.5vw" }}>
           <Card
             shadow="xl"
@@ -358,12 +353,6 @@ export const LandingPage = () => {
                   >
                     Food Logs
                   </Tabs.Tab>
-                  {/* <Tabs.Tab
-                    value="Macro Counts"
-                    leftSection={<FontAwesomeIcon icon={faHandHoldingHeart} />}
-                  >
-                    Macro Counts
-                  </Tabs.Tab> */}
                 </Tabs.List>
 
                 <Tabs.Panel value="Chart">
@@ -445,7 +434,6 @@ export const LandingPage = () => {
                       <Space h="sm" />
                       <Text
                         size="18px"
-                        // ta="center"
                         mt="lg"
                         style={{ fontWeight: "bold", textAlign: "left" }}
                       >
@@ -502,32 +490,20 @@ export const LandingPage = () => {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Excercise Logs">
-                  {/* <Card withBorder shadow="sm" p="lg"> */}
                   <ExerciseLogListing
                     date={false}
                     dateProp={selectedDate}
                     fullWidth={true}
                   />
-                  {/* </Card> */}
                 </Tabs.Panel>
 
                 <Tabs.Panel value="Food Logs">
-                  {/* <Card withBorder shadow="sm" p="lg"> */}
                   <FoodLogListing
                     date={false}
                     dateProp={selectedDate}
                     fullWidth={true}
                   />
-                  {/* </Card> */}
                 </Tabs.Panel>
-
-                {/* <Tabs.Panel value="Macro Counts">
-                  <Container className={classes.macronutrient}>
-                    <Card withBorder shadow="sm" p="lg">
-                      <MacroNutrient />
-                    </Card>
-                  </Container>
-                </Tabs.Panel> */}
               </Tabs>
             ) : (
               <div>
@@ -693,13 +669,6 @@ export const LandingPage = () => {
                     fullWidth={true}
                   />
                 </Card>
-
-                {/* <Card withBorder shadow="sm" p="lg">
-                  <Text size="lg" style={{ fontWeight: "bold" }} mb="sm">
-                    <FontAwesomeIcon icon={faHandHoldingHeart} /> Macro Counts
-                  </Text>
-                  <MacroNutrient />
-                </Card> */}
               </div>
             )}
           </Card>
@@ -760,7 +729,6 @@ const useStyles = createStyles(() => {
       zIndex: 1,
       wordWrap: "break-word",
       whiteSpace: "nowrap",
-      // textShadow: "2px 2px 4px rgb(31, 101, 239)",
       "@media (max-width: 768px)": {
         fontSize: "20px",
         maxWidth: "80%",
@@ -909,7 +877,5 @@ const useStyles = createStyles(() => {
       alignItems: "flex-start",
       flexDirection: "column",
     },
-
-    afterBackground: {},
   };
 });

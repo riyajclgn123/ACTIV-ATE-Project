@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   SimpleGrid,
-  Space,
   TextInput,
   Text,
   useMantineColorScheme,
@@ -18,7 +17,6 @@ import { routes } from "../../routes";
 import { createStyles } from "@mantine/emotion";
 import {
   faArrowLeft,
-  faHistory,
   faPencil,
   faPlus,
   faSearch,
@@ -32,7 +30,7 @@ import cardio from "../../assets/cardio.jpg";
 import cycling from "../../assets/cycling.jpg";
 import chestpress from "../../assets/chestpress.jpg";
 import inclined from "../../assets/inclined.jpg";
-import cable from "../../assets/cable1.jpg";
+
 export const ExerciseListing = () => {
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -105,8 +103,6 @@ export const ExerciseListing = () => {
     Cycling: cycling,
     "Chest Press": chestpress,
     "Inclined Bench Press": inclined,
-    //"cable machine": cable,
-    // Add more mappings as needed
   };
 
   return (

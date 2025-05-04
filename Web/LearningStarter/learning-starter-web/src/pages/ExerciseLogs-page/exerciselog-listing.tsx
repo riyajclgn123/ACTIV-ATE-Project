@@ -10,6 +10,7 @@ import {
   useMantineColorScheme,
   Button,
   Space,
+  Text,
 } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -108,7 +109,9 @@ export const ExerciseLogListing = ({ date, dateProp, fullWidth = false }: any) =
             Add Exercise
           </Button>
           </div>
-          <Space h="md"></Space>
+          <Space h="md"/>
+
+          { logs.length>0 ? (
           <Table striped highlightOnHover>
             <Table.Thead>
               <Table.Tr>
@@ -151,6 +154,11 @@ export const ExerciseLogListing = ({ date, dateProp, fullWidth = false }: any) =
               ))}
             </Table.Tbody>
           </Table>
+        ) : (
+          <Text c="dimmed" ta="center" py="xl">
+            No exercise logged yet.
+          </Text>
+        )}
         </div>
       </div>
     </>

@@ -38,7 +38,7 @@ const useStyles = createStyles((theme) => {
         justifyContent: "center",
         alignItems: "center",
         color: isDark ? theme.white : theme.black,
-        backgroundColor: "#008b84", 
+        background: 'linear-gradient(90deg,rgb(5, 149, 184),rgb(1, 176, 126))',
         fontSize: "15px",
         width: "100%",  
         marginTop: "auto",

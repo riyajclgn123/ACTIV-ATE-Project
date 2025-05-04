@@ -37,7 +37,7 @@ export const Goals = () => {
   const currentUser = useUser();
 
   const [targetWeight, setTargetWeight] = useState<number>(0);
-  const [unit, setUnit] = useState<"kg" | "lb">("lb"); 
+  const [unit, setUnit] = useState<"kg" | "lb">("lb");
   const [timePeriod, setTimePeriod] = useState<number>(0);
   const [activityLevel, setActivityLevel] = useState<string>("sedentary");
   const [isLoading, setIsLoading] = useState(false);
@@ -77,8 +77,7 @@ export const Goals = () => {
         throw new Error("Please enter a valid time period (0 or positive)");
       }
 
-      const weightInKg =
-        unit === "lb" ? targetWeight / 2.20462 : targetWeight;
+      const weightInKg = unit === "lb" ? targetWeight / 2.20462 : targetWeight;
 
       const response = await api.post<GoalResponse>("/api/goals", {
         userId: currentUser.id,
@@ -113,7 +112,7 @@ export const Goals = () => {
   };
 
   return (
-    <Box style={{paddingX:"1.2rem",}}>
+    <Box style={{ paddingX: "1.2rem" }}>
       <LoadingOverlay visible={isLoading} />
       <Container className={classes.buttonsContainer}>
         <Button
@@ -130,64 +129,63 @@ export const Goals = () => {
         Create Weight Goal
       </Title>
 
-   
-        <Card withBorder shadow="sm"  className={classes.innerCard}>
-          <Stack align="center">
-            <Box className={classes.inputGroup}>
-              <NumberInput
-                label={`Target Weight (${unit})`}
-                value={targetWeight}
-                onChange={(val) => setTargetWeight(Number(val))}
-                min={0}
-                step={0.1}
-                required
-              />
-              <Select
-                label="Unit"
-                value={unit}
-                onChange={(val) => setUnit((val as "kg" | "lb") || "lb")}
-                data={[
-                  { value: "lb", label: "Pounds (lb)" },
-                  { value: "kg", label: "Kilograms (kg)" },
-                ]}
-                required
-              />
-            </Box>
-
+      <Card withBorder shadow="sm" className={classes.innerCard}>
+        <Stack align="center">
+          <Box className={classes.inputGroup}>
             <NumberInput
-              label="Time Period (days)"
-              description="0 means no specific time frame"
-              value={timePeriod}
-              onChange={(val) => setTimePeriod(Number(val))}
+              label={`Target Weight (${unit})`}
+              value={targetWeight}
+              onChange={(val) => setTargetWeight(Number(val))}
               min={0}
+              step={0.1}
               required
-              className={classes.centeredInput}
             />
-
             <Select
-              label="Activity Level"
-              value={activityLevel}
-              onChange={(val) => setActivityLevel(val || "sedentary")}
-              data={activityLevels}
+              label="Unit"
+              value={unit}
+              onChange={(val) => setUnit((val as "kg" | "lb") || "lb")}
+              data={[
+                { value: "lb", label: "Pounds (lb)" },
+                { value: "kg", label: "Kilograms (kg)" },
+              ]}
               required
-              className={classes.centeredInput}
             />
+          </Box>
 
-            <Group mt="xl">
-              <Button
-                onClick={handleSubmit}
-                loading={isLoading}
-                size="md"
-                disabled={!targetWeight || isNaN(targetWeight)}
-                rightSection={<FontAwesomeIcon icon={faBullseye} />}
-                color="#008b84"
-                variant="light"
-              >
-                Save Goal
-              </Button>
-            </Group>
-          </Stack>
-        </Card>
+          <NumberInput
+            label="Time Period (days)"
+            description="0 means no specific time frame"
+            value={timePeriod}
+            onChange={(val) => setTimePeriod(Number(val))}
+            min={0}
+            required
+            className={classes.centeredInput}
+          />
+
+          <Select
+            label="Activity Level"
+            value={activityLevel}
+            onChange={(val) => setActivityLevel(val || "sedentary")}
+            data={activityLevels}
+            required
+            className={classes.centeredInput}
+          />
+
+          <Group mt="xl">
+            <Button
+              onClick={handleSubmit}
+              loading={isLoading}
+              size="md"
+              disabled={!targetWeight || isNaN(targetWeight)}
+              rightSection={<FontAwesomeIcon icon={faBullseye} />}
+              color="#008b84"
+              variant="light"
+            >
+              Save Goal
+            </Button>
+          </Group>
+        </Stack>
+      </Card>
     </Box>
   );
 };
@@ -202,17 +200,16 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    
   },
   innerCard: {
-    alignItems:"center",
-    justifyContent:"center",
-    display:"flex",
-    //border: "1px solid #e0e0e0", 
-    borderRadius: theme.radius.md, 
-    padding: theme.spacing.lg, 
-    maxWidth: "600px", 
-    margin: "0 auto", 
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    //border: "1px solid #e0e0e0",
+    borderRadius: theme.radius.md,
+    padding: theme.spacing.lg,
+    maxWidth: "600px",
+    margin: "0 auto",
   },
   inputGroup: {
     display: "flex",
@@ -228,6 +225,5 @@ const useStyles = createStyles((theme) => ({
   centeredInput: {
     width: "100%",
     maxWidth: "400px",
-
   },
 }));

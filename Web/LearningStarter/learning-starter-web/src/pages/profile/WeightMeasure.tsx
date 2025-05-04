@@ -139,7 +139,7 @@ export const WeightMeasure = () => {
   if (loading) return <Loader />;
 
   return (
-    <Box style={{padding:"1.2rem",}}>
+    <Box style={{ padding: "1.2rem" }}>
       <Text mb="md" fw={700} size="xl">
         Weight Tracking
       </Text>
@@ -170,8 +170,8 @@ export const WeightMeasure = () => {
         onSubmit={form.onSubmit(handleSubmit)}
         style={{ marginBottom: "2rem" }}
       >
-         <Flex
-          direction={{ base: 'column', sm: 'row' }}
+        <Flex
+          direction={{ base: "column", sm: "row" }}
           gap="md"
           align="center"
           justify="center"
@@ -199,9 +199,15 @@ export const WeightMeasure = () => {
             ]}
             required
           />
-        <Button type="submit" color="#008b84" mt="md" variant="light" style={{ alignSelf: 'flex-end' }}>
-          {editingLog ? "Update Weight" : "Record Weight"}
-        </Button>
+          <Button
+            type="submit"
+            color="#008b84"
+            mt="md"
+            variant="light"
+            style={{ alignSelf: "flex-end" }}
+          >
+            {editingLog ? "Update Weight" : "Record Weight"}
+          </Button>
         </Flex>
       </form>
 
@@ -250,7 +256,6 @@ export const WeightMeasure = () => {
                       <Group style={{ display: "flex", gap: "6px" }}>
                         <Button
                           size="xs"
-                          
                           color="#008b84"
                           onClick={() => handleEdit(log)}
                         >
@@ -259,7 +264,6 @@ export const WeightMeasure = () => {
                         <Button
                           size="xs"
                           color="red"
-                          
                           onClick={() => handleDelete(log.id)}
                         >
                           <FontAwesomeIcon icon={faTrash} />

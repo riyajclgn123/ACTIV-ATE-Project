@@ -19,7 +19,6 @@ import { BMIIndicator } from "../pages/BMI-Indicator/bmiIndicator";
 import { Profile } from "../pages/profile/profile";
 import { FoodLogCreate } from "../pages/FoodLogs-page/food-logs-create";
 import { FoodLogListing } from "../pages/FoodLogs-page/food-logs-listing";
-import { MacroNutrient } from "../pages/MacroNutrient-pages/MacroNutrient";
 import { WeeklyReport } from "../pages/profile/weeklyReport";
 import { Achievements } from "../pages/Achievements-page/achievements";
 import { FoodLogUpdate } from "../pages/FoodLogs-page/food-logs-update";
@@ -57,7 +56,6 @@ export const Routes = () => {
           <Route path={routes.foods} element={<FoodListing />} />
           <Route path={routes.foodCreate} element={<FoodCreate />} />
           <Route path={routes.foodUpdate} element={<FoodUpdate />} />
-          <Route path={routes.macroNutrient} element={<MacroNutrient />} />
           <Route
             path={routes.foodLog}
             element={<FoodLogListing date={true} dateProp={new Date()} />}

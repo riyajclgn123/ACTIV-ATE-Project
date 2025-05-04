@@ -16,7 +16,6 @@ import {
 } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import { Tabs } from "@mantine/core";
-//import { UserPage } from "../user-page/user-page";
 import { WeightMeasure } from "./WeightMeasure";
 import { useUser } from "../../authentication/use-auth";
 import { Goals } from "./goals";
@@ -51,18 +50,12 @@ function ProfilePicture() {
   const handleFileChange = (file: File | null) => {
     if (file) {
       setSelectedFile(file);
-
-      // Create preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result as string);
       };
       reader.readAsDataURL(file);
-
-      // Here you would typically upload the file to your server
-      // and update the user's profile picture in the database
       console.log("Selected file:", file);
-      // uploadProfilePicture(file);
     }
   };
 
@@ -79,7 +72,6 @@ function ProfilePicture() {
       <FileButton
         onChange={handleFileChange}
         accept="image/png,image/jpeg,image/gif"
-        
       >
         {(props) => (
           <ActionIcon
@@ -151,7 +143,7 @@ export const Profile = () => {
         updatedDate: currentDateTime,
       };
       const response = await api.put(`/api/users/${user.id}`, updatedUserData);
-    
+
       if (response.status === 200) {
         notifications.show({
           title: "Success!",
@@ -199,9 +191,7 @@ export const Profile = () => {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
-    // OR for more control over formatting:
-    // return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    return date.toISOString().split("T")[0];
   };
 
   const formatDateTime = (dateString: string | null) => {
@@ -216,7 +206,7 @@ export const Profile = () => {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true, // Use AM/PM
+      hour12: true,
     });
   };
 
@@ -293,10 +283,9 @@ export const Profile = () => {
                   display: "flex",
                   justifyContent: "center",
                   marginBottom: 20,
-                  
                 }}
               >
-                <ProfilePicture/>
+                <ProfilePicture />
               </Box>
 
               <Divider my="sm" />
@@ -456,14 +445,24 @@ export const Profile = () => {
 
           <Tabs.Panel value="weightMeasure">
             <Space h={30} />
-            <Card withBorder shadow="sm" radius="md" className={classes.profileCard}>
+            <Card
+              withBorder
+              shadow="sm"
+              radius="md"
+              className={classes.profileCard}
+            >
               <WeightMeasure />
             </Card>
           </Tabs.Panel>
 
           <Tabs.Panel value="goals">
             <Space h={30} />
-            <Card withBorder shadow="sm" radius="md" className={classes.profileCard}>
+            <Card
+              withBorder
+              shadow="sm"
+              radius="md"
+              className={classes.profileCard}
+            >
               <Goals />
             </Card>
           </Tabs.Panel>
@@ -474,50 +473,47 @@ export const Profile = () => {
 };
 
 const useStyles = createStyles((theme) => {
-   const { colorScheme } = useMantineColorScheme();
-  return{
-  profileCard: {
-    position: "relative",
-    marginBottom: "20px",
-    border: `1px solid ${
-      colorScheme === "dark"
-        ? "#008b84"
-        : theme.colors[theme.primaryColor][3]
-    }`,
-    
-    borderRadius: theme.radius.md,
-    background: "rgba(255, 255, 255, 0.05)",
-            backdropFilter: "blur(10px)",
-            boxShadow: 
-            `
+  const { colorScheme } = useMantineColorScheme();
+  return {
+    profileCard: {
+      position: "relative",
+      marginBottom: "20px",
+      border: `1px solid ${
+        colorScheme === "dark" ? "#008b84" : theme.colors[theme.primaryColor][3]
+      }`,
+
+      borderRadius: theme.radius.md,
+      background: "rgba(255, 255, 255, 0.05)",
+      backdropFilter: "blur(10px)",
+      boxShadow: `
                   0 4px 6px rgba(0, 0, 0, 0.1), 
                   0 8px 20px rgba(0, 0, 0, 0.2), 
                   0 12px 24px rgba(0, 0, 0, 0.15)
              `,
-    
-  },
-  editButton: {
-    position: "absolute",
-    top: theme.spacing.md,
-    right: theme.spacing.md,
-  },
-  infoRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-    // "&:nth-of-type(odd)": {
-    //   backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-    // },
-  },
-  infoLabel: {
-    fontWeight: 600,
-    // color: theme.colorScheme === 'dark' ? theme.colors.gray[5] : theme.colors.gray[7],
-  },
-  infoValue: {
-    textAlign: "right",
-  },
-  editInput: {
-    flex: 1,
-    maxWidth: "200px",
-  },
-}});
+    },
+    editButton: {
+      position: "absolute",
+      top: theme.spacing.md,
+      right: theme.spacing.md,
+    },
+    infoRow: {
+      display: "flex",
+      justifyContent: "space-between",
+      padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+      // "&:nth-of-type(odd)": {
+      //   backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+      // },
+    },
+    infoLabel: {
+      fontWeight: 600,
+      // color: theme.colorScheme === 'dark' ? theme.colors.gray[5] : theme.colors.gray[7],
+    },
+    infoValue: {
+      textAlign: "right",
+    },
+    editInput: {
+      flex: 1,
+      maxWidth: "200px",
+    },
+  };
+});

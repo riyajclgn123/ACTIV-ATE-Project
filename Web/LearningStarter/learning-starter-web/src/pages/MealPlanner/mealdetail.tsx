@@ -1,6 +1,17 @@
-import { Button, Card, Group, Image, List, Space, Text, Title } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Group,
+  Image,
+  List,
+  Space,
+  Text,
+  Title,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FC } from "react";
+import { createStyles } from "@mantine/emotion";
 
 interface Meal {
   id: number;
@@ -14,6 +25,7 @@ interface Meal {
 export const MealDetail: FC = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { classes } = useStyles();
   const meal = (state as { meal: Meal })?.meal;
 
   if (!meal) {
@@ -23,12 +35,12 @@ export const MealDetail: FC = () => {
   return (
     <div style={{ padding: "30px" }}>
       <Space h="md" />
-      <Title ta="center" order={2} c="blue.7">
+      <Title ta="center" order={2} c="#008b84">
         {meal.title}
       </Title>
       <Space h="md" />
 
-      <Card shadow="md" padding="xl" radius="md" withBorder>
+      <Card shadow="md" padding="xl" radius="md" withBorder className={classes.card1}>
         <Group justify="center">
           <Image
             src={meal.image}
@@ -56,8 +68,7 @@ export const MealDetail: FC = () => {
 
         <Button
           variant="outline"
-          color="blue"
-          fullWidth
+          color="#52aead"
           mt="lg"
           onClick={() => navigate(-1)}
         >
@@ -67,3 +78,25 @@ export const MealDetail: FC = () => {
     </div>
   );
 };
+
+const useStyles = createStyles((theme) => {
+  const { colorScheme } = useMantineColorScheme();
+  return {
+    card1: {
+      border: `1px solid ${
+        colorScheme === "dark"
+          ? "#008b84"
+          : theme.colors[theme.primaryColor][3]
+      }`,
+      
+      borderRadius: theme.radius.md,
+      background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              boxShadow: 
+              `
+                    0 4px 6px rgba(0, 0, 0, 0.1), 
+                    0 8px 20px rgba(0, 0, 0, 0.2), 
+                    0 12px 24px rgba(0, 0, 0, 0.15)
+               `,
+    }
+  }});
