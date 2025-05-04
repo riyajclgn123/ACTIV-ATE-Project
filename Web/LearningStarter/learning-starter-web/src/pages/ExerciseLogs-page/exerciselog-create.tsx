@@ -149,7 +149,7 @@ export const ExerciseLogCreate = () => {
           onClick={() => navigate(routes.exercises)}
           leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
         >
-          Back to Exercises
+          Back to Search
         </Button>
         <Button
           onClick={() => navigate(routes.exerciseLog)}

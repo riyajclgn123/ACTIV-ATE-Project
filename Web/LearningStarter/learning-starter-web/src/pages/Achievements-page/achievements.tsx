@@ -13,6 +13,7 @@ import {
   SimpleGrid,
   ThemeIcon,
   useMantineColorScheme,
+  Box,
 } from "@mantine/core";
 import { useAuth } from "../../authentication/use-auth";
 import api from "../../config/axios";
@@ -22,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { createStyles } from "@mantine/emotion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"; 
+import Confetti from "react-confetti";
 
 interface Achievement {
   id: number;
@@ -54,6 +56,23 @@ export const Achievements = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { classes } = useStyles();
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -67,9 +86,16 @@ export const Achievements = () => {
         ApiResponse<AchievementsResponse>
       >(`/api/achievements`);
       setAchievements(achievementsResponse.data.data);
+
+      if (goalResponse.data.data.isAchieved && goalResponse.data.data.achievement) {
+        setShowConfetti(true);
+        const timer = setTimeout(() => setShowConfetti(false), 5000);
+        return () => clearTimeout(timer);
+      }
+
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError("Failed to load achievement data");
+      // setError("Failed to load achievement data");
     } finally {
       setLoading(false);
     }
@@ -104,6 +130,17 @@ export const Achievements = () => {
   return (
     <Container size="lg" py="xl">
       <LoadingOverlay visible={loading} />
+      {showConfetti && (
+        <Box style={{ position: 'fixed', top: 0, left: 0, zIndex: 1000, pointerEvents: 'none' }}>
+          <Confetti
+            width={windowSize.width}
+            height={windowSize.height}
+            recycle={false}
+            numberOfPieces={500}
+            gravity={0.2}
+          />
+        </Box>
+      )}
 
       <Group justify="space-between" mb="xl">
         <Title order={2}>Your Achievements</Title>
