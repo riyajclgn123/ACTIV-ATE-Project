@@ -101,16 +101,14 @@ export const FoodListing = () => {
   };
 
   const foodImages: Record<string, string> = {
-    Dumbbell: dumbell,
-    Squat: squat,
-    "Leg Press": legpress,
-    "Flat Bench Press": flat,
-    Cardio: cardio,
-    Cycling: cycling,
-    "Chest Press": chestpress,
-    "Inclined Bench Press": inclined,
-    //"cable machine": cable,
-    // Add more mappings as needed
+    'Pizza': dumbell,
+    'Burger': squat,
+    'Fried chicken leg': legpress,
+    'Mashed potatoes': flat,
+    'Egg sandwich': cardio,
+    'T-bone steak': cycling,
+    'French fries': chestpress,
+    'Protein shake': inclined,
   };
 
   return (
