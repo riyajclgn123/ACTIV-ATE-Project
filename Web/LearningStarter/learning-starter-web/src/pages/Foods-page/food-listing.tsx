@@ -28,16 +28,17 @@ import {
   faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import foodbgImage from "../../assets/foodbg.jpg";
-import dumbell from "../../assets/dumbbell.jpg";
-import squat from "../../assets/squart.jpg";
-import legpress from "../../assets/legpress.jpg";
-import flat from "../../assets/flat.jpg";
-import cardio from "../../assets/cardio.jpg";
-import cycling from "../../assets/cycling.jpg";
-import chestpress from "../../assets/chestpress.jpg";
-import inclined from "../../assets/inclined.jpg";
-import cable from "../../assets/cable1.jpg";
+import pizza from "../../assets/pizza.jpg";
+import burger from "../../assets/burger.jpg";
+import friedChickenLeg from "../../assets/fried-chicken-leg.jpg";
+import frenchFries from "../../assets/french-fries.jpg";
+import tboneSteak from "../../assets/tbone-steak.jpg";
+import mashedPotatoes from "../../assets/mashed-potatoes.jpg";
+import eggSandwich from "../../assets/egg-sandwich.jpg";
+import proteinShake from "../../assets/protein-shake.jpg";
+import biryani from "../../assets/biryani.jpg";
+import momo from "../../assets/momo.jpg";
+
 
 export const FoodListing = () => {
   const location = useLocation();
@@ -101,16 +102,16 @@ export const FoodListing = () => {
   };
 
   const foodImages: Record<string, string> = {
-    Dumbbell: dumbell,
-    Squat: squat,
-    "Leg Press": legpress,
-    "Flat Bench Press": flat,
-    Cardio: cardio,
-    Cycling: cycling,
-    "Chest Press": chestpress,
-    "Inclined Bench Press": inclined,
-    //"cable machine": cable,
-    // Add more mappings as needed
+    'Pizza': pizza,
+    'Burger': burger,
+    'Fried chicken leg': friedChickenLeg,
+    'Mashed potatoes': mashedPotatoes,
+    'Egg sandwich': eggSandwich,
+    'T-bone steak': tboneSteak,
+    'French fries': frenchFries,
+    'Protein shake': proteinShake,
+    'Biryani': biryani,
+    'Momo': momo,
   };
 
   return (
@@ -198,7 +199,7 @@ export const FoodListing = () => {
               >
                 <Card.Section className={classes.cardImageSection}>
                   <img
-                    src={foodImages[food.name] || dumbell}
+                    src={foodImages[food.name] || pizza}
                     height={200}
                     width="100%"
                     alt={food.name}

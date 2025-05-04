@@ -233,91 +233,253 @@ public class Startup
         {
             return;
         }
-
+        //nutrient type 1: calories
+        //nutrient type 2: protein
+        //nutrient type 3: carbohydrates
+        //nutrient type 4: sugar
+        //nutrient type 5: fiber
+        //nutrient type 6: fat
+        
+        // for food 1, pizza
         var seededNutrient1 = new Nutrient
         {
             NutrientTypeId = 1,
                 FoodId = 1,
-                Value = 300,
+                Value = 260,
                 Unit = "Calories",
         };
         var seededNutrient2 = new Nutrient
         {
             NutrientTypeId = 2,
             FoodId = 1,
-            Value = 30,
+            Value = 12,
             Unit = "gm",
         };
         var seededNutrient3 = new Nutrient
         {
             NutrientTypeId = 3,
             FoodId = 1,
-            Value = 150,
+            Value = 33,
             Unit = "gm",
         };
         var seededNutrient4 = new Nutrient
         {
-            NutrientTypeId = 4,
+            NutrientTypeId = 6,
             FoodId = 1,
-            Value = 50,
+            Value = 10,
             Unit = "gm",
         };
+        
+        // for food 2, burger
         var seededNutrient5 = new Nutrient
         {
             NutrientTypeId = 1,
             FoodId = 2,
-            Value = 350,
+            Value = 370,
             Unit = "Calories",
         };
         var seededNutrient6 = new Nutrient
         {
             NutrientTypeId = 2,
             FoodId = 2,
-            Value = 40,
+            Value = 15,
             Unit = "gm",
         };
         var seededNutrient7 = new Nutrient
         {
             NutrientTypeId = 3,
             FoodId = 2,
-            Value = 200,
+            Value = 36,
             Unit = "gm",
         };
         var seededNutrient8 = new Nutrient
         {
-            NutrientTypeId = 4,
+            NutrientTypeId = 6,
             FoodId = 2,
-            Value = 40,
+            Value = 19,
             Unit = "gm",
         };
+        
+        // for food 3, fried chicken leg
         var seededNutrient9= new Nutrient
         {
             NutrientTypeId = 1,
             FoodId = 3,
-            Value = 400,
+            Value = 280,
             Unit = "Calories",
         };
         var seededNutrient10 = new Nutrient
         {
             NutrientTypeId = 2,
             FoodId = 3,
-            Value = 70,
+            Value = 22,
             Unit = "gm",
         };
         var seededNutrient11 = new Nutrient
         {
             NutrientTypeId = 3,
             FoodId = 3,
-            Value = 390,
+            Value = 11,
             Unit = "gm",
         };
         var seededNutrient12 = new Nutrient
         {
-            NutrientTypeId = 4,
+            NutrientTypeId = 6,
             FoodId = 3,
-            Value = 65,
+            Value = 16,
             Unit = "gm",
         };
+        
+        // for food 4, mashed potatoes
+        var seededNutrient13 = new Nutrient
+        {
+            NutrientTypeId = 1,
+            FoodId = 4,
+            Value = 290,
+            Unit = "Calories",
+        };
+        var seededNutrient14 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 4,
+            Value = 4,
+            Unit = "gm",
+        };
+        var seededNutrient15 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 4,
+            Value = 44,
+            Unit = "gm",
+        };
+        var seededNutrient16 = new Nutrient
+        {
+            NutrientTypeId = 6,
+            FoodId = 4,
+            Value = 11,
+            Unit = "gm",
+        };
+        
+        // for food 5, egg sandwich
+        var seededNutrient17 = new Nutrient
+        {
+            NutrientTypeId = 1,
+            FoodId = 5,
+            Value = 300,
+            Unit = "Calories",
+        };
+        var seededNutrient18 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 5,
+            Value = 18,
+            Unit = "gm",
+        };
+        var seededNutrient19 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 5,
+            Value = 30,
+            Unit = "gm",
+        };
+        var seededNutrient20 = new Nutrient
+        {
+            NutrientTypeId = 6,
+            FoodId = 5,
+            Value = 12,
+            Unit = "gm",
+        };
+        
+        // for food 6, t-bone steak
+        var seededNutrient21 = new Nutrient
+        {
+            NutrientTypeId = 1,
+            FoodId = 6,
+            Value = 610,
+            Unit = "Calories",
+        };
+        var seededNutrient22 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 6,
+            Value = 52,
+            Unit = "gm",
+        };
+        var seededNutrient23 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 6,
+            Value = 1,
+            Unit = "gm",
+        };
+        var seededNutrient24 = new Nutrient
+        {
+            NutrientTypeId = 6,
+            FoodId = 6,
+            Value = 41,
+            Unit = "gm",
+        };
+        
+        // for food 7, french fries
+        var seededNutrient25 = new Nutrient
+        {
+            NutrientTypeId = 1,
+            FoodId = 7,
+            Value = 340,
+            Unit = "Calories",
+        };
+        var seededNutrient26 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 7,
+            Value = 4,
+            Unit = "gm",
+        };
+        var seededNutrient27 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 7,
+            Value = 44,
+            Unit = "gm",
+        };
+        var seededNutrient28 = new Nutrient
+        {
+            NutrientTypeId = 6,
+            FoodId = 7,
+            Value = 16,
+            Unit = "gm",
+        };
+        
+        // for food 8, protein shake
+        var seededNutrient29 = new Nutrient
+        {
+            NutrientTypeId = 1,
+            FoodId = 8,
+            Value = 160,
+            Unit = "Calories",
+        };
+        var seededNutrient30 = new Nutrient
+        {
+            NutrientTypeId = 2,
+            FoodId = 8,
+            Value = 30,
+            Unit = "gm",
+        };
+        var seededNutrient31 = new Nutrient
+        {
+            NutrientTypeId = 3,
+            FoodId = 8,
+            Value = 5,
+            Unit = "gm",
+        };
+        var seededNutrient32 = new Nutrient
+        {
+            NutrientTypeId = 6,
+            FoodId = 8,
+            Value = 3,
+            Unit = "gm",
+        };
+
         
         dataContext.Set<Nutrient>().Add(seededNutrient1);
         dataContext.Set<Nutrient>().Add(seededNutrient2);
@@ -331,6 +493,26 @@ public class Startup
         dataContext.Set<Nutrient>().Add(seededNutrient10);
         dataContext.Set<Nutrient>().Add(seededNutrient11);
         dataContext.Set<Nutrient>().Add(seededNutrient12);
+        dataContext.Set<Nutrient>().Add(seededNutrient13);
+        dataContext.Set<Nutrient>().Add(seededNutrient14);
+        dataContext.Set<Nutrient>().Add(seededNutrient15);
+        dataContext.Set<Nutrient>().Add(seededNutrient16);
+        dataContext.Set<Nutrient>().Add(seededNutrient17);
+        dataContext.Set<Nutrient>().Add(seededNutrient18);
+        dataContext.Set<Nutrient>().Add(seededNutrient19);
+        dataContext.Set<Nutrient>().Add(seededNutrient20);
+        dataContext.Set<Nutrient>().Add(seededNutrient21);
+        dataContext.Set<Nutrient>().Add(seededNutrient22);
+        dataContext.Set<Nutrient>().Add(seededNutrient23);
+        dataContext.Set<Nutrient>().Add(seededNutrient24);
+        dataContext.Set<Nutrient>().Add(seededNutrient25);
+        dataContext.Set<Nutrient>().Add(seededNutrient26);
+        dataContext.Set<Nutrient>().Add(seededNutrient27);
+        dataContext.Set<Nutrient>().Add(seededNutrient28);
+        dataContext.Set<Nutrient>().Add(seededNutrient29);
+        dataContext.Set<Nutrient>().Add(seededNutrient30);
+        dataContext.Set<Nutrient>().Add(seededNutrient31);
+        dataContext.Set<Nutrient>().Add(seededNutrient32);
         dataContext.SaveChanges();
     }
 
@@ -344,28 +526,52 @@ public class Startup
         var seededFood1 = new Food
         {
             Name = "Pizza",
-            Description = "Made of Chicken",
+            Description = "Doughy, saucy, cheesy, and delicious.",
         };
         var seededFood2 = new Food
         {
             Name = "Burger",
-            Description = "Made of Chicken",
+            Description = "Bread, meat, cheese, and lettuce.",
         };
         var seededFood3 = new Food
         {
-            Name = "Biryani",
-            Description = "Made of Chicken and rice",
+            Name = "Fried chicken leg",
+            Description = "Tender, juicy, and crispy.",
         };
         var seededFood4 = new Food
         {
-            Name = "Momo",
-            Description = "Made of Chicken and wheat",
+            Name = "Mashed potatoes",
+            Description = "Creamy and fluffy.",
+        };
+        var seededFood5 = new Food
+        {
+            Name = "Egg sandwich",
+            Description = "Toasted bread with an egg and cheese.",
+        };
+        var seededFood6 = new Food
+        {
+            Name = "T-bone steak",
+            Description = "Seared to perfection.",
+        };
+        var seededFood7 = new Food
+        {
+            Name = "French fries",
+            Description = "Soft on the inside and crispy on the outside.",
+        };
+        var seededFood8 = new Food
+        {
+            Name = "Protein shake",
+            Description = "Healthy and delicious",
         };
         
         dataContext.Set<Food>().Add(seededFood1);
         dataContext.Set<Food>().Add(seededFood2);
         dataContext.Set<Food>().Add(seededFood3);
         dataContext.Set<Food>().Add(seededFood4);
+        dataContext.Set<Food>().Add(seededFood5);
+        dataContext.Set<Food>().Add(seededFood6);
+        dataContext.Set<Food>().Add(seededFood7);
+        dataContext.Set<Food>().Add(seededFood8);
         dataContext.SaveChanges();
     }
   

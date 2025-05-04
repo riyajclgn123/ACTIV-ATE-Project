@@ -87,8 +87,8 @@ export const CalorieBudgetProgress = ({
             </Text>
             <Text fw={700} c={isOverBudget ? "red" : "green"}>
               {isOverBudget
-                ? `${Math.abs(remainingCalories)}`
-                : remainingCalories}{" "}
+                ? `${Math.round(Math.abs(remainingCalories))}`
+                : Math.round(remainingCalories)}{" "}
               calories
             </Text>
           </Group>
@@ -117,7 +117,7 @@ export const CalorieBudgetProgress = ({
 
           <Group justify="apart" mt={5}>
             <Text size="sm" c="dimmed">
-              {consumedCalories} / {calorieGoal} kcal
+              {Math.round(consumedCalories)} / {Math.round(calorieGoal)} kcal
             </Text>
             <Text size="sm" fw={500}>
               {percentage.toFixed(0)}%
