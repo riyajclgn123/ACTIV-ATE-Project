@@ -30,6 +30,7 @@ import cardio from "../../assets/cardio.jpg";
 import cycling from "../../assets/cycling.jpg";
 import chestpress from "../../assets/chestpress.jpg";
 import inclined from "../../assets/inclined.jpg";
+import cable from "../../assets/cable1.jpg";
 
 export const ExerciseListing = () => {
   const navigate = useNavigate();
@@ -103,6 +104,7 @@ export const ExerciseListing = () => {
     Cycling: cycling,
     "Chest Press": chestpress,
     "Inclined Bench Press": inclined,
+    "Cable Machine": cable,
   };
 
   return (
@@ -161,6 +163,7 @@ export const ExerciseListing = () => {
                     <FontAwesomeIcon
                       className={classes.iconButton}
                       icon={faPencil}
+                      color="#008b84"
                       onClick={(e) => handleEditClick(exercise.id, e)}
                     />
                   </div>
@@ -307,10 +310,6 @@ const useStyles = createStyles((theme) => {
       cursor: "pointer",
       padding: "5px",
       fontSize: "14px",
-      color: isDark ? theme.colors.blue[4] : theme.colors.blue[6],
-      "&:hover": {
-        color: "orange",
-      },
     },
 
     container: {
@@ -356,7 +355,7 @@ const useStyles = createStyles((theme) => {
 
     dropdown: {
       position: "absolute",
-      top: "100%",
+      top: "calc(100% + 5px)",
       width: "80%",
       background: isDark ? theme.colors.dark[5] : theme.white,
       borderRadius: theme.radius.sm,

@@ -163,6 +163,7 @@ export const FoodListing = () => {
                     <FontAwesomeIcon
                       className={classes.editFoodItemButton}
                       icon={faPencil}
+                      color="#008b84"
                       onClick={(event) => handleEditClick(food.id, event)}
                     />
                   </div>
@@ -341,7 +342,7 @@ const useStyles = createStyles((theme) => {
     dropdown: {
       position: "absolute",
       top: "calc(100% + 5px)",
-      width: "100%",
+      width: "80%",
       background: isDark ? theme.colors.dark[5] : theme.white,
       borderRadius: theme.radius.sm,
       boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
@@ -377,12 +378,8 @@ const useStyles = createStyles((theme) => {
 
     editFoodItemButton: {
       cursor: "pointer",
-      color: isDark ? theme.colors.blue[4] : theme.colors.blue[6],
       fontSize: "14px",
       padding: "5px",
-      "&:hover": {
-        color: theme.colors.blue[7],
-      },
     },
 
     buttonsContainer: {
